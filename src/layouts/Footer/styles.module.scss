@@ -1,0 +1,43 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.footerContainer {
+  @apply w-full bg-[#f9f9fc] h-[260px];
+}
+
+// .footerContent{
+//     @apply px-[140px] py-[40px] grid grid-cols-1 lg:grid-cols-3
+// }
+
+.footerContent {
+  @apply px-[300px] py-[40px] flex justify-between;
+}
+
+.footerCol {
+  @apply text-[#686c71];
+}
+
+.footerTitleCol {
+  @apply text-[#313944] font-bold text-[18px];
+}
+
+.footerContentCol {
+  @apply mt-[20px] list-disc pl-[20px] cursor-pointer text-[16px];
+
+  li:hover {
+    @apply text-black;
+  }
+}
+
+.footerContact {
+  @apply list-none;
+}
+
+.footerLink {
+  @apply flex leading-[24px] items-center justify-start;
+}
+
+.iconLink {
+  @apply mr-[12px];
+}
