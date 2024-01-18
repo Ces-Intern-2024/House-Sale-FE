@@ -1,24 +1,26 @@
 import React from 'react'
 import './App.css'
-import logo from './logo.svg'
-
+import PropertyCard from './components/Properties/PropertyCard'
+import { properties } from './utils/properties'
+import Container from './components/Container'
+import Footer from './layouts/Footer/Footer'
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Container>
+        <div>Navbar</div>
+        <div>Header</div>
+        <div>SlideShow</div>
+        <div>
+          <div>Title</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl-grid-cols-5 2xl:grid-cols-3 gap-8">
+            {properties.map((property) => {
+              return <PropertyCard key={property.propertyId} data={property} />
+            })}
+          </div>
+        </div>
+      </Container>
+      <Footer />
     </div>
   )
 }
