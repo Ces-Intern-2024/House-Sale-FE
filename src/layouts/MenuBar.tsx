@@ -7,7 +7,7 @@ export default function MenuBar() {
   return (
     <>
       <div className="flex items-center justify-center py-2">
-        <div className="hover:bg-sky-700 hover:text-white">
+        <div className="hover:bg-sky-7006 hover:text-white">
           <Menu trigger="click-hover" openDelay={100} closeDelay={400}>
             <Menu.Target>
               <Button
