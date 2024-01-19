@@ -71,7 +71,7 @@ export const properties: Properties[] = [
   {
     propertyId: 4,
     name: 'Apartment for sale at Alphanam Luxury Apartment Danang ',
-    featuredId: 'sale',
+    featuredId: 'rent',
     categoryId: 'house',
     districtId: '3',
     location: '789 Beach Road',
@@ -93,7 +93,7 @@ export const properties: Properties[] = [
   {
     propertyId: 5,
     name: 'Indochina Riverside Danang apartment for sale',
-    featuredId: 'sale',
+    featuredId: 'rent',
     categoryId: 'house',
     districtId: '3',
     location: '789 Beach Road',
@@ -115,7 +115,7 @@ export const properties: Properties[] = [
   {
     propertyId: 6,
     name: 'Beachfront House',
-    featuredId: 'sale',
+    featuredId: 'rent',
     categoryId: 'house',
     districtId: '3',
     location: '789 Beach Road',
