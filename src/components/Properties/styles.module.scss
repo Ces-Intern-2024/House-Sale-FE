@@ -1,7 +1,6 @@
 .propertyContainer {
   @apply col-span-1 
       relative
-      cursor-pointer 
       border-[1.2px] 
       border-slate-200 
       bg-slate-50
@@ -24,7 +23,7 @@
       px-[15px] 
       uppercase 
       inline-block 
-      z-10 
+      z-[1]
       text-white
       bg-emerald-700;
 }
@@ -41,15 +40,16 @@
 }
 
 .propertyLocation {
-  @apply text-[14px]
-      text-[#7e7e7e]
-      leading-[25px]
-      text-left
-      px-3 pb-1;
+  @apply flex justify-between items-center
+    text-[14px]
+    text-[#7e7e7e]
+    leading-[25px]
+    text-left
+    px-3 pb-1;
 }
 
 .propertyCoverIcon {
-  @apply inline-block;
+  @apply flex items-center;
 }
 .propertyIcon {
   @apply mr-[5px];

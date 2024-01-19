@@ -40,6 +40,7 @@ export default function SlideShow() {
           <MenuBar />
           <Header />
         </div>
+        
       </div>
 
       <div className="relative">

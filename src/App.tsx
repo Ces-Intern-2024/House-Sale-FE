@@ -1,26 +1,44 @@
 import React from 'react'
 import './App.css'
-import PropertyCard from './components/Properties/PropertyCard'
 import { properties } from './utils/properties'
 import Container from './components/Container'
 import Footer from './layouts/Footer/Footer'
 import { MantineProvider } from '@mantine/core'
+import SlideShow from './layouts/SlideShow'
+import Button from './components/Button/ButtonCustom'
+import '@mantine/core/styles.css'
+import FeaturedProperties from './components/FeaturedProperties/FeaturedProperties'
 
 function App() {
   return (
     <MantineProvider>
+      <SlideShow />
       <Container>
-        <div>Navbar</div>
-        <div>Header</div>
-        <div>SlideShow</div>
-        <div>
-          <div>Title</div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl-grid-cols-5 2xl:grid-cols-3 gap-8">
-            {properties.map((property) => {
-              return <PropertyCard key={property.propertyId} data={property} />
-            })}
-          </div>
-        </div>
+        <FeaturedProperties
+          properties={properties}
+          title="FEATURED FOR RENT"
+          filter="rent"
+        >
+          <Button
+            className="text-center mt-[20px]"
+            color="rgba(52, 129, 217, 1)"
+            variant="filled"
+            text="View more"
+          />
+        </FeaturedProperties>
+
+        <FeaturedProperties
+          properties={properties}
+          title="FEATURED FOR SALE"
+          filter="sale"
+        >
+          <Button
+            className="text-center mt-[20px]"
+            color="rgba(52, 129, 217, 1)"
+            variant="filled"
+            text="View more"
+          />
+        </FeaturedProperties>
       </Container>
       <Footer />
     </MantineProvider>

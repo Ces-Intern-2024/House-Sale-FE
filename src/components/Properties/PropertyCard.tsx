@@ -4,6 +4,7 @@ import { MdOutlineZoomOutMap } from 'react-icons/md'
 import { IoBedOutline } from 'react-icons/io5'
 import { GrSteps } from 'react-icons/gr'
 import { Properties as PropertiesType } from '@/types'
+import { FaRegHeart } from 'react-icons/fa6'
 import style from './styles.module.scss'
 
 type Props = {
@@ -27,8 +28,11 @@ const Properties = ({ data }: Props) => {
           <div className={style.propertyLocation}>
             <span className={style.propertyCoverIcon}>
               <FaLocationDot className={style.propertyIcon} size={16} />
+              {data.location}
             </span>
-            {data.location}
+            <span>
+              <FaRegHeart size={16} />
+            </span>
           </div>
           <div className={style.propertyPrice}>
             {data.price} {data.currencyCode}
