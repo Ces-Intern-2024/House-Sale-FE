@@ -1,0 +1,35 @@
+.outer {
+  @apply relative lg:h-[670px] xs:h-[500px] h-[500px];
+}
+
+.carousel {
+  @apply flex items-center justify-center;
+}
+
+.indicator {
+  @apply h-[20px] w-[20px] z-[2] col-auto;
+}
+
+.controls {
+  @apply z-[999] col-auto;
+}
+
+.slide {
+  @apply lg:h-[670px] xs:h-[500px] h-[500px];
+}
+
+.slideImage {
+  @apply w-[100%] h-[100%];
+}
+
+.overlay {
+  @apply lg:h-[670px] xs:h-[500px] h-[500px] absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex flex-col justify-center items-center;
+}
+
+.largeText {
+  @apply col-auto text-white font-bold lg:text-6xl xs:text-4xl text-4xl lg:mb-5 xs:mb-3 mb-3;
+}
+
+.smallText {
+  @apply col-auto text-white font-bold;
+}
