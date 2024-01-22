@@ -1,0 +1,12 @@
+.outer {
+  @apply bg-[#396652] justify-between px-10 flex w-full h-[6rem]
+    flex justify-center items-center z-[999];
+}
+
+.logo {
+  @apply w-[50] px-5 cursor-pointer h-[100%];
+}
+
+.logoOuter {
+  @apply lg:h-[65%] xs:h-[50%] h-[50%];
+}
