@@ -1,8 +1,7 @@
 import React from 'react'
-import { Menu, Button } from '@mantine/core'
+import { Menu, Button, Avatar  } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import styles from './MenuBar.module.scss'
-import { Avatar } from '@mantine/core'
 
 interface MenuBarProps {
   isOfDrawers: boolean

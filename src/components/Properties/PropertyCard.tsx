@@ -1,10 +1,9 @@
 import React from 'react'
-import { FaLocationDot } from 'react-icons/fa6'
+import { FaLocationDot, FaRegHeart } from 'react-icons/fa6'
 import { MdOutlineZoomOutMap } from 'react-icons/md'
 import { IoBedOutline } from 'react-icons/io5'
 import { GrSteps } from 'react-icons/gr'
 import { Properties as PropertiesType } from '@/types'
-import { FaRegHeart } from 'react-icons/fa6'
 import style from './styles.module.scss'
 
 type Props = {

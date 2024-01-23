@@ -11,7 +11,7 @@ const Button = ({ children,className, variant, text, color, ...props }: Props) =
 
   return (
     <div className={className}>
-      <ButtonMantine  color={color} variant={variant} {...props} className={style.btn}>
+      <ButtonMantine  color={color} variant={variant}  className={style.btn} {...props}>
         {text}
         {children}
       </ButtonMantine>
