@@ -1,5 +1,5 @@
 .outer {
-  @apply relative lg:h-[670px] xs:h-[500px] h-[500px];
+  @apply relative lg:h-[670px] xs:h-[500px] mobile:h-[400px];
 }
 
 .carousel {
@@ -15,7 +15,7 @@
 }
 
 .slide {
-  @apply lg:h-[670px] xs:h-[500px] h-[500px];
+  @apply lg:h-[670px] xs:h-[500px] mobile:h-[400px];
 }
 
 .slideImage {
@@ -23,13 +23,13 @@
 }
 
 .overlay {
-  @apply lg:h-[670px] xs:h-[500px] h-[500px] absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex flex-col justify-center items-center;
+  @apply lg:h-[670px] xs:h-[500px] mobile:h-[400px] absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex flex-col justify-center items-center;
 }
 
 .largeText {
-  @apply col-auto text-white font-bold lg:text-6xl xs:text-4xl text-4xl lg:mb-5 xs:mb-3 mb-3;
+  @apply col-auto text-white font-bold lg:text-6xl xs:text-4xl mobile:text-2xl lg:mb-5 xs:mb-3 mobile:mb-1 mb-1;
 }
 
 .smallText {
-  @apply col-auto text-white font-bold;
+  @apply col-auto text-white font-bold mobile:text-sm xs:text-lg;
 }

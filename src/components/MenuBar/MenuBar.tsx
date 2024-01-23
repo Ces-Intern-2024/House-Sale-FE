@@ -1,8 +1,7 @@
 import React from 'react'
-import { Menu, Button } from '@mantine/core'
+import { Menu, Button, Avatar } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import styles from './MenuBar.module.scss'
-import { Avatar } from '@mantine/core'
 
 interface MenuBarProps {
   isOfDrawers: boolean
@@ -33,6 +32,7 @@ export default function MenuBar(props: MenuBarProps) {
             closeDelay={400}
             width={150}
             position={props.isOfDrawers ? 'right-start' : 'bottom'}
+            withArrow
           >
             <Menu.Target>
               <Button className={styles.button}>
@@ -55,6 +55,7 @@ export default function MenuBar(props: MenuBarProps) {
             closeDelay={400}
             width={150}
             position={props.isOfDrawers ? 'right-start' : 'bottom'}
+            withArrow
           >
             <Menu.Target>
               <Button className={styles.button}>

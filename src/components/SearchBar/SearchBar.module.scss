@@ -1,0 +1,7 @@
+.outer {
+  @apply grid grid-cols-3 px-96 gap-1 mt-5;
+}
+
+.searchBtn {
+  @apply bg-transparent  outline outline-4 outline-cyan-500 text-[#065f46] font-extrabold flex justify-between items-center;
+}
