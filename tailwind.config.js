@@ -4,12 +4,20 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        xs: '576',
+        xs: '576px',
         sm: '640px',
         md: '768px',
         lg: '1024px',
         xl: '1280px',
         '2xl': '1536px',
+        mobile: '300px',
+      },
+      colors: {
+        transparent: 'transparent',
+        primary: '#396652',
+        blur: '#c9d5cf',
+        label: 'rgb(4 120 87 / var(--tw-bg-opacity))',
+        banner: '#f8fafc',
       },
     },
   },
