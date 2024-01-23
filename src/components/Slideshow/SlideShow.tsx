@@ -1,7 +1,6 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import { Carousel } from '@mantine/carousel'
 import { Image } from '@mantine/core'
-import { useRef } from 'react'
 import Autoplay from 'embla-carousel-autoplay'
 import styles from './SlideShow.module.scss'
 

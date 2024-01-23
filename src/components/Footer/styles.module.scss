@@ -3,15 +3,12 @@
 @import 'tailwindcss/utilities';
 
 .footerContainer {
-  @apply w-full bg-[#f9f9fc] h-[260px];
+  @apply w-full bg-primary h-[260px] mobile:h-full
 }
 
-// .footerContent{
-//     @apply px-[140px] py-[40px] grid grid-cols-1 lg:grid-cols-3
-// }
 
 .footerContent {
-  @apply px-[300px] py-[40px] flex justify-between;
+  @apply px-[60px] lg:py-[40px] lg:flex lg:flex-row lg:justify-evenly lg:items-start mobile:flex mobile:flex-col mobile:items-center mobile:py-[20px]
 }
 
 .footerCol {
@@ -19,19 +16,27 @@
 }
 
 .footerTitleCol {
-  @apply text-[#313944] font-bold text-[18px];
+  @apply text-white font-bold text-[18px] mobile:py-[10px] mobile:text-center
 }
 
 .footerContentCol {
-  @apply mt-[20px] list-disc pl-[20px] cursor-pointer text-[16px];
+  @apply mt-[20px] pl-[20px] cursor-pointer text-[16px] text-blur mobile:mt-0 mobile:p-0 mobile:text-center;
 
   li:hover {
     @apply text-black;
   }
 }
 
+.footerCoverLogo{
+  @apply w-[260px] text-blur mobile:text-center
+}
+
+.footerImage{
+  @apply w-[230px]
+}
+
 .footerContact {
-  @apply list-none;
+  @apply list-none mobile:text-center
 }
 
 .footerLink {
@@ -40,4 +45,8 @@
 
 .iconLink {
   @apply mr-[12px];
+}
+
+.footerCopyRight{
+  @apply text-white lg:flex lg:items-center lg:justify-center lg:pb-[12px] mobile:flex mobile:items-center mobile:justify-center mobile:pb-[16px]
 }
