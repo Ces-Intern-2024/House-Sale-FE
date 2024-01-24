@@ -7,7 +7,7 @@
 }
 
 .toggleBtn {
-  @apply lg:hidden xs:block block;
+  @apply lg:hidden xs:block block bg-transparent;
 }
 
 .drawersContent {

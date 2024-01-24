@@ -1,6 +1,7 @@
 .outer {
-  @apply bg-[#396652] justify-between px-10 flex w-full h-[6rem]
-    flex justify-center items-center z-[999];
+  @apply bg-[#396652] justify-between lg:px-10 xs:px-7 mobile:px-5 px-5 flex 
+  lg:h-[6rem] xs:h-[5rem] mobile:h-[5rem] 
+   items-center z-[999];
 }
 
 .logo {
