@@ -1,4 +1,4 @@
-import React, {useRef} from 'react'
+import React, { useRef } from 'react'
 import { Carousel } from '@mantine/carousel'
 import { Image } from '@mantine/core'
 import Autoplay from 'embla-carousel-autoplay'
@@ -10,9 +10,9 @@ export default function SlideShow() {
   const images = [
     'https://www.riccicoproperty.vn/themes/ricci/images/house_wide_view-min.jpg',
     'https://www.riccicoproperty.vn/themes/ricci/images/9-min.png',
-    // 'https://www.riccicoproperty.vn/themes/ricci/images/3-min.png',
-    // 'https://www.riccicoproperty.vn/themes/ricci/images/6-min.png',
-    // 'https://www.riccicoproperty.vn/themes/ricci/images/10-min.png',
+    'https://www.riccicoproperty.vn/themes/ricci/images/3-min.png',
+    'https://www.riccicoproperty.vn/themes/ricci/images/6-min.png',
+    'https://www.riccicoproperty.vn/themes/ricci/images/10-min.png',
   ]
 
   const slides = images.map((url) => {
