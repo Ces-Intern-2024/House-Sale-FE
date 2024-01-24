@@ -1,7 +1,23 @@
 .outer {
-  @apply grid grid-cols-3 px-96 gap-1 mt-5;
+  @apply flex flex-col  gap-x-1 gap-y-1 mt-5 px-14;
 }
 
 .searchBtn {
-  @apply bg-transparent  outline outline-4 outline-cyan-500 text-[#065f46] font-extrabold flex justify-between items-center;
+  @apply text-lime-700 font-extrabold bg-transparent px-0;
+}
+
+.btnOuter {
+  @apply flex justify-between outline-lime-700  outline outline-2 
+    font-[1000] items-center cursor-pointer xs:px-5 px-2 bg-gray-200 text-lime-700
+    xs:h-[100%] h-[80%];
+}
+
+.searchButton2 {
+  @apply flex items-center justify-evenly flex-grow outline-lime-700
+    outline outline-2 font-[1000] cursor-pointer px-5 bg-gray-200 text-lime-700
+    xs:h-[100%] h-[80%];
+}
+
+.flexBox {
+  @apply flex justify-between;
 }

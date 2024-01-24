@@ -1,150 +1,184 @@
-import React from 'react'
-import { Menu, Button } from '@mantine/core'
+import React, { useState } from 'react'
+import { Menu, Button, Transition } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import styles from './SearchBar.module.scss'
+import { FaAlignJustify, FaSearch } from 'react-icons/fa'
 
 export default function SearchBar() {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  const handleExpandSearch = () => {
+    setIsExpanded((prev) => !prev)
+  }
+
   return (
     <>
       <div className={styles.outer}>
-        <Menu
-          trigger="click"
-          openDelay={100}
-          closeDelay={400}
-          width={150}
-          withArrow
-        >
-          <Menu.Target>
-            <div className={styles.searchBtn}>
-              <Button>PROVINCE</Button>
-              <IconChevronDown />
-            </div>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item>Search</Menu.Item>
-            <Menu.Item>House</Menu.Item>
-            <Menu.Item>Apartment</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        <div className={isExpanded ? 'visible' : 'invisible'}>
+          <Transition
+            mounted={isExpanded ? true : false}
+            transition="slide-up"
+            duration={400}
+            timingFunction="ease"
+          >
+            {(stylesParam) => (
+              <div style={stylesParam}>
+                <div className="grid grid-cols-2 md:grid-cols-4">
+                  <Menu
+                    trigger="click"
+                    openDelay={100}
+                    closeDelay={400}
+                    width={200}
+                    withArrow
+                  >
+                    <Menu.Target>
+                      <div className={styles.btnOuter}>
+                        <Button className={styles.searchBtn}>BED</Button>
+                        <IconChevronDown />
+                      </div>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item>Search</Menu.Item>
+                      <Menu.Item>House</Menu.Item>
+                      <Menu.Item>Apartment</Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
 
-        <Menu
-          trigger="click"
-          openDelay={100}
-          closeDelay={400}
-          width={150}
-          withArrow
-          position="bottom"
-        >
-          <Menu.Target>
-            <Button className={styles.searchBtn}>
-              DISTRICT
-              <IconChevronDown />
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item onClick={() => console.log('hihhihihi')}>
-              Search
-            </Menu.Item>
-            <Menu.Item>House</Menu.Item>
-            <Menu.Item>Apartment</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+                  <Menu
+                    trigger="click"
+                    openDelay={100}
+                    closeDelay={400}
+                    width={200}
+                    withArrow
+                  >
+                    <Menu.Target>
+                      <div className={styles.btnOuter}>
+                        <Button className={styles.searchBtn}>BATHROOM</Button>
+                        <IconChevronDown />
+                      </div>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item>Search</Menu.Item>
+                      <Menu.Item>House</Menu.Item>
+                      <Menu.Item>Apartment</Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
 
-        <Menu
-          trigger="click"
-          openDelay={100}
-          closeDelay={400}
-          width={150}
-          withArrow
-          position="bottom"
-        >
-          <Menu.Target>
-            <Button className={styles.searchBtn}>
-              WARD
-              <IconChevronDown />
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item>Search</Menu.Item>
-            <Menu.Item>House</Menu.Item>
-            <Menu.Item>Apartment</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+                  <Menu
+                    trigger="click"
+                    openDelay={100}
+                    closeDelay={400}
+                    width={200}
+                    withArrow
+                  >
+                    <Menu.Target>
+                      <div className={styles.btnOuter}>
+                        <Button className={styles.searchBtn}>CATEGORY</Button>
+                        <IconChevronDown />
+                      </div>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item>Search</Menu.Item>
+                      <Menu.Item>House</Menu.Item>
+                      <Menu.Item>Apartment</Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
 
-        <Menu
-          trigger="click"
-          openDelay={100}
-          closeDelay={400}
-          width={150}
-          withArrow
-          position="bottom"
-        >
-          <Menu.Target>
-            <Button className={styles.searchBtn}>
-              FOR SALE
-              <IconChevronDown />
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item>Search</Menu.Item>
-            <Menu.Item>House</Menu.Item>
-            <Menu.Item>Apartment</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+                  <Menu
+                    trigger="click"
+                    openDelay={100}
+                    closeDelay={400}
+                    width={200}
+                    withArrow
+                  >
+                    <Menu.Target>
+                      <div className={styles.btnOuter}>
+                        <Button className={styles.searchBtn}>RENT/SALE</Button>
+                        <IconChevronDown />
+                      </div>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item>Search</Menu.Item>
+                      <Menu.Item>House</Menu.Item>
+                      <Menu.Item>Apartment</Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                </div>
+              </div>
+            )}
+          </Transition>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 ">
+          <Menu
+            trigger="click"
+            openDelay={100}
+            closeDelay={400}
+            width={200}
+            withArrow
+          >
+            <Menu.Target>
+              <div className={styles.btnOuter}>
+                <Button className={styles.searchBtn}>PROVINCE</Button>
+                <IconChevronDown />
+              </div>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item>Search</Menu.Item>
+              <Menu.Item>House</Menu.Item>
+              <Menu.Item>Apartment</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
 
-        <Menu
-          trigger="click"
-          openDelay={100}
-          closeDelay={400}
-          width={150}
-          withArrow
-          position="bottom"
-        >
-          <Menu.Target>
-            <Button className={styles.searchBtn}>
-              FOR SALE
-              <IconChevronDown />
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item>Search</Menu.Item>
-            <Menu.Item>House</Menu.Item>
-            <Menu.Item>Apartment</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
-        <Menu
-          trigger="click"
-          openDelay={100}
-          closeDelay={400}
-          width={150}
-          withArrow
-          position="bottom"
-        >
-          <Menu.Target>
-            <Button className={styles.searchBtn}>
-              FOR SALE
-              <IconChevronDown />
-            </Button>
-          </Menu.Target>
-          <Menu.Dropdown>
-            <Menu.Item>Search</Menu.Item>
-            <Menu.Item>House</Menu.Item>
-            <Menu.Item>Apartment</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+          <Menu
+            trigger="click"
+            openDelay={100}
+            closeDelay={400}
+            width={200}
+            withArrow
+          >
+            <Menu.Target>
+              <div className={styles.btnOuter}>
+                <Button className={styles.searchBtn}>DISTRICT</Button>
+                <IconChevronDown />
+              </div>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item>Search</Menu.Item>
+              <Menu.Item>House</Menu.Item>
+              <Menu.Item>Apartment</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+
+          <Menu
+            trigger="click"
+            openDelay={100}
+            closeDelay={400}
+            width={200}
+            withArrow
+          >
+            <Menu.Target>
+              <div className={styles.btnOuter}>
+                <Button className={styles.searchBtn}>WARD</Button>
+                <IconChevronDown />
+              </div>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item>Search</Menu.Item>
+              <Menu.Item>House</Menu.Item>
+              <Menu.Item>Apartment</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+
+          <div className={styles.flexBox}>
+            <button className={styles.btnOuter} onClick={handleExpandSearch}>
+              <FaAlignJustify />
+            </button>
+            <button className={styles.searchButton2}>
+              <FaSearch></FaSearch> Search
+            </button>
+          </div>
+        </div>
       </div>
-      <h1>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim in aut
-        amet repudiandae ad, vero vitae odit molestiae adipisci minima ut,
-        similique blanditiis quam ratione necessitatibus corrupti voluptatum
-        error voluptates. Lorem, ipsum dolor sit amet consectetur adipisicing
-        elit. Repudiandae, quas cumque commodi perspiciatis quidem optio, porro
-        molestias numquam nulla debitis neque voluptate alias officiis
-        voluptatem in omnis minus sint sed? Lorem ipsum dolor sit amet,
-        consectetur adipisicing elit. Eos tempore reiciendis, rem quibusdam
-        eveniet quia non nisi ipsum dignissimos, consectetur, modi ab neque
-        quaerat fuga veniam dolorum porro nesciunt eum.
-      </h1>
     </>
   )
 }

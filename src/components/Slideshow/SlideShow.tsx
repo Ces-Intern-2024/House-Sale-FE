@@ -3,15 +3,16 @@ import { Carousel } from '@mantine/carousel'
 import { Image } from '@mantine/core'
 import Autoplay from 'embla-carousel-autoplay'
 import styles from './SlideShow.module.scss'
+import SearchBar from '../SearchBar/SearchBar'
 
 export default function SlideShow() {
   const autoplay = useRef(Autoplay({ delay: 3000 }))
   const images = [
-    'https://www.riccicoproperty.vn/themes/ricci/images/3-min.png',
-    'https://www.riccicoproperty.vn/themes/ricci/images/6-min.png',
-    'https://www.riccicoproperty.vn/themes/ricci/images/9-min.png',
-    'https://www.riccicoproperty.vn/themes/ricci/images/10-min.png',
     'https://www.riccicoproperty.vn/themes/ricci/images/house_wide_view-min.jpg',
+    'https://www.riccicoproperty.vn/themes/ricci/images/9-min.png',
+    // 'https://www.riccicoproperty.vn/themes/ricci/images/3-min.png',
+    // 'https://www.riccicoproperty.vn/themes/ricci/images/6-min.png',
+    // 'https://www.riccicoproperty.vn/themes/ricci/images/10-min.png',
   ]
 
   const slides = images.map((url) => {
@@ -42,8 +43,14 @@ export default function SlideShow() {
         </Carousel>
 
         <div className={styles.overlay}>
-          <h1 className={styles.largeText}>Find the perfect home</h1>
-          <h1 className={styles.smallText}>Your dreams are in trusted hands</h1>
+          <div className={styles.flexBox}>
+            <h1 className={styles.largeText}>Find the perfect home</h1>
+            <h1 className={styles.smallText}>
+              Your dreams are in trusted hands
+            </h1>
+          </div>
+
+          <SearchBar />
         </div>
       </div>
     </>
