@@ -18,6 +18,13 @@ module.exports = {
         blur: '#c9d5cf',
         label: 'rgb(4 120 87 / var(--tw-bg-opacity))',
         banner: '#f8fafc',
+        subBackground:'#f8fafc',
+      },
+      fontFamily: {
+        lobster: ['Lobster', 'sans-serif'],
+        greatVibes: ['Great Vibes', 'cursive'],
+        kanit: ['Kanit','sans-serif'],
+        archivo: ['Archivo','sans-serif']
       },
     },
   },

@@ -32,6 +32,7 @@ export default function MenuBar(props: MenuBarProps) {
             closeDelay={400}
             width={150}
             position={props.isOfDrawers ? 'right-start' : 'bottom'}
+            withArrow
           >
             <Menu.Target>
               <Button className={styles.button}>
@@ -54,6 +55,7 @@ export default function MenuBar(props: MenuBarProps) {
             closeDelay={400}
             width={150}
             position={props.isOfDrawers ? 'right-start' : 'bottom'}
+            withArrow
           >
             <Menu.Target>
               <Button className={styles.button}>
