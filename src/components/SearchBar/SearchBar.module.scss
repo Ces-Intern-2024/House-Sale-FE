@@ -7,11 +7,15 @@
 }
 
 .btnOuter {
-  @apply flex justify-between outline-lime-700 outline outline-2 font-[1000] items-center cursor-pointer xs:px-5 px-2 bg-gray-200 text-lime-700 xs:h-[100%] h-[80%];
+  @apply flex justify-between outline-lime-700 outline outline-2
+   font-[1000] items-center cursor-pointer xs:px-5 px-2 bg-gray-200 
+   text-lime-700 xs:h-[100%] h-[80%];
 }
 
 .searchButton2 {
-  @apply flex items-center justify-evenly flex-grow outline-lime-700 outline outline-2 font-[1000] cursor-pointer px-5 bg-gray-200 text-lime-700 xs:h-[100%] h-[80%];
+  @apply flex items-center justify-evenly flex-grow outline-lime-700 
+  outline outline-2 font-[1000] cursor-pointer px-5 bg-gray-200 text-lime-700 
+  xs:h-[100%] h-[80%];
 }
 
 .flexBox {

@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 .footerContainer {
-  @apply w-full bg-primary h-[260px] mobile:h-full
+  @apply w-full bg-primary h-[260px] mobile:h-full bottom-0 relative
 }
 
 

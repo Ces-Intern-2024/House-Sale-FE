@@ -20,5 +20,5 @@
 
 .outerOfDrawers {
   @apply bg-[#396652]  px-5
-    justify-start py-2 lg:hidden xs:flex mobile:flex flex flex-col gap-y-2 h-[70vh];
+  justify-start py-2 lg:hidden xs:flex mobile:flex mobile:flex flex-col gap-y-2 h-[70vh];
 }
