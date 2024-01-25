@@ -5,7 +5,7 @@ import Container from '../../components/Container/Container'
 import FeaturedProperties from '../../components/FeaturedProperties/FeaturedProperties'
 // import Button from '../../components/Button/ButtonCustom'
 import BannerValue from '../../components/BannerValue/BannerValue'
-
+import BannerWelcome from '../../components/BannerWelcome/BannerWelcome'
 const HomePage = () => {
   return (
     <div>
@@ -34,6 +34,7 @@ const HomePage = () => {
           variant="filled"
           text="View more"
         /> */}
+        <BannerWelcome/>
       </Container>
     </div>
   )
