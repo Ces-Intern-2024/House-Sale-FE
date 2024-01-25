@@ -1,0 +1,58 @@
+.ContactContainer {
+  @apply bg-second font-archivo rounded-[20px]
+    lg:w-[420px] lg:px-[40px]
+    mobile:px-[40px];
+}
+
+.ContactContent {
+  @apply flex flex-col items-center border-none py-[80px];
+}
+
+.ContactPriceProperty {
+  @apply font-[500]
+    lg:text-[48px];
+}
+
+.ContactText {
+  @apply text-[12px] font-[500] tracking-[8px] mb-[50px];
+}
+
+.ContactInputContainer {
+  @apply w-full flex flex-col justify-between justify-center;
+}
+
+.ContactInputRow {
+  @apply mt-[16px];
+}
+
+.ContactInput {
+  @apply border-[1px] border-none;
+}
+
+.ContactSubmit {
+  @apply flex justify-center my-[20px] items-center;
+}
+
+.ContactInfoSeller {
+  @apply flex flex-col justify-center items-center font-archivo;
+}
+
+.ContactAvatar {
+  @apply mb-[20px] text-center;
+}
+
+.ContactInfoDetail {
+  @apply flex flex-col items-center;
+}
+
+.ContactNameSeller {
+  @apply text-[32px] font-[500];
+}
+
+.ContactPhoneEmail {
+  @apply flex flex-row items-center text-[20px] pt-[12px];
+}
+
+.ContactTextSeller {
+  @apply pl-[8px];
+}

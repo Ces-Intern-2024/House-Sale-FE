@@ -1,0 +1,33 @@
+.tableTitle {
+  @apply text-primary text-[20px] font-[600] font-archivo px-[20px] pt-[20px] pb-[12px];
+}
+
+.tableContent {
+  @apply border-[1px] border-b-0
+  lg:flex lg:flex-row 
+  mobile:flex mobile:flex-col;
+}
+
+.tableCol {
+  @apply w-3/6  text-[16px]
+  mobile:w-full;
+}
+
+.tableRow {
+  @apply w-full border-b-[1px] px-[16px]  py-[6px] 
+    flex flex-row;
+}
+
+.labelText {
+  @apply lg:w-3/6 block
+  mobile:w-full;
+}
+
+.value {
+  @apply lg:w-3/6 block
+  mobile:w-full;
+}
+
+.detailDescription {
+  @apply px-[20px] pb-[30px] whitespace-break-spaces;
+}
