@@ -7,11 +7,11 @@
 }
 
 .outer {
-  @apply mt-28 xl:px-[120px] md:px-[100px] px-[30px];
+  @apply mt-28 xl:px-[120px] md:px-[100px] px-[30px] pt-[40px];
 }
 
 .title {
-  @apply font-bold lg:text-[50px] md:text-[40px] text-[30px] font-kanit;
+  @apply font-bold lg:text-[50px] md:text-[40px] text-[30px] font-archivo;
 }
 
 .imgContainer {

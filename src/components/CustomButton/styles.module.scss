@@ -1,0 +1,8 @@
+@import '../../styles/_variables.scss';
+
+// .root {
+//   background-color: $main-color;
+// }
+.root {
+  @apply bg-primary 
+}
