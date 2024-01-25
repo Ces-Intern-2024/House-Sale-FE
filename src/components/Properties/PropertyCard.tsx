@@ -23,7 +23,9 @@ const Properties = ({ data }: Props) => {
           />
         </div>
         <div className="w-full">
-          <div className={style.propertyName}>{data.name}</div>
+          <div className={style.propertyName}>
+            <a href="/">{data.name}</a>
+          </div>
           <div className={style.propertyLocation}>
             <span className={style.propertyCoverIcon}>
               <FaLocationDot className={style.propertyIcon} size={16} />
