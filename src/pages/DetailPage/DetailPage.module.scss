@@ -1,0 +1,16 @@
+.container {
+  @apply w-full justify-between pt-[40px]
+    lg:px-[120px] lg:flex  lg:flex-row 
+    mobile:flex mobile:flex-col mobile:px-[30px];
+}
+
+.containerDesc {
+  @apply w-full bg-second rounded-[20px] 
+  lg:py-0
+  mobile:py-[20px];
+}
+
+.containerContact {
+  @apply lg:px-[20px] lg:py-0
+     mobile:py-[20px];
+}

@@ -1,31 +1,26 @@
-
 .bannerWelcomeContainer {
-  @apply  w-full xl:px-[80px] my-[60px] 
-  lg:px-[60px]
-  mobile:px-[20px]
+  @apply w-full  mt-[60px];
 }
 
 .bannerWelcomeContent {
-  @apply relative w-full xl:flex xl:flex-row rounded-[16px]
+  @apply relative w-full xl:flex xl:flex-row 
   mx-auto bg-blur mx-auto 
   lg:flex lg:flex-row lg:w-full 
-  mobile:flex mobile:flex-col mobile:pt-[20px]
+  mobile:flex mobile:flex-col mobile:pt-[20px];
 }
 
 .bannerWelcomeText {
   @apply z-[1] relative gap-x-[16px] gap-y-[16px] text-center flex-col justify-center items-center mx-auto  
   xl:flex xl:max-h-[500px] xl:max-w-[50%] xl:min-h-[500px] xl:min-w-[50%] 
   lg:flex lg:max-h-[500px] lg:max-w-[50%] lg:min-h-[500px] lg:min-w-[50%]
-  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%]
-    
+  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%];
 }
 
 .bannerWelcomeImage {
   @apply xl:absolute object-cover  justify-center items-center overflow-hidden rounded-tr-[16px] rounded-br-[16px]
   xl:bottom-0 xl:right-0 xl:h-[80%] xl:bg-[50%] xl:bg-no-repeat xl:bg-scroll 
   lg:absolute lg:bottom-0 lg:right-0 lg:h-[80%]
-  mobile:pt-[12px]
-
+  mobile:pt-[12px];
 }
 
 .wordWrapper {
@@ -38,11 +33,11 @@
 }
 
 .bannerSubTitle {
-  @apply lg:leading-[70px] font-[100] lg:text-[64px] font-[Inter_Sans] text-[#d7eb6e] italic font-[500]
+  @apply lg:leading-[70px] font-[100] lg:text-[64px] font-[Inter_Sans] text-primary italic font-[500]
   mobile:text-[32px] mobile:leading-[10px];
 }
 
-.bannerDescription{
+.bannerDescription {
   @apply max-w-[420px] text-[18px] font-[600]
-  mobile:max-w-[300px]
+  mobile:max-w-[300px];
 }
