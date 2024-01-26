@@ -1,0 +1,15 @@
+.outer {
+  @apply my-10 xl:px-[120px] md:px-[100px] px-[30px];
+}
+
+.title {
+  @apply text-[50px] mobile:text-[30px] font-semibold font-kanit mb-1;
+}
+
+.underline {
+  @apply w-[80px] h-[4px] bg-[#209c24] block mx-0 mb-[30px];
+}
+
+.carouselItem {
+  @apply cursor-pointer mx-[10px] h-[100%];
+}

@@ -1,0 +1,24 @@
+.slide {
+  @apply lg:h-[670px] xs:h-[500px] mobile:h-[400px];
+}
+
+.slideImage {
+  @apply w-[100%] h-[100%] object-contain;
+}
+
+.outer {
+  @apply mt-28 xl:px-[120px] md:px-[100px] px-[30px];
+}
+
+.title {
+  @apply font-bold lg:text-[50px] md:text-[40px] text-[30px] font-kanit;
+}
+
+.imgContainer {
+  @apply grid gap-1 xl:grid-cols-2 xl:grid-rows-1 lg:grid-cols-1 lg:grid-rows-2 md:grid-cols-1 md:grid-rows-2 xs:grid-cols-1 xs:grid-rows-2 mobile:grid-cols-1 mobile:grid-rows-2 cursor-pointer 
+    h-[90vh] mobile:h-[70vh];
+}
+
+.img {
+  @apply w-[100%] h-[100%] object-fill;
+}
