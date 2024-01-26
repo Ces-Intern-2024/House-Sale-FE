@@ -1,0 +1,8 @@
+.mapContainer {
+  @apply outline outline-gray-200 pt-3 rounded-sm xl:mx-[120px] md:mx-[100px] 
+    mx-[30px] mb-7;
+}
+
+.mapFont {
+  @apply text-[22px] font-semibold font-archivo pb-3 ml-5;
+}

@@ -5,13 +5,15 @@ import '@mantine/core/styles.css'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layouts/CommonLayout/Layout'
 import HomePage from './pages/HomePage/HomePage'
+import DetailPage from './pages/DetailPage/DetailPage'
 
 function App() {
   return (
     <MantineProvider>
       <Routes>
         <Route path="/" element={<Layout></Layout>}>
-          <Route path='/' element={<HomePage/>}></Route>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/details" element={<DetailPage></DetailPage>}></Route>
         </Route>
       </Routes>
     </MantineProvider>
