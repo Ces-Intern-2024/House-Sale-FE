@@ -6,13 +6,14 @@ import styles from './SlideShow.module.scss'
 import SearchBar from '../SearchBar/SearchBar'
 
 export default function SlideShow() {
-  const autoplay = useRef(Autoplay({ delay: 3000 }))
+  const autoplay = useRef(Autoplay({ delay: 7000 }))
   const images = [
+    'https://cf.bstatic.com/xdata/images/hotel/max1280x900/408497438.jpg?k=de7739e09eae2df6bd51044356ddbd5248ff557b6190edd1ea1c5db94f0454af&o=&hp=1',
     'https://www.riccicoproperty.vn/themes/ricci/images/house_wide_view-min.jpg',
     'https://www.riccicoproperty.vn/themes/ricci/images/9-min.png',
-    'https://www.riccicoproperty.vn/themes/ricci/images/3-min.png',
-    'https://www.riccicoproperty.vn/themes/ricci/images/6-min.png',
-    'https://www.riccicoproperty.vn/themes/ricci/images/10-min.png',
+
+    'https://www.bhg.com/thmb/dgy0b4w_W0oUJUxc7M4w3H4AyDo=/1866x0/filters:no_upscale():strip_icc()/living-room-gallery-shelves-l-shaped-couch-ELeyNpyyqpZ8hosOG3EG1X-b5a39646574544e8a75f2961332cd89a.jpg',
+    'https://stay.greatworld.com.sg/wp-content/uploads/2022/08/serviced-apartments-singapore.jpg-scaled.jpg',
   ]
 
   const slides = images.map((url) => {
@@ -37,7 +38,7 @@ export default function SlideShow() {
           loop
           dragFree
           height="100%"
-          className={styles.carousel}
+          // className={styles.carousel}
         >
           {slides}
         </Carousel>
