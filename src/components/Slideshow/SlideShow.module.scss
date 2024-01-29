@@ -28,7 +28,7 @@
 }
 
 .smallText {
-  @apply col-auto text-white font-bold mobile:text-sm xs:text-lg;
+  @apply text-white font-bold lg:text-2xl xs:text-xl mobile:text-sm;
 }
 
 .flexBox {

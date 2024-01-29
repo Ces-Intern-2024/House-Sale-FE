@@ -1,0 +1,31 @@
+.img {
+  @apply h-[50px] w-[170px];
+}
+
+.header {
+  @apply bg-primary flex items-center px-7 justify-between;
+}
+
+.navBar {
+  @apply bg-white flex flex-col sm:justify-between sm:items-center py-10 mobile:items-start mobile:justify-center mobile:px-10 sm:px-0 grow;
+}
+
+.navBarInner {
+  @apply flex flex-col gap-3 cursor-pointer grow;
+}
+
+.navItem {
+  @apply flex items-center gap-3 p-3 mobile:hover:bg-[#d3a62e] grow;
+}
+
+.navText {
+  @apply font-bold text-[green];
+}
+
+.main {
+  @apply bg-second;
+}
+
+.root {
+  @apply lg:hidden;
+}

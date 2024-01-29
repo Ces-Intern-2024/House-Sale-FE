@@ -1,17 +1,10 @@
 .button {
-  @apply bg-transparent border-none outline-none text-white hover:text-black hover:bg-white hover:rounded-[50%];
+  @apply text-white focus:bg-gray-50 focus:text-black focus:rounded-[50%] 
+  hover:bg-gray-50 hover:text-black hover:rounded-[50%];
 }
 
 .outer {
-  @apply bg-[#396652]  items-center justify-center py-2 lg:flex xs:hidden hidden;
-}
-
-.login {
-  @apply flex items-center  text-[#0ba1e4] font-semibold;
-}
-
-.loginBtn {
-  @apply text-white hover:text-black p-1 hover:bg-white hover:rounded-[50%];
+  @apply bg-[#396652] items-center justify-center py-2 lg:flex xs:hidden hidden;
 }
 
 .icon {
@@ -20,5 +13,9 @@
 
 .outerOfDrawers {
   @apply bg-[#396652]  px-5
-  justify-start py-2 lg:hidden xs:flex mobile:flex mobile:flex flex-col gap-y-2 h-[70vh];
+  justify-start py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-2 h-[70vh];
+}
+
+.dropdown {
+  @apply hover:bg-slate-200;
 }

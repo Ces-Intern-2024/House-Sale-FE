@@ -41,7 +41,6 @@ const HomePage = () => {
             />
           </div>
         </FeaturedProperties>
-
         <BannerWelcome />
       </Container>
     </div>
