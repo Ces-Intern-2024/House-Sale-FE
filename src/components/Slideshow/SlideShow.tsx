@@ -3,10 +3,11 @@ import { Carousel } from '@mantine/carousel'
 import { Image } from '@mantine/core'
 import Autoplay from 'embla-carousel-autoplay'
 import styles from './SlideShow.module.scss'
-import SearchBar from '../SearchBar/SearchBar'
+import TextSearchBar from '../SearchBar/TextSearchBar'
 
 export default function SlideShow() {
-  const autoplay = useRef(Autoplay({ delay: 7000 }))
+  const DELAY_TIME = 7000
+  const autoplay = useRef(Autoplay({ delay: DELAY_TIME }))
   const images = [
     'https://cf.bstatic.com/xdata/images/hotel/max1280x900/408497438.jpg?k=de7739e09eae2df6bd51044356ddbd5248ff557b6190edd1ea1c5db94f0454af&o=&hp=1',
     'https://www.riccicoproperty.vn/themes/ricci/images/house_wide_view-min.jpg',
@@ -46,12 +47,12 @@ export default function SlideShow() {
         <div className={styles.overlay}>
           <div className={styles.flexBox}>
             <h1 className={styles.largeText}>Find the perfect home</h1>
-            <h1 className={styles.smallText}>
+            <h6 className={styles.smallText}>
               Your dreams are in trusted hands
-            </h1>
+            </h6>
           </div>
 
-          <SearchBar />
+          <TextSearchBar />
         </div>
       </div>
     </>

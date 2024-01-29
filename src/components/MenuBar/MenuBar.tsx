@@ -1,24 +1,20 @@
 import React from 'react'
-import { Menu, Button, Avatar } from '@mantine/core'
+import { Menu, Button } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import styles from './MenuBar.module.scss'
 
 interface MenuBarProps {
   isOfDrawers: boolean
 }
-export default function MenuBar(props: MenuBarProps) {
+export default function MenuBar({ isOfDrawers }: MenuBarProps) {
+  const OPEN_DELAY = 100
+  const CLOSE_DELAY = 400
+
   return (
     <>
-      <div className={props.isOfDrawers ? styles.outerOfDrawers : styles.outer}>
+      <div className={isOfDrawers ? styles.outerOfDrawers : styles.outer}>
         <div>
-          <Menu trigger="click-hover" openDelay={100} closeDelay={400}>
-            <Menu.Target>
-              <Button className={styles.button}>HOME</Button>
-            </Menu.Target>
-          </Menu>
-        </div>
-        <div>
-          <Menu trigger="click-hover" openDelay={100} closeDelay={400}>
+          <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
               <Button className={styles.button}>ABOUT US</Button>
             </Menu.Target>
@@ -28,33 +24,10 @@ export default function MenuBar(props: MenuBarProps) {
         <div>
           <Menu
             trigger="click-hover"
-            openDelay={100}
-            closeDelay={400}
+            openDelay={OPEN_DELAY}
+            closeDelay={CLOSE_DELAY}
             width={150}
-            position={props.isOfDrawers ? 'right-start' : 'bottom'}
-            withArrow
-          >
-            <Menu.Target>
-              <Button className={styles.button}>
-                FOR SALE
-                <IconChevronDown className={styles.icon} />
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item>Search</Menu.Item>
-              <Menu.Item>House</Menu.Item>
-              <Menu.Item>Apartment</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </div>
-
-        <div>
-          <Menu
-            trigger="click-hover"
-            openDelay={100}
-            closeDelay={400}
-            width={150}
-            position={props.isOfDrawers ? 'right-start' : 'bottom'}
+            position={isOfDrawers ? 'right-start' : 'bottom'}
             withArrow
           >
             <Menu.Target>
@@ -64,25 +37,53 @@ export default function MenuBar(props: MenuBarProps) {
               </Button>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Item>Search</Menu.Item>
-              <Menu.Item>House</Menu.Item>
-              <Menu.Item>Apartment</Menu.Item>
+              <Menu.Item className={styles.dropdown}>Search</Menu.Item>
+              <Menu.Item className={styles.dropdown}>House</Menu.Item>
+              <Menu.Item className={styles.dropdown}>Apartment</Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </div>
 
         <div>
-          <Menu trigger="click-hover" openDelay={100} closeDelay={400}>
+          <Menu
+            trigger="click-hover"
+            openDelay={OPEN_DELAY}
+            closeDelay={CLOSE_DELAY}
+            width={150}
+            position={isOfDrawers ? 'right-start' : 'bottom'}
+            withArrow
+          >
+            <Menu.Target>
+              <Button className={styles.button}>
+                FOR SALE
+                <IconChevronDown className={styles.icon} />
+              </Button>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item className={styles.dropdown}>Search</Menu.Item>
+              <Menu.Item className={styles.dropdown}>House</Menu.Item>
+              <Menu.Item className={styles.dropdown}>Apartment</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
+
+        <div>
+          <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
               <Button className={styles.button}>CONTACT</Button>
             </Menu.Target>
           </Menu>
         </div>
-        <div className={styles.login}>
-          <Avatar color="white" />
-          <a href="#" className={styles.loginBtn}>
-            Log In
-          </a>
+
+        <div>
+          <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
+            <Menu.Target>
+              <div className="flex">
+                {/* <Avatar color="white" /> */}
+                <Button className={styles.button}>LOG IN</Button>
+              </div>
+            </Menu.Target>
+          </Menu>
         </div>
       </div>
     </>

@@ -1,5 +1,5 @@
 .outer {
-  @apply bg-[#396652] justify-between lg:px-10 xs:px-7 mobile:px-5 px-5 flex 
+  @apply bg-primary justify-between lg:px-16 xs:px-10 mobile:px-7  flex 
   lg:h-[6rem] xs:h-[5rem] mobile:h-[5rem] 
    items-center z-[999];
 }
@@ -9,5 +9,5 @@
 }
 
 .logoOuter {
-  @apply lg:h-[65%] xs:h-[50%] h-[50%];
+  @apply lg:h-[60%] xs:h-[50%] h-[50%];
 }
