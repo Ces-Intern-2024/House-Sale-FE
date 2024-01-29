@@ -1,0 +1,15 @@
+.wrapper {
+  @apply lg:w-[450px] md:w-[400px] xs:w-[350px] mobile:w-[270px] md:py-5  mobile:py-4;
+}
+
+.input {
+  @apply bg-gray-50  border border-[#73a8d7] text-primary font-medium;
+}
+
+.section {
+  @apply bg-teal-100 h-[52%] top-[24%] w-[66px];
+}
+
+.icon {
+  @apply text-green-600 hover:text-cyan-600;
+}
