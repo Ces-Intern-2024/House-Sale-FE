@@ -1,0 +1,74 @@
+.creditContainer {
+  @apply p-[20px] w-full;
+}
+
+.creditContent {
+  @apply flex flex-row gap-[20px];
+}
+
+.creditNoti {
+  @apply flex flex-col border-[1px] w-[40%] py-[8px] px-[12px] rounded-[16px] h-[150px];
+}
+
+.title {
+  @apply flex flex-row  items-center gap-[12px];
+}
+
+.titleText {
+  @apply font-archivo text-[24px] font-[600] text-primary text-center;
+}
+
+.titleIcon {
+  @apply text-primary text-[24px];
+}
+
+.detailNoti {
+  @apply overflow-y-scroll;
+}
+.row {
+  @apply flex flex-row items-center justify-start border-b-[1px];
+}
+
+.date {
+  @apply w-[40%];
+}
+
+.content {
+  @apply w-[40%];
+}
+
+.quantity {
+  @apply w-[10%] flex flex-row items-center;
+}
+
+.symbol {
+  @apply text-[14px] w-[16px] font-[700] text-center;
+}
+
+.money {
+  @apply font-[600];
+}
+
+.icon {
+  @apply ml-[4px] text-primary;
+}
+
+.creditCurrent {
+  @apply w-[20%] border-[1px] rounded-[16px] py-[8px] px-[12px];
+}
+
+.creditCurrentRow {
+  @apply flex flex-row items-center gap-[12px] justify-center;
+}
+
+.creditAmount {
+  @apply text-[30px] font-[600];
+}
+
+.creditIcon {
+  @apply text-[30px] text-primary;
+}
+
+.creditBtn {
+  @apply text-right mt-[8px] w-full;
+}
