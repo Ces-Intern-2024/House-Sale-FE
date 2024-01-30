@@ -1,7 +1,7 @@
 import { SET_IS_SMALL_SCREEN } from '../action'
 
 const initialState = {
-  isSmallScreen: false,
+  isSmallScreen: null,
 }
 
 const resizeReducer = (state = initialState, action: any) => {

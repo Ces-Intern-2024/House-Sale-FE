@@ -7,19 +7,34 @@
 }
 
 .navBar {
-  @apply bg-white flex flex-col sm:justify-between sm:items-center py-10 mobile:items-start mobile:justify-center mobile:px-10 sm:px-0 grow;
+  @apply bg-white flex flex-col
+  md:justify-between md:items-center sm:justify-start sm:items-center 
+  py-10 mobile:items-center mobile:justify-start mobile:px-10 sm:px-10;
 }
 
 .navBarInner {
-  @apply flex flex-col gap-3 cursor-pointer grow;
+  @apply flex flex-col gap-3 cursor-pointer md:w-auto mobile:w-[100%];
 }
 
 .navItem {
-  @apply flex items-center gap-3 p-3 mobile:hover:bg-[#d3a62e] grow;
+  @apply flex items-center gap-3 p-3 hover:bg-[#1b2850]
+   text-[#212b36] hover:text-white grow;
+
+  &:hover .navIcon {
+    color: white;
+  }
+}
+
+.navIcon {
+  @apply text-[#212b36];
 }
 
 .navText {
-  @apply font-bold text-[green];
+  @apply font-bold mobile:visible;
+}
+
+.burger {
+  @apply text-white;
 }
 
 .main {
@@ -27,5 +42,5 @@
 }
 
 .root {
-  @apply lg:hidden;
+  @apply lg:hidden md:hidden mobile:visible;
 }

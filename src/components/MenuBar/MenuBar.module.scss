@@ -1,6 +1,6 @@
 .button {
-  @apply text-white focus:bg-gray-50 focus:text-black focus:rounded-[50%] 
-  hover:bg-gray-50 hover:text-black hover:rounded-[50%];
+  @apply text-white 
+  hover:bg-slate-100 hover:text-black hover:rounded-[50%] font-bold;
 }
 
 .outer {
@@ -12,7 +12,7 @@
 }
 
 .outerOfDrawers {
-  @apply bg-[#396652]  px-5
+  @apply bg-[#396652] px-5
   justify-start py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-2 h-[70vh];
 }
 
