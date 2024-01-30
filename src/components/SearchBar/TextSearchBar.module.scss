@@ -3,13 +3,17 @@
 }
 
 .input {
-  @apply bg-gray-50  border border-[#73a8d7] text-primary font-medium;
+  @apply bg-gray-50  border border-[#73a8d7]  font-medium;
 }
 
 .section {
-  @apply bg-teal-100 h-[52%] top-[24%] w-[66px];
+  @apply bg-teal-100 hover:bg-orange-100 h-[52%] top-[24%] w-[66px];
+
+  &:hover .icon {
+    color: rgba(255, 166, 0, 0.961);
+  }
 }
 
 .icon {
-  @apply text-green-600 hover:text-cyan-600;
+  @apply text-green-600;
 }

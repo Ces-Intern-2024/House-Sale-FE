@@ -7,8 +7,8 @@ interface MenuBarProps {
   isOfDrawers: boolean
 }
 export default function MenuBar({ isOfDrawers }: MenuBarProps) {
-  const OPEN_DELAY = 100
-  const CLOSE_DELAY = 400
+  const OPEN_DELAY = 50
+  const CLOSE_DELAY = 50
 
   return (
     <>
@@ -23,7 +23,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
 
         <div>
           <Menu
-            trigger="click-hover"
+            trigger="hover"
             openDelay={OPEN_DELAY}
             closeDelay={CLOSE_DELAY}
             width={150}
@@ -46,7 +46,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
 
         <div>
           <Menu
-            trigger="click-hover"
+            trigger="hover"
             openDelay={OPEN_DELAY}
             closeDelay={CLOSE_DELAY}
             width={150}

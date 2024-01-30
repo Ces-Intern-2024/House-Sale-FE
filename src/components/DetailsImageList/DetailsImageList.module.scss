@@ -6,10 +6,6 @@
   @apply w-[100%] h-[100%] object-contain;
 }
 
-.outer {
-  @apply mt-28 xl:px-[120px] md:px-[100px] px-[30px] pt-[40px];
-}
-
 .title {
   @apply font-bold lg:text-[50px] md:text-[40px] text-[30px] font-archivo;
 }

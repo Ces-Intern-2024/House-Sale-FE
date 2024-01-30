@@ -4,6 +4,7 @@ import 'react-multi-carousel/lib/styles.css'
 import { properties } from '../../utils/properties'
 import PropertyCard from '../Properties/PropertyCard'
 import styles from './MultiCarousel.module.scss'
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 
 export default function MultiCarousel() {
   const responsive = {
@@ -35,11 +36,35 @@ export default function MultiCarousel() {
       <div className={styles.outer}>
         <h1 className={styles.title}>FEATURED</h1>
         <span className={styles.underline}></span>
-        <Carousel responsive={responsive} autoPlay={true} infinite={true}>
-          {properties.map((el, index) => {
+        <Carousel
+          arrows={true}
+          responsive={responsive}
+          autoPlay={true}
+          infinite={true}
+          customLeftArrow={
+            <IconChevronLeft
+              size="xl"
+              color="black"
+              className={styles.leftArrow}
+            ></IconChevronLeft>
+          }
+          customRightArrow={
+            <IconChevronRight
+              size="xl"
+              color="black"
+              className={styles.rightArrow}
+            ></IconChevronRight>
+          }
+        >
+          {properties.map((carouselItem, index) => {
             return (
-              <div className={styles.carouselItem} key={index}>
-                <PropertyCard key={el.propertyId} data={el} />
+              <div key={index} className="py-3">
+                <div className={styles.carouselItem}>
+                  <PropertyCard
+                    key={carouselItem.propertyId}
+                    data={carouselItem}
+                  />
+                </div>
               </div>
             )
           })}
