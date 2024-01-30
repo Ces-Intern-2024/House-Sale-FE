@@ -8,6 +8,8 @@ import {
   Select,
   ComboboxItem,
   OptionsFilter,
+  PasswordInput,
+  Stack,
 } from '@mantine/core'
 import {
   IconCamera,
@@ -15,6 +17,7 @@ import {
   IconDiscountCheckFilled,
 } from '@tabler/icons-react'
 import styles from './SellerProfile.module.scss'
+import { useDisclosure } from '@mantine/hooks'
 
 const optionsFilter: OptionsFilter = ({ options, search }) => {
   const splittedSearch = search.toLowerCase().trim().split(' ')
@@ -25,180 +28,231 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
     )
   })
 }
-
+/**
+ * The comments are kept in case we wanna use it in the future.
+ */
 export default function SellerProfile() {
   const [file, setFile] = useState<File | null>(null)
   const [nameEditing, setNameEditing] = useState(false)
-  const [emailEditing, setEmailEditing] = useState(false)
   const [phoneEditing, setPhoneEditing] = useState(false)
-  const [addressEditing, setAddressEditing] = useState(false)
   const nameInputRef: any = useRef(null)
-  const emailInputRef: any = useRef(null)
   const phoneInputRef: any = useRef(null)
-  const addressInputRef: any = useRef(null)
+  const [visible, { toggle }] = useDisclosure(false)
+  // const [emailEditing, setEmailEditing] = useState(false)
+  // const [addressEditing, setAddressEditing] = useState(false)
+  // const emailInputRef: any = useRef(null)
+  // const addressInputRef: any = useRef(null)
 
   return (
     <>
-      <div className="bg-white rounded-[5px] w-full min-h-[500px] p-5">
-        <h1 className="text-[30px] font-semibold">My Profile</h1>
+      <div className={styles.container}>
+        <h1 className={styles.heading}>My Profile</h1>
         <Divider my="md" />
-        <div className=" flex gap-7 items-start md:flex-row mobile:flex-col">
+        <div className={styles.outer}>
           <div className={styles.imgOuter}>
-            <div className="flex flex-col h-[100%] justify-between">
+            <div className={styles.imgInner}>
               <Avatar
                 src={file ? URL.createObjectURL(file) : undefined}
                 size={150}
-                className="outline outline-2 outline-blue-200"
+                className={styles.avatar}
               ></Avatar>
               <FileButton onChange={setFile} accept="image/png,image/jpeg">
                 {(props) => (
-                  <Button {...props} color="blue" bg="#FFA836">
-                    <IconCamera className=" mr-1" />
+                  <Button {...props} className={styles.uploadBtn}>
+                    <IconCamera className="mr-1" />
                     Upload Image
                   </Button>
                 )}
               </FileButton>
             </div>
           </div>
-          <div className="flex flex-col gap-y-5">
-            <TextInput
-              id="name"
-              className=" font-semibold"
-              size="md"
-              w="400px"
-              label="Your name"
-              ref={nameInputRef}
-              placeholder="Ms.Roseanne Park"
-              defaultValue="Roseanne Park"
-              readOnly={nameEditing ? false : true}
-              rightSection={
-                !nameEditing ? (
-                  <IconPencil
-                    onClick={() => {
-                      setNameEditing(true)
-                      nameInputRef.current.focus()
-                    }}
-                    className=" cursor-pointer"
-                  ></IconPencil>
-                ) : (
-                  <IconDiscountCheckFilled
-                    onClick={() => setNameEditing(false)}
-                    className=" text-blue-500 cursor-pointer"
-                  />
-                )
-              }
-            />
-            <TextInput
-              id="email"
-              size="md"
-              w="400px"
-              label="Email"
-              ref={emailInputRef}
-              placeholder="Email"
-              defaultValue="roseannepark@gmail.com"
-              readOnly={emailEditing ? false : true}
-              rightSection={
-                !emailEditing ? (
-                  <IconPencil
-                    onClick={() => {
-                      setEmailEditing(true)
-                      emailInputRef.current.focus()
-                    }}
-                    className=" cursor-pointer"
-                  ></IconPencil>
-                ) : (
-                  <IconDiscountCheckFilled
-                    onClick={() => setEmailEditing(false)}
-                    className=" text-blue-500 cursor-pointer"
-                  />
-                )
-              }
-            />
-
-            <TextInput
-              id="phone"
-              size="md"
-              w="400px"
-              label="Phone Number"
-              ref={phoneInputRef}
-              placeholder="Phone Number"
-              defaultValue="0222777111"
-              readOnly={phoneEditing ? false : true}
-              rightSection={
-                !phoneEditing ? (
-                  <IconPencil
-                    onClick={() => {
-                      setPhoneEditing(true)
-                      phoneInputRef.current.focus()
-                    }}
-                    className=" cursor-pointer"
-                  ></IconPencil>
-                ) : (
-                  <IconDiscountCheckFilled
-                    onClick={() => setPhoneEditing(false)}
-                    className=" text-blue-500 cursor-pointer"
-                  />
-                )
-              }
-            />
-
-            <TextInput
-              id="address"
-              size="md"
-              w="400px"
-              label="Address"
-              ref={addressInputRef}
-              placeholder="Address"
-              defaultValue="27 Le Do Street"
-              readOnly={addressEditing ? false : true}
-              rightSection={
-                !addressEditing ? (
-                  <IconPencil
-                    onClick={() => {
-                      setAddressEditing(true)
-                      addressInputRef.current.focus()
-                    }}
-                    className=" cursor-pointer"
-                  ></IconPencil>
-                ) : (
-                  <IconDiscountCheckFilled
-                    onClick={() => setAddressEditing(false)}
-                    className=" text-blue-500 cursor-pointer"
-                  />
-                )
-              }
-            />
-            <div className=" flex gap-3">
-              <Select
-                className=" w-[50%]"
-                checkIconPosition="right"
-                label="District"
-                placeholder="Pick value"
-                data={['React', 'Angular', 'Vue', 'Svelte']}
-                filter={optionsFilter}
-                searchable
-                comboboxProps={{
-                  position: 'bottom',
-                  offset: 0,
-                  transitionProps: { transition: 'pop', duration: 200 },
-                }}
+          <div className={styles.personalInfoOuter}>
+            <h1 className={styles.title}>Personal Information</h1>
+            <Stack>
+              <TextInput
+                id="name"
+                className="font-semibold"
+                size="md"
+                w="100%"
+                label="Your name"
+                ref={nameInputRef}
+                placeholder="Ms.Roseanne Park"
+                defaultValue="Roseanne Park"
+                readOnly={nameEditing ? false : true}
+                rightSection={
+                  !nameEditing ? (
+                    <IconPencil
+                      onClick={() => {
+                        setNameEditing(true)
+                        nameInputRef.current.focus()
+                      }}
+                      className="cursor-pointer"
+                    ></IconPencil>
+                  ) : (
+                    <IconDiscountCheckFilled
+                      onClick={() => setNameEditing(false)}
+                      className={styles.editIcon}
+                    />
+                  )
+                }
+              />
+              <TextInput
+                id="email"
+                size="md"
+                w="100%"
+                label="Email"
+                placeholder="Email"
+                defaultValue="roseannepark@gmail.com"
+                readOnly
+                // ref={emailInputRef}
+                // readOnly={emailEditing ? false : true}
+                // rightSection={
+                //   !emailEditing ? (
+                //     <IconPencil
+                //       onClick={() => {
+                //         setEmailEditing(true)
+                //         emailInputRef.current.focus()
+                //       }}
+                //       className=" cursor-pointer"
+                //     ></IconPencil>
+                //   ) : (
+                //     <IconDiscountCheckFilled
+                //       onClick={() => setEmailEditing(false)}
+                //       className=" text-blue-500 cursor-pointer"
+                //     />
+                //   )
+                // }
               />
 
-              <Select
-                className=" w-[50%]"
-                checkIconPosition="right"
-                label="City"
-                placeholder="Pick value"
-                data={['Danang', 'HCM', 'Hanoi', 'Hai Phong']}
-                filter={optionsFilter}
-                searchable
-                comboboxProps={{
-                  position: 'bottom',
-                  offset: 0,
-                  transitionProps: { transition: 'pop', duration: 200 },
-                }}
+              <TextInput
+                id="phone"
+                size="md"
+                w="100%"
+                label="Phone Number"
+                ref={phoneInputRef}
+                placeholder="Phone Number"
+                defaultValue="0222777111"
+                readOnly={phoneEditing ? false : true}
+                rightSection={
+                  !phoneEditing ? (
+                    <IconPencil
+                      onClick={() => {
+                        setPhoneEditing(true)
+                        phoneInputRef.current.focus()
+                      }}
+                      className="cursor-pointer"
+                    ></IconPencil>
+                  ) : (
+                    <IconDiscountCheckFilled
+                      onClick={() => setPhoneEditing(false)}
+                      className={styles.editIcon}
+                    />
+                  )
+                }
               />
-            </div>
+
+              <TextInput
+                id="address"
+                size="md"
+                w="100%"
+                label="Address"
+                placeholder="Address"
+                defaultValue="27 Le Do Street"
+                readOnly
+                // ref={addressInputRef}
+                // readOnly={addressEditing ? false : true}
+                // rightSection={
+                //   !addressEditing ? (
+                //     <IconPencil
+                //       onClick={() => {
+                //         setAddressEditing(true)
+                //         addressInputRef.current.focus()
+                //       }}
+                //       className=" cursor-pointer"
+                //     ></IconPencil>
+                //   ) : (
+                //     <IconDiscountCheckFilled
+                //       onClick={() => setAddressEditing(false)}
+                //       className=" text-blue-500 cursor-pointer"
+                //     />
+                //   )
+                // }
+              />
+              <div className=" flex gap-x-3">
+                <Select
+                  readOnly
+                  size="md"
+                  classNames={{ label: styles.label }}
+                  w="50%"
+                  checkIconPosition="right"
+                  label="District"
+                  placeholder="Thanh Khe"
+                  data={['Thanh Khe', 'Hai Chau', 'Lien Chieu', 'Cam Le']}
+                  filter={optionsFilter}
+                  searchable
+                  comboboxProps={{
+                    position: 'bottom',
+                    offset: 0,
+                    transitionProps: { transition: 'pop', duration: 200 },
+                  }}
+                />
+
+                <Select
+                  readOnly
+                  size="md"
+                  w="50%"
+                  classNames={{ label: styles.label }}
+                  checkIconPosition="right"
+                  label="City"
+                  placeholder="Danang"
+                  data={['Danang', 'HCM', 'Hanoi', 'Hai Phong']}
+                  filter={optionsFilter}
+                  searchable
+                  comboboxProps={{
+                    position: 'bottom',
+                    offset: 0,
+                    transitionProps: { transition: 'pop', duration: 200 },
+                  }}
+                />
+              </div>
+              <div className={styles.btnContainer}>
+                <Button size="md" className={styles.btn}>
+                  Save Changes
+                </Button>
+              </div>
+            </Stack>
+          </div>
+
+          <div className={styles.pwContainer}>
+            <h1 className={styles.title}>Change Password</h1>
+            <Stack>
+              <PasswordInput
+                size="md"
+                label="Current Password"
+                defaultValue="secret"
+                visible={visible}
+                onVisibilityChange={toggle}
+              />
+              <PasswordInput
+                size="md"
+                label="New Password"
+                defaultValue="secret"
+                visible={visible}
+                onVisibilityChange={toggle}
+              />
+              <PasswordInput
+                size="md"
+                label="Confirm Password"
+                defaultValue="secret"
+                visible={visible}
+                onVisibilityChange={toggle}
+              />
+              <div className={styles.btnContainer}>
+                <Button size="md" className={styles.btn}>
+                  Confirm
+                </Button>
+              </div>
+            </Stack>
           </div>
         </div>
       </div>

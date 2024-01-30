@@ -1,9 +1,61 @@
+.container {
+  @apply bg-white rounded-[5px] min-h-[500px] p-5;
+}
+
+.outer {
+  @apply flex gap-7 mobile:items-center md:flex-row mobile:flex-col md:justify-start md:items-start mobile:justify-center;
+}
+
+.heading {
+  @apply text-[30px] font-semibold;
+}
+
+.title {
+  @apply font-bold text-[30px] mb-3;
+}
+
 .imgOuter {
   @apply w-[250px] h-[250px] flex flex-col justify-center items-center 
-    py-5 rounded-[14px] mt-6;
+    py-5 rounded-[14px] md:mt-16 mt-3  flex-shrink-0;
 
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9VW0YJ_BK5Bsh_jC7RV5PjPcIZEznjL4d-g&usqp=CAU');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.imgInner {
+  @apply flex flex-col h-[100%] justify-between;
+}
+
+.avatar {
+  @apply outline outline-2 outline-blue-200;
+}
+
+.label {
+  @apply text-[16px];
+}
+
+.btn {
+  @apply mt-6 bg-[#1b2850] hover:bg-[#FFA836] w-[50%];
+}
+
+.uploadBtn {
+  @apply bg-[#1b2850] hover:bg-[#FFA836];
+}
+
+.personalInfoOuter {
+  @apply flex flex-col w-full;
+}
+
+.editIcon {
+  @apply text-blue-500 cursor-pointer;
+}
+
+.btnContainer {
+  @apply flex md:justify-end mobile:justify-center;
+}
+
+.pwContainer {
+  @apply flex flex-col w-full justify-center;
 }
