@@ -1,7 +1,7 @@
 .container {
   @apply w-full justify-between pt-[40px]
-    lg:px-[120px] lg:flex  lg:flex-row 
-    mobile:flex mobile:flex-col mobile:px-[30px];
+     lg:flex  lg:flex-row 
+    mobile:flex mobile:flex-col;
 }
 
 .containerDesc {
@@ -11,6 +11,10 @@
 }
 
 .containerContact {
-  @apply lg:px-[20px] lg:py-0
+  @apply lg:pl-[20px] lg:py-0
      mobile:py-[20px];
+}
+
+.outer {
+  @apply md:mt-20 mt-16 xl:px-[120px] md:px-[100px] px-[30px] mobile:pt-[20px] md:pt-[40px];
 }

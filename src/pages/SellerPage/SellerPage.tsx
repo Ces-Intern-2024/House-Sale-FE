@@ -1,5 +1,12 @@
+import SellerProfile from '../../components/Profile/SellerProfile'
 import React from 'react'
 
 export default function SellerPage() {
-  return <></>
+  return (
+    <>
+      <div>
+        <SellerProfile />
+      </div>
+    </>
+  )
 }

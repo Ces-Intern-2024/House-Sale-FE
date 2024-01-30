@@ -1,0 +1,9 @@
+.imgOuter {
+  @apply w-[250px] h-[250px] flex flex-col justify-center items-center 
+    py-5 rounded-[14px] mt-6;
+
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9VW0YJ_BK5Bsh_jC7RV5PjPcIZEznjL4d-g&usqp=CAU');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

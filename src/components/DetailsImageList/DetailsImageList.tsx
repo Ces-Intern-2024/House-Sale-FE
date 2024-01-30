@@ -31,7 +31,7 @@ export default function DetailsImageList() {
 
   return (
     <>
-      <div className={styles.outer}>
+      <div>
         <h1 className={styles.title}>Zen Apartment by Loft Affair</h1>
         <div className={styles.imgContainer}>
           <img
