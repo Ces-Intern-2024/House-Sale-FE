@@ -14,7 +14,7 @@ const Footer = () => {
         <div className={style.footerCol}>
           <div className={style.footerCoverLogo}>
             <Image src={logo} className={style.footerImage} />
-            <p>
+            <p className={style.footerSlogan}>
               Our portfolio includes exquisite properties nestled in prime
               locations renowned for their desirability.
             </p>
@@ -79,8 +79,8 @@ const Footer = () => {
         </div>
       </div>
       <div className={style.footerCopyRight}>
-          <FaRegCopyright />
-          2024 Modern House. All Rights Reserved
+        <FaRegCopyright />
+        2024 Modern House. All Rights Reserved
       </div>
     </div>
   )

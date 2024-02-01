@@ -5,8 +5,6 @@ import Container from '../../components/Container/Container'
 import FeaturedProperties from '../../components/FeaturedProperties/FeaturedProperties'
 import BannerValue from '../../components/BannerValue/BannerValue'
 import BannerWelcome from '../../components/BannerWelcome/BannerWelcome'
-import Button from '../../components/CustomButton/ButtonCustom'
-import style from './HomePage.module.scss'
 const HomePage = () => {
   return (
     <div>
@@ -16,15 +14,7 @@ const HomePage = () => {
           properties={properties}
           title="FEATURED FOR RENT"
           filter="rent"
-        >
-          <div className={style.buttonContainer}>
-            <Button
-              className="text-center mt-[20px]"
-              variant="filled"
-              text="View more"
-            />
-          </div>
-        </FeaturedProperties>
+        ></FeaturedProperties>
 
         <BannerValue />
 
@@ -32,15 +22,7 @@ const HomePage = () => {
           properties={properties}
           title="FEATURED FOR SALE"
           filter="sale"
-        >
-          <div className={style.buttonContainer}>
-            <Button
-              className="text-center mt-[20px]"
-              variant="filled"
-              text="View more"
-            />
-          </div>
-        </FeaturedProperties>
+        ></FeaturedProperties>
         <BannerWelcome />
       </Container>
     </div>

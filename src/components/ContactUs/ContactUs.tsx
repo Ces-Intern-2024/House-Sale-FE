@@ -4,27 +4,10 @@ import Button from '../CustomButton/ButtonCustom'
 import style from './ContactUs.module.scss'
 import { MdPerson2, MdEmail } from 'react-icons/md'
 import { FaPhoneAlt } from 'react-icons/fa'
-import { FaMessage } from 'react-icons/fa6'
-import { Group, Image } from '@mantine/core'
+import { Group, Image, Textarea } from '@mantine/core'
 import avatar from '../../assets/images/avatar.jpg'
-// import { useForm } from '@mantine/form'
-const ContactUs = () => {
-  // const form = useForm({
-  //   initialValues: {
-  //     fullName: '',
-  //     email: '',
-  //     phone: '',
-  //     message: '',
-  //   },
-  //   validate: {
-  //     fullName: (value) =>
-  //       value.length === 0 ? 'The name field cannot be empty' : null,
-  //     email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-  //     phone: (value) =>
-  //       value.length !== 10 ? 'The phone number includes 10 numbers' : null,
-  //   },
-  // })
 
+const ContactUs = () => {
   return (
     <div className={style.ContactContainer}>
       <div className={style.ContactContent}>
@@ -34,7 +17,7 @@ const ContactUs = () => {
           <form>
             <div className={style.ContactInputRow}>
               <Input
-                size="lg"
+                size="md"
                 radius="xl"
                 placeholder="Full Name"
                 className={style.ContactInput}
@@ -44,7 +27,7 @@ const ContactUs = () => {
             </div>
             <div className={style.ContactInputRow}>
               <Input
-                size="lg"
+                size="md"
                 radius="xl"
                 placeholder="Email"
                 className={style.ContactInput}
@@ -54,7 +37,7 @@ const ContactUs = () => {
             </div>
             <div className={style.ContactInputRow}>
               <Input
-                size="lg"
+                size="md"
                 radius="xl"
                 placeholder="Phone"
                 className={style.ContactInput}
@@ -63,22 +46,14 @@ const ContactUs = () => {
               ></Input>
             </div>
             <div className={style.ContactInputRow}>
-              <Input
-                size="lg"
-                radius="xl"
+              <Textarea
+                classNames={{ input: style.rootTextArea }}
                 placeholder="Message"
-                className={style.ContactInput}
-                leftS={<FaMessage size={16} color="green" />}
-                required
-              ></Input>
+              />
             </div>
             <div className={style.ContactSubmit}>
               <Group>
-                <Button
-                  variant="filled"
-                  text="SEND TO SELLER"
-                  // bg='red'
-                ></Button>
+                <Button variant="filled" text="SEND TO SELLER"></Button>
               </Group>
             </div>
           </form>
@@ -90,7 +65,7 @@ const ContactUs = () => {
               src={avatar}
               alt="avatar"
               radius="50%"
-              h={140}
+              h={100}
               w="auto"
               fit="cover"
             />
