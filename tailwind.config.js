@@ -19,14 +19,16 @@ module.exports = {
         label: 'rgb(4 120 87 / var(--tw-bg-opacity))',
         banner: '#f8fafc',
         second: 'rgb(241 245 249)',
+        orangeBtn: '#ff9f43',
+        darkBlue: '#1b2850',
+        subText: '#555',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],
         greatVibes: ['Great Vibes', 'cursive'],
-        kanit: ['Kanit','sans-serif'],
-        archivo: ['Archivo','sans-serif']
+        kanit: ['Kanit', 'sans-serif'],
+        archivo: ['Archivo', 'sans-serif'],
       },
-      
     },
   },
   plugins: [],

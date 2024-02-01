@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { AppShell, Burger, Group, Anchor, Breadcrumbs } from '@mantine/core'
+import {
+  AppShell,
+  Burger,
+  Group,
+  Anchor,
+  Breadcrumbs,
+  Divider,
+} from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import logo from '../../../assets/images/logo_transparent.png'
 import styles from './SellerLayout.module.scss'
@@ -78,19 +85,19 @@ export default function SellerLayout() {
             <div className={styles.navItem}>
               <IconDashboard className={styles.navIcon} size={ICON_SIZE} />
               {(!isSmallNav || isSmallScreen) && (
-                <h1 className={styles.navText}>DASHBOARD</h1>
+                <h1 className={styles.navText}>Dashboard</h1>
               )}
             </div>
             <div className={styles.navItem}>
               <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
               {(!isSmallNav || isSmallScreen) && (
-                <h1 className={styles.navText}>PROFILE</h1>
+                <h1 className={styles.navText}>Profile</h1>
               )}
             </div>
             <div className={styles.navItem}>
               <IconGraph className={styles.navIcon} size={ICON_SIZE} />
               {(!isSmallNav || isSmallScreen) && (
-                <h1 className={styles.navText}>REPORT</h1>
+                <h1 className={styles.navText}>Report</h1>
               )}
             </div>
           </div>
@@ -109,6 +116,7 @@ export default function SellerLayout() {
 
         <AppShell.Main className={styles.main}>
           <Breadcrumbs my="md">{paths}</Breadcrumbs>
+          <Divider size="xs" />
           <Outlet />
         </AppShell.Main>
       </AppShell>

@@ -95,7 +95,11 @@ const Credit = () => {
             </div>
           </div>
           <div className={style.creditBtn}>
-            <Button fullWidth text="Buy Credit"></Button>
+            <Button
+              classNames={{ root: style.rootButton }}
+              fullWidth
+              text="Buy Credit"
+            ></Button>
           </div>
         </div>
       </div>
