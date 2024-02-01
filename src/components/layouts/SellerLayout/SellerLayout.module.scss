@@ -44,3 +44,7 @@
 .root {
   @apply lg:hidden md:hidden mobile:visible;
 }
+
+.rootBreadCrumb {
+  @apply border-b-[1px];
+}

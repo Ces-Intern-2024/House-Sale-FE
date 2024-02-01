@@ -1,0 +1,115 @@
+@import '../../styles/_variables.scss';
+
+.tablePropertyContainer {
+  @apply m-[40px];
+}
+
+.tablePropertyContent {
+  @apply bg-white px-[12px] py-[8px] rounded-[15px];
+}
+
+.tableHeader {
+  @apply flex flex-row justify-between items-center;
+}
+
+.pageTitle {
+  @apply flex flex-col;
+}
+
+.title {
+  @apply text-[20px] font-[700] font-archivo text-primary;
+}
+
+.subTitle {
+  @apply font-[600] text-[16px];
+}
+
+.coverBtn {
+  @apply flex flex-row items-center;
+}
+
+.iconBtn {
+  @apply text-[16px] mr-[8px] font-[400] text-white;
+}
+
+.addBtn {
+  @apply bg-orangeBtn text-[16px] hover:bg-darkBlue;
+}
+
+.tableSideBar {
+  @apply flex flex-row justify-between mt-[40px];
+}
+
+.tableSelect {
+  @apply flex flex-row gap-[24px];
+}
+
+.tableSearch {
+}
+.input {
+  @apply w-[300px] focus:border-primary;
+}
+
+.elementSelect {
+  @apply focus:border-primary;
+}
+.iconSearch {
+  @apply bg-orangeBtn w-full leading-[36px] cursor-pointer py-[8px] h-full text-white rounded-[2px]
+    hover:bg-darkBlue;
+}
+
+.tableContent {
+  @apply mt-[40px] h-[600px];
+}
+
+.propertyNameModal {
+  @apply flex flex-row gap-[8px] items-center;
+}
+
+.propertyName {
+  @apply text-black text-[17px];
+}
+.propertyImage {
+  @apply min-w-[40px] w-[40px] h-[40px];
+}
+
+.propertyActions {
+  @apply flex flex-row items-center justify-evenly h-full;
+}
+
+.actionIcon {
+  @apply text-[20px] cursor-pointer;
+}
+
+.editIcon {
+  @apply text-orangeBtn;
+}
+
+.deleteIcon {
+  @apply text-[red];
+}
+
+.titleTable {
+  @apply text-[16px];
+}
+
+.detailContentTable {
+  @apply text-[16px];
+}
+
+// Modal
+
+.headerModal {
+  @apply bg-second;
+}
+.contentModal {
+  @apply bg-second;
+}
+
+.bodyModal {
+  @apply px-[40px] py-[20px];
+}
+
+.titleModal {
+  @apply text-[20px] font-[700] font-archivo;
+}

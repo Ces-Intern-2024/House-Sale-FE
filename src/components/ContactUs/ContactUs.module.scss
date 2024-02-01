@@ -1,20 +1,21 @@
 .ContactContainer {
   @apply bg-second font-archivo rounded-[20px]
-    lg:w-[420px] lg:px-[40px]
+    lg:w-[300px] lg:px-[40px]
     mobile:px-[40px];
 }
 
 .ContactContent {
-  @apply flex flex-col items-center border-none py-[80px];
+  @apply flex flex-col items-center border-none py-[24px];
 }
 
 .ContactPriceProperty {
   @apply font-[500]
-    lg:text-[48px];
+    lg:text-[48px]
+    mobile:text-[30px];
 }
 
 .ContactText {
-  @apply text-[12px] font-[500] tracking-[8px] mb-[50px];
+  @apply text-[12px] font-[500] tracking-[8px] mb-[20px] text-center;
 }
 
 .ContactInputContainer {
@@ -38,7 +39,7 @@
 }
 
 .ContactAvatar {
-  @apply mb-[20px] text-center;
+  @apply mb-[12px] text-center;
 }
 
 .ContactInfoDetail {
@@ -46,13 +47,17 @@
 }
 
 .ContactNameSeller {
-  @apply text-[32px] font-[500];
+  @apply text-[24px] font-[500];
 }
 
 .ContactPhoneEmail {
-  @apply flex flex-row items-center text-[20px] pt-[12px];
+  @apply flex flex-row items-center text-[16px] pt-[8px];
 }
 
 .ContactTextSeller {
   @apply pl-[8px];
+}
+
+.rootTextArea {
+  @apply focus:border-primary;
 }

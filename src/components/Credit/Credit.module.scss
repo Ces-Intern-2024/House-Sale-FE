@@ -1,13 +1,13 @@
 .creditContainer {
-  @apply p-[20px] w-full;
+  @apply p-[40px] w-full;
 }
 
 .creditContent {
-  @apply flex flex-row gap-[20px];
+  @apply flex flex-row gap-[20px] justify-between;
 }
 
 .creditNoti {
-  @apply flex flex-col border-[1px] w-[40%] py-[8px] px-[12px] rounded-[16px] h-[150px];
+  @apply flex flex-col border-[1px] w-[60%] py-[8px] px-[12px] rounded-[16px] h-[150px] bg-white;
 }
 
 .title {
@@ -50,11 +50,11 @@
 }
 
 .icon {
-  @apply ml-[4px] text-primary;
+  @apply ml-[4px] text-orangeBtn;
 }
 
 .creditCurrent {
-  @apply w-[20%] border-[1px] rounded-[16px] py-[8px] px-[12px];
+  @apply w-[40%] border-[1px] rounded-[16px] py-[8px] px-[12px] bg-white;
 }
 
 .creditCurrentRow {
@@ -66,9 +66,13 @@
 }
 
 .creditIcon {
-  @apply text-[30px] text-primary;
+  @apply text-[30px] text-orangeBtn;
 }
 
 .creditBtn {
   @apply text-right mt-[8px] w-full;
+}
+
+.rootButton {
+  @apply bg-orangeBtn hover:bg-darkBlue;
 }

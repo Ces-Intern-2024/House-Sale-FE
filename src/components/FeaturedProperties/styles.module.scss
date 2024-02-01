@@ -1,12 +1,12 @@
 .featuredContainer {
-  @apply w-full 
+  @apply w-full mt-[20px]
     lg:px-[60px] lg:mb-[40px] 
     mobile:px-[20px] 
     xl:px-[120px];
 }
 
 .featuredTitle {
-  @apply text-left text-[30px] text-[#313944] font-['Nunito',_sans-serif] mt-[20px];
+  @apply text-left text-[30px] text-[#313944] font-['Nunito',_sans-serif];
 }
 
 .featuredLineBreak {
@@ -18,4 +18,12 @@
     sm:grid-cols-2 
     lg:grid-cols-2 
     xl:grid-cols-3 gap-8;
+}
+
+.buttonContainer {
+  @apply text-center;
+}
+
+.rootButton {
+  @apply bg-primary;
 }
