@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage/HomePage'
 import DetailPage from './pages/DetailPage/DetailPage'
 import SellerLayout from './components/layouts/SellerLayout/SellerLayout'
 import SellerPage from './pages/SellerPage/SellerPage'
-
+import SellerProfile from './components/Profile/SellerProfile'
 function App() {
   return (
     <MantineProvider>
@@ -19,6 +19,10 @@ function App() {
         </Route>
         <Route path="/seller" element={<SellerLayout></SellerLayout>}>
           <Route path="/seller" element={<SellerPage></SellerPage>}></Route>
+          <Route
+            path="/seller/profile"
+            element={<SellerProfile></SellerProfile>}
+          ></Route>
         </Route>
       </Routes>
     </MantineProvider>
