@@ -38,6 +38,12 @@ export default function SellerProfile() {
   const nameInputRef: any = useRef(null)
   const phoneInputRef: any = useRef(null)
   const [visible, { toggle }] = useDisclosure(false)
+  const [visibleCurrentPw, handlers] = useDisclosure(false)
+
+  const handleToggleCurrentPassword = (prop: boolean) => {
+    prop ? handlers.open() : handlers.close()
+  }
+
   // const [emailEditing, setEmailEditing] = useState(false)
   // const [addressEditing, setAddressEditing] = useState(false)
   // const emailInputRef: any = useRef(null)
@@ -230,8 +236,10 @@ export default function SellerProfile() {
                 size="md"
                 label="Current Password"
                 defaultValue="secret"
-                visible={visible}
-                onVisibilityChange={toggle}
+                visible={visibleCurrentPw}
+                onVisibilityChange={() =>
+                  handleToggleCurrentPassword(!visibleCurrentPw)
+                }
               />
               <PasswordInput
                 size="md"
