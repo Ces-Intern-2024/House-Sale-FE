@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import style from './TableProperty.module.scss'
 import {
   Modal,
@@ -14,20 +14,29 @@ import { properties } from '../../utils/properties'
 import { MdDelete } from 'react-icons/md'
 import { useDisclosure } from '@mantine/hooks'
 import ModalProperty from '../ModalProperty/ModalProperty'
+import { Properties } from '@/types'
 
 const TableProperty = () => {
   const [opened, { open, close }] = useDisclosure(false)
+  const [selectedProperty, setSelectedProperty] = useState<Properties | null>(
+    null,
+  )
 
-  const handleAddNewProperty = () => {
-    alert('add toi di')
+  const handlePropertyView = (property: Properties) => {
+    setSelectedProperty(property)
+    open()
+  }
+
+  const handlePropertyAdd = () => {
+    setSelectedProperty(null)
+    open()
   }
 
   const rows = properties.map((element) => (
     <Table.Tr className={style.detailContentTable} key={element.propertyId}>
       <Table.Td>{element.propertyId}</Table.Td>
-      <Table.Td>
+      <Table.Td onClick={() => handlePropertyView(element)}>
         <Button
-          onClick={open}
           className={style.propertyNameCover}
           classNames={{ label: style.propertyNameModal }}
         >
@@ -40,7 +49,10 @@ const TableProperty = () => {
       <Table.Td>{element.categoryId}</Table.Td>
       <Table.Td>
         <div className={style.propertyActions}>
-          <FaEdit className={`${style.actionIcon} ${style.editIcon}`} />
+          <FaEdit
+            className={`${style.actionIcon} ${style.editIcon}`}
+            onClick={() => handlePropertyView(element)}
+          />
           <MdDelete className={`${style.actionIcon} ${style.deleteIcon}`} />
         </div>
       </Table.Td>
@@ -57,7 +69,7 @@ const TableProperty = () => {
               <span className={style.subTitle}>Manage your properties</span>
             </div>
             <div className={style.coverBtn}>
-              <Button onClick={handleAddNewProperty} className={style.addBtn}>
+              <Button onClick={handlePropertyAdd} className={style.addBtn}>
                 <span className={style.iconBtn}>
                   <FaPlus />
                 </span>
@@ -114,8 +126,12 @@ const TableProperty = () => {
                 <Table.Thead>
                   <Table.Tr className={style.titleTable}>
                     <Table.Th>#Id</Table.Th>
-                    <Table.Th>Property Name</Table.Th>
-                    <Table.Th>Price</Table.Th>
+                    <Table.Th classNames={{ th: style.thName }}>
+                      Property Name
+                    </Table.Th>
+                    <Table.Th classNames={{ th: style.thPrice }}>
+                      Price
+                    </Table.Th>
                     <Table.Th>Featured</Table.Th>
                     <Table.Th>Category</Table.Th>
                     <Table.Th>Actions</Table.Th>
@@ -129,7 +145,10 @@ const TableProperty = () => {
       </div>
       <Modal
         opened={opened}
-        onClose={close}
+        onClose={() => {
+          close()
+          setSelectedProperty(null)
+        }}
         size={1280}
         title="Property Add"
         classNames={{
@@ -139,7 +158,7 @@ const TableProperty = () => {
           content: style.contentModal,
         }}
       >
-        <ModalProperty />
+        <ModalProperty property={selectedProperty} />
       </Modal>
     </>
   )

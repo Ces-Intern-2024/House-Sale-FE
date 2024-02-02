@@ -1,11 +1,11 @@
 @import '../../styles/_variables.scss';
 
 .tablePropertyContainer {
-  @apply m-[40px];
+  @apply mx-[40px];
 }
 
 .tablePropertyContent {
-  @apply bg-white px-[12px] py-[8px] rounded-[15px];
+  @apply bg-white px-[20px] py-[8px] rounded-[15px] border-[1px];
 }
 
 .tableHeader {
@@ -17,7 +17,7 @@
 }
 
 .title {
-  @apply text-[20px] font-[700] font-archivo text-primary;
+  @apply text-[24px] font-[700] font-archivo text-primary;
 }
 
 .subTitle {
@@ -33,11 +33,11 @@
 }
 
 .addBtn {
-  @apply bg-orangeBtn text-[16px] hover:bg-darkBlue;
+  @apply text-[16px] bg-darkBlue hover:bg-orangeBtn;
 }
 
 .tableSideBar {
-  @apply flex flex-row justify-between mt-[40px];
+  @apply flex flex-row justify-between mt-[32px];
 }
 
 .tableSelect {
@@ -54,8 +54,8 @@
   @apply focus:border-primary;
 }
 .iconSearch {
-  @apply bg-orangeBtn w-full leading-[36px] cursor-pointer py-[8px] h-full text-white rounded-[2px]
-    hover:bg-darkBlue;
+  @apply w-full leading-[36px] cursor-pointer py-[8px] h-full text-white rounded-[2px]
+    bg-darkBlue hover:bg-orangeBtn;
 }
 
 .tableContent {
@@ -67,12 +67,24 @@
 }
 
 .propertyName {
-  @apply text-black text-[17px];
+  @apply text-black text-[17px] font-archivo font-[500] min-w-[260px] max-w-[380px] text-start
+  truncate;
+  // xl:text-balance xl:w-full xl:text-ellipsis
+  // lg:text-balance lg:w-[300px] lg:text-start lg:pl-[8px] lg:text-ellipsis
 }
+.thName {
+  @apply w-[400px];
+}
+
 .propertyImage {
   @apply min-w-[40px] w-[40px] h-[40px];
 }
 
+.propertyPrice {
+}
+.thPrice {
+  @apply max-w-[200px];
+}
 .propertyActions {
   @apply flex flex-row items-center justify-evenly h-full;
 }

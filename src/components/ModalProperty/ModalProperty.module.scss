@@ -10,8 +10,8 @@
   @apply flex flex-col gap-[8px] w-1/4 mt-[24px];
 }
 
-.priceCurrency {
-  @apply flex flex-col gap-[8px] mt-[24px] 
+.colDirection {
+  @apply flex flex-col gap-[8px] mt-[24px]
     xl:w-[280px]
     lg:w-[196px];
 }
