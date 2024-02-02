@@ -16,7 +16,7 @@ import {
   IconGraph,
   IconLogout,
 } from '@tabler/icons-react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { setIsSmallScreen } from '../../../redux/action'
 
@@ -82,18 +82,22 @@ export default function SellerLayout() {
 
         <AppShell.Navbar className={styles.navBar}>
           <div className={styles.navBarInner}>
-            <div className={styles.navItem}>
-              <IconDashboard className={styles.navIcon} size={ICON_SIZE} />
-              {(!isSmallNav || isSmallScreen) && (
-                <h1 className={styles.navText}>Dashboard</h1>
-              )}
-            </div>
-            <div className={styles.navItem}>
-              <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
-              {(!isSmallNav || isSmallScreen) && (
-                <h1 className={styles.navText}>Profile</h1>
-              )}
-            </div>
+            <Link to="/seller">
+              <div className={styles.navItem}>
+                <IconDashboard className={styles.navIcon} size={ICON_SIZE} />
+                {(!isSmallNav || isSmallScreen) && (
+                  <h1 className={styles.navText}>Dashboard</h1>
+                )}
+              </div>
+            </Link>
+            <Link to="/seller/profile">
+              <div className={styles.navItem}>
+                <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
+                {(!isSmallNav || isSmallScreen) && (
+                  <h1 className={styles.navText}>Profile</h1>
+                )}
+              </div>
+            </Link>
             <div className={styles.navItem}>
               <IconGraph className={styles.navIcon} size={ICON_SIZE} />
               {(!isSmallNav || isSmallScreen) && (
