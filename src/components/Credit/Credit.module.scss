@@ -1,5 +1,5 @@
 .creditContainer {
-  @apply p-[40px] w-full;
+  @apply px-[40px] w-full my-[30px];
 }
 
 .creditContent {
@@ -7,7 +7,7 @@
 }
 
 .creditNoti {
-  @apply flex flex-col border-[1px] w-[60%] py-[8px] px-[12px] rounded-[16px] h-[150px] bg-white;
+  @apply flex flex-col border-[1px] w-[60%] py-[8px] px-[20px] rounded-[16px] h-[150px] bg-white;
 }
 
 .title {
@@ -74,5 +74,5 @@
 }
 
 .rootButton {
-  @apply bg-orangeBtn hover:bg-darkBlue;
+  @apply hover:bg-orangeBtn bg-darkBlue;
 }

@@ -10,8 +10,12 @@ import {
   Textarea,
 } from '@mantine/core'
 import style from './ModalProperty.module.scss'
+import { Properties } from '@/types'
 
-const ModalProperty = () => {
+type Props = {
+  property: Properties | null
+}
+const ModalProperty = ({ property }: Props) => {
   const [files, setFiles] = useState<File[]>([])
   const resetRef = useRef<() => void>(null)
   const clearFile = () => {
@@ -56,11 +60,13 @@ const ModalProperty = () => {
           className={style.colModal}
           label="Property name"
           placeholder="Enter name "
+          value={property?.name}
         />
         <TextInput
           className={style.colModal}
           label="Property code"
           placeholder="Enter code "
+          value={property?.code}
         />
 
         <Select
@@ -68,12 +74,14 @@ const ModalProperty = () => {
           label="Featured"
           placeholder="Choose featured "
           data={['Sale', 'Rent']}
+          value={property?.featuredId}
         />
         <Select
           className={style.colModal}
           label="Category"
           placeholder="Choose featured "
           data={['House', 'Villa', 'Appartment']}
+          value={property?.categoryId}
         />
       </div>
       <div className={style.rowModal}>
@@ -113,18 +121,21 @@ const ModalProperty = () => {
           label="Number of floor"
           placeholder="Enter number of floor"
           min={0}
+          value={property?.numberOfFloor}
         />
         <NumberInput
           className={style.colModal}
           label="Number of bedroom"
           placeholder="Enter number of bedroom"
           min={0}
+          value={property?.numberOfBedroom}
         />
         <NumberInput
           className={style.colModal}
           label="Number of toilet"
           placeholder="Enter number of toilet"
           min={0}
+          value={property?.numberOfToilet}
         />
       </div>
       <div className={style.rowModal}>
@@ -132,36 +143,35 @@ const ModalProperty = () => {
           className={style.colModal}
           label="Land of Area"
           placeholder="Enter number"
+          value={property?.landArea}
         />
         <NumberInput
           className={style.colModal}
           label="Area of use"
           placeholder="Enter number "
           min={0}
-        />
-        <TextInput
-          className={style.colModal}
-          label="Direction"
-          placeholder="Enter direction"
+          value={property?.areaOfUse}
         />
         <NumberInput
           className={style.colModal}
-          label="Number of toilet"
-          placeholder="Enter number of toilet"
-          min={0}
-        />
-      </div>
-      <div className={style.rowModal}>
-        <NumberInput
-          className={style.priceCurrency}
           label="Price"
           placeholder="Enter price "
           min={0}
+          value={property?.price}
         />
         <TextInput
-          className={style.priceCurrency}
+          className={style.colModal}
           label="Currency Code"
           placeholder="Enter currency"
+          value={property?.currencyCode}
+        />
+      </div>
+      <div className={style.rowModal}>
+        <TextInput
+          className={style.colDirection}
+          label="Direction"
+          placeholder="Enter direction"
+          value={property?.direction}
         />
       </div>
       <Textarea
@@ -170,6 +180,7 @@ const ModalProperty = () => {
         placeholder="Enter decription"
         autosize
         minRows={5}
+        value={property?.description}
       />
       <div className={style.coverBtn}>
         <Button

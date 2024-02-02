@@ -3,6 +3,7 @@ export type Properties = {
   name: string
   featuredId: string
   categoryId: string
+  code: string
   districtId: string
   location: string
   price: number
