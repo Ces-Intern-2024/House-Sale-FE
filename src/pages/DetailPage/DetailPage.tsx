@@ -6,6 +6,7 @@ import ContactUs from '../../components/ContactUs/ContactUs'
 import DetailsProperty from '../../components/DetailsProperty/DetailsProperty'
 import style from './DetailPage.module.scss'
 import { Anchor, Breadcrumbs } from '@mantine/core'
+
 export default function DetailPage() {
   const paths = [
     { title: 'Home', href: '#' },

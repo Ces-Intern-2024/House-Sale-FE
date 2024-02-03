@@ -1,0 +1,8 @@
+.authContainer {
+  background-color: #55efc4;
+  background-image: linear-gradient(315deg, #55efc4 0%, #00000099 74%);
+}
+
+.outletContainer {
+  @apply flex items-center justify-center h-screen;
+}

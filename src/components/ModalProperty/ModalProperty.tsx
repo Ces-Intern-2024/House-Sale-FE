@@ -24,37 +24,6 @@ const ModalProperty = ({ property }: Props) => {
   }
   return (
     <div>
-      <div>
-        <Group justify="start">
-          <FileButton
-            onChange={setFiles}
-            accept="image/png,image/jpeg"
-            multiple
-          >
-            {(props) => (
-              <Button {...props} classNames={{ root: style.rootButton }}>
-                Upload image
-              </Button>
-            )}
-          </FileButton>
-
-          <Button disabled={!files} bg="red" onClick={clearFile}>
-            Reset
-          </Button>
-        </Group>
-
-        {files.length > 0 && (
-          <Text size="sm" mt="sm">
-            Your images:
-          </Text>
-        )}
-
-        <ul>
-          {files.map((file, index) => (
-            <li key={index}>{file.name}</li>
-          ))}
-        </ul>
-      </div>
       <div className={style.rowModal}>
         <TextInput
           className={style.colModal}
@@ -180,8 +149,40 @@ const ModalProperty = ({ property }: Props) => {
         placeholder="Enter decription"
         autosize
         minRows={5}
-        value={property?.description}
+        // value={property?.description}
       />
+
+      <div className="mt-[20px]">
+        <Group justify="start">
+          <FileButton
+            onChange={setFiles}
+            accept="image/png,image/jpeg"
+            multiple
+          >
+            {(props) => (
+              <Button {...props} classNames={{ root: style.rootButton }}>
+                Upload image
+              </Button>
+            )}
+          </FileButton>
+
+          <Button disabled={!files} bg="red" onClick={clearFile}>
+            Reset
+          </Button>
+        </Group>
+
+        {files.length > 0 && (
+          <Text size="sm" mt="sm">
+            Your images:
+          </Text>
+        )}
+
+        <ul>
+          {files.map((file, index) => (
+            <li key={index}>{file.name}</li>
+          ))}
+        </ul>
+      </div>
       <div className={style.coverBtn}>
         <Button
           classNames={{ root: style.rootButton }}

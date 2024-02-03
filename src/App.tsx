@@ -8,7 +8,9 @@ import HomePage from './pages/HomePage/HomePage'
 import DetailPage from './pages/DetailPage/DetailPage'
 import SellerLayout from './components/layouts/SellerLayout/SellerLayout'
 import SellerPage from './pages/SellerPage/SellerPage'
-import SellerProfile from './components/Profile/SellerProfile'
+import { Login } from './components/Login/Login'
+import AuthLayout from './components/layouts/AuthLayout/AuthLayout'
+
 function App() {
   return (
     <MantineProvider>
@@ -19,10 +21,9 @@ function App() {
         </Route>
         <Route path="/seller" element={<SellerLayout></SellerLayout>}>
           <Route path="/seller" element={<SellerPage></SellerPage>}></Route>
-          <Route
-            path="/seller/profile"
-            element={<SellerProfile></SellerProfile>}
-          ></Route>
+        </Route>
+        <Route path="/" element={<AuthLayout />}>
+          <Route path="/login" element={<Login />}></Route>
         </Route>
       </Routes>
     </MantineProvider>

@@ -53,7 +53,11 @@ const ContactUs = () => {
             </div>
             <div className={style.ContactSubmit}>
               <Group>
-                <Button variant="filled" text="SEND TO SELLER"></Button>
+                <Button
+                  variant="filled"
+                  text="SEND TO SELLER"
+                  classNames={{ root: style.btnSendSeller }}
+                ></Button>
               </Group>
             </div>
           </form>
