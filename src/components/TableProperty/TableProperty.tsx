@@ -68,18 +68,16 @@ const TableProperty = () => {
               <span className={style.title}>Property List</span>
               <span className={style.subTitle}>Manage your properties</span>
             </div>
-            <div className={style.coverBtn}>
-              <Button onClick={handlePropertyAdd} className={style.addBtn}>
-                <span className={style.iconBtn}>
-                  <FaPlus />
-                </span>
-                Add New Property
-              </Button>
-            </div>
           </div>
 
           <div className={style.tableSideBar}>
             <div className={style.tableSelect}>
+              <div className={style.tableSearch}>
+                <TextInput
+                  classNames={{ input: style.input }}
+                  placeholder="Search property......"
+                />
+              </div>
               <div>
                 <Select
                   classNames={{ input: style.elementSelect }}
@@ -100,18 +98,13 @@ const TableProperty = () => {
                 </Button>
               </div>
             </div>
-            <div className={style.tableSearch}>
-              <TextInput
-                classNames={{ input: style.input }}
-                placeholder="Search property......"
-                rightSection={
-                  <FaSearch
-                    className={style.iconSearch}
-                    size={20}
-                    onClick={() => alert('hihi')}
-                  />
-                }
-              />
+            <div className={style.coverBtn}>
+              <Button onClick={handlePropertyAdd} className={style.addBtn}>
+                <span className={style.iconBtn}>
+                  <FaPlus />
+                </span>
+                Add New Property
+              </Button>
             </div>
           </div>
 
@@ -125,7 +118,7 @@ const TableProperty = () => {
               >
                 <Table.Thead>
                   <Table.Tr className={style.titleTable}>
-                    <Table.Th>#Id</Table.Th>
+                    <Table.Th>ID</Table.Th>
                     <Table.Th classNames={{ th: style.thName }}>
                       Property Name
                     </Table.Th>
