@@ -17,17 +17,21 @@ import {
 } from '@mantine/core'
 import { GoogleButton } from './GoogleButton'
 import style from './Login.module.scss'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { IoIosArrowBack } from 'react-icons/io'
-// import logo from '../../assets/images/logo_transparent.png'
-
+import axios from 'axios'
+import { getItem, setItem } from '../../utils/localStorage'
+const LOGIN_URL = '/login'
+interface Props {
+  email: string
+  password: string
+}
 export function Login(props: PaperProps) {
   const [type, toggle] = useToggle(['Login', 'Register'])
-
+  const navigate = useNavigate()
   const form = useForm({
     initialValues: {
       email: '',
-      name: '',
       password: '',
       terms: true,
     },
@@ -41,6 +45,26 @@ export function Login(props: PaperProps) {
     },
   })
 
+  const handleLogin = async (value: Props) => {
+    // e.preventDefault()
+    try {
+      const res = await axios.post(
+        LOGIN_URL,
+        { email: value.email, password: value.password },
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        },
+      )
+
+      setItem('data', res.data.metaData)
+      navigate('/')
+      console.log(getItem('data'))
+    } catch (err) {
+      console.error('Login error:', err)
+    }
+  }
+
   return (
     <Paper
       w={460}
@@ -50,14 +74,9 @@ export function Login(props: PaperProps) {
       withBorder
       {...props}
     >
-      {/* <div className="flex justify-between">
-        <div className="w-[120px] bg-[#4cd5ae] rounded-[15px] ">
-          <Image src={logo} fit="contain" />
-        </div> */}
       <Link to="/" className={style.btnBackHome}>
         <IoIosArrowBack />
       </Link>
-      {/* </div> */}
 
       <Text className="text-center" size="lg" fw={500}>
         Welcome to{' '}
@@ -74,12 +93,12 @@ export function Login(props: PaperProps) {
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
       <form
-        onSubmit={form.onSubmit(() => {
-          alert('login')
+        onSubmit={form.onSubmit((values) => {
+          handleLogin(values)
         })}
       >
         <Stack>
-          {type === 'Register' && (
+          {/* {type === 'Register' && (
             <TextInput
               label="Name"
               placeholder="Your name"
@@ -89,12 +108,12 @@ export function Login(props: PaperProps) {
               }
               radius="md"
             />
-          )}
+          )} */}
 
           <TextInput
             required
             label="Email"
-            placeholder="hello@mantine.dev"
+            placeholder="Enter email"
             value={form.values.email}
             onChange={(event) =>
               form.setFieldValue('email', event.currentTarget.value)
@@ -106,7 +125,7 @@ export function Login(props: PaperProps) {
           <PasswordInput
             required
             label="Password"
-            placeholder="Your password"
+            placeholder="Enter password"
             value={form.values.password}
             onChange={(event) =>
               form.setFieldValue('password', event.currentTarget.value)

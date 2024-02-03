@@ -9,7 +9,9 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './redux/reducers/index'
 import App from './App'
+import axios from 'axios'
 
+axios.defaults.baseURL = 'https://housesale.tldev.id.vn/v1/api/user'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 const store = createStore(rootReducer)
 root.render(
