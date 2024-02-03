@@ -10,6 +10,7 @@ import SellerLayout from './components/layouts/SellerLayout/SellerLayout'
 import SellerPage from './pages/SellerPage/SellerPage'
 import { Login } from './components/Login/Login'
 import AuthLayout from './components/layouts/AuthLayout/AuthLayout'
+import SellerProfile from './components/Profile/SellerProfile'
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
         </Route>
         <Route path="/seller" element={<SellerLayout></SellerLayout>}>
           <Route path="/seller" element={<SellerPage></SellerPage>}></Route>
+        </Route>
+        <Route path="/" element={<AuthLayout />}>
+          <Route path="/login" element={<Login />}></Route>
         </Route>
         <Route path="/" element={<AuthLayout />}>
           <Route path="/login" element={<Login />}></Route>

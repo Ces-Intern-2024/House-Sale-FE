@@ -2,6 +2,7 @@ import React from 'react'
 import { Menu, Button } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import styles from './MenuBar.module.scss'
+import { getItem } from '../../utils/localStorage'
 
 interface MenuBarProps {
   isOfDrawers: boolean
@@ -9,6 +10,7 @@ interface MenuBarProps {
 export default function MenuBar({ isOfDrawers }: MenuBarProps) {
   const OPEN_DELAY = 50
   const CLOSE_DELAY = 50
+  const data: any = getItem('data')
 
   return (
     <>
@@ -79,8 +81,11 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
           <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
               <div className="flex">
-                {/* <Avatar color="white" /> */}
-                <Button className={styles.button}>LOG IN</Button>
+                {data ? (
+                  <h3>{data.user.fullName}</h3>
+                ) : (
+                  <Button className={styles.button}>LOG IN</Button>
+                )}
               </div>
             </Menu.Target>
           </Menu>
