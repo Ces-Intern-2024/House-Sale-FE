@@ -13,7 +13,7 @@ type Props = {
 const FeaturedProperties = ({ title, properties, filter, children }: Props) => {
   // console.log(properties);
 
-  const quantity = 9
+  const quantity = 3
   const [visibleProperty, setVisibleProperty] = useState<number>(quantity)
   const [propertiesToShow, setPropertiesToShow] = useState<Properties[]>([])
   const [filteredList, setFilteredList] = useState<Properties[]>([])

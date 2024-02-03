@@ -82,7 +82,7 @@ export default function SellerLayout() {
 
         <AppShell.Navbar className={styles.navBar}>
           <div className={styles.navBarInner}>
-            <Link to="/seller">
+            <Link to="dashboard">
               <div className={styles.navItem}>
                 <IconDashboard className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
@@ -90,7 +90,7 @@ export default function SellerLayout() {
                 )}
               </div>
             </Link>
-            <Link to="/seller/profile">
+            <Link to="profile">
               <div className={styles.navItem}>
                 <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
