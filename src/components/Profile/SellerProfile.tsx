@@ -186,7 +186,6 @@ export default function SellerProfile() {
               />
               <div className=" flex gap-x-3">
                 <Select
-                  readOnly
                   size="md"
                   classNames={{ label: styles.label }}
                   w="50%"
@@ -204,7 +203,6 @@ export default function SellerProfile() {
                 />
 
                 <Select
-                  readOnly
                   size="md"
                   w="50%"
                   classNames={{ label: styles.label }}

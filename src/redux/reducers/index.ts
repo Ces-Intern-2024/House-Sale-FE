@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import resizeReducer from './reducer'
-// import authReducer from './authReducer'
+import resizeReducer from './resizeReducer'
 
 export default combineReducers({ resizeReducer })
