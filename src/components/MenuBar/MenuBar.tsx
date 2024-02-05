@@ -1,8 +1,9 @@
 import React from 'react'
-import { Menu, Button } from '@mantine/core'
+import { Menu, Button, Avatar } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import styles from './MenuBar.module.scss'
-import { getItem } from '../../utils/localStorage'
+import { getItem, inforUser, removeItem } from '../../utils/localStorage'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface MenuBarProps {
   isOfDrawers: boolean
@@ -10,7 +11,12 @@ interface MenuBarProps {
 export default function MenuBar({ isOfDrawers }: MenuBarProps) {
   const OPEN_DELAY = 50
   const CLOSE_DELAY = 50
-  const data: any = getItem('data')
+  const data: inforUser | undefined = getItem('data')
+  const navigate = useNavigate()
+  const handleLogout = () => {
+    removeItem('data')
+    navigate('/')
+  }
 
   return (
     <>
@@ -80,11 +86,41 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
         <div>
           <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
-              <div className="flex">
+              <div className="flex items-center cursor-pointer">
                 {data ? (
-                  <h3>{data.user.fullName}</h3>
+                  <>
+                    <Menu
+                      trigger="click-hover"
+                      openDelay={OPEN_DELAY}
+                      closeDelay={CLOSE_DELAY}
+                      width={150}
+                      position={isOfDrawers ? 'right-start' : 'bottom'}
+                      withArrow
+                    >
+                      <Menu.Target>
+                        <Button>
+                          <Avatar color="white" />
+                          <h3 className=" text-white font-bold ml-1">
+                            {data.user.fullName
+                              ? data.user.fullName.toUpperCase()
+                              : 'USER'}
+                          </h3>
+                        </Button>
+                      </Menu.Target>
+                      <Menu.Dropdown className=" flex-col justify-center">
+                        <Menu.Item className={styles.dropdown}>
+                          PROFILE
+                        </Menu.Item>
+                        <Menu.Item className={styles.dropdown}>
+                          <h1 onClick={handleLogout}>LOG OUT</h1>
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
+                  </>
                 ) : (
-                  <Button className={styles.button}>LOG IN</Button>
+                  <Link to="/login">
+                    <Button className={styles.button}>LOG IN</Button>
+                  </Link>
                 )}
               </div>
             </Menu.Target>

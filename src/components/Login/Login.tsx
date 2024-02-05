@@ -1,33 +1,26 @@
 import React from 'react'
-
-import { useToggle, upperFirst } from '@mantine/hooks'
 import { useForm } from '@mantine/form'
 import {
   TextInput,
   PasswordInput,
-  Text,
-  Paper,
   Group,
-  PaperProps,
   Button,
-  Divider,
-  Checkbox,
-  Anchor,
   Stack,
+  Anchor,
+  Text,
+  Divider,
 } from '@mantine/core'
-import { GoogleButton } from './GoogleButton'
 import style from './Login.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
-import { IoIosArrowBack } from 'react-icons/io'
+import { GoogleButton } from './GoogleButton'
 import axios from 'axios'
 import { getItem, setItem } from '../../utils/localStorage'
-const LOGIN_URL = '/login'
+const LOGIN_URL = '/user/login'
 interface Props {
   email: string
   password: string
 }
-export function Login(props: PaperProps) {
-  const [type, toggle] = useToggle(['Login', 'Register'])
+export function Login() {
   const navigate = useNavigate()
   const form = useForm({
     initialValues: {
@@ -66,24 +59,15 @@ export function Login(props: PaperProps) {
   }
 
   return (
-    <Paper
-      w={460}
-      classNames={{ root: style.rootLoginForm }}
-      radius="md"
-      p="xl"
-      withBorder
-      {...props}
-    >
-      <Link to="/" className={style.btnBackHome}>
-        <IoIosArrowBack />
-      </Link>
-
+    <>
       <Text className="text-center" size="lg" fw={500}>
         Welcome to{' '}
-        <span className="font-[700] text-archivo text-[#399f83]">
-          Modern House
-        </span>
-        . {type} with
+        <Link to="/">
+          <span className="font-[700] text-archivo text-[#399f83]">
+            Modern House
+          </span>
+        </Link>
+        . Log In with
       </Text>
 
       <Group grow mb="md" mt="md">
@@ -91,25 +75,12 @@ export function Login(props: PaperProps) {
       </Group>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
-
       <form
         onSubmit={form.onSubmit((values) => {
           handleLogin(values)
         })}
       >
         <Stack>
-          {/* {type === 'Register' && (
-            <TextInput
-              label="Name"
-              placeholder="Your name"
-              value={form.values.name}
-              onChange={(event) =>
-                form.setFieldValue('name', event.currentTarget.value)
-              }
-              radius="md"
-            />
-          )} */}
-
           <TextInput
             required
             label="Email"
@@ -121,7 +92,6 @@ export function Login(props: PaperProps) {
             error={form.errors.email && 'Invalid email'}
             radius="md"
           />
-
           <PasswordInput
             required
             label="Password"
@@ -136,40 +106,23 @@ export function Login(props: PaperProps) {
             }
             radius="md"
           />
-
-          {type === 'Register' && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) =>
-                form.setFieldValue('terms', event.currentTarget.checked)
-              }
-            />
-          )}
         </Stack>
 
         <Group justify="space-between" mt="xl">
-          <Anchor
-            component="button"
-            type="button"
-            c="dimmed"
-            onClick={() => toggle()}
-            size="xs"
-          >
-            {type === 'Register'
-              ? 'Already have an account? Login'
-              : "Don't have an account? Register"}
+          <Anchor>
+            <Link to="/register">Do not have an account? Register</Link>
           </Anchor>
+
           <Button
             size="md"
             type="submit"
             radius="xl"
             classNames={{ root: style.btnLogIn }}
           >
-            {upperFirst(type)}
+            Log In
           </Button>
         </Group>
       </form>
-    </Paper>
+    </>
   )
 }
