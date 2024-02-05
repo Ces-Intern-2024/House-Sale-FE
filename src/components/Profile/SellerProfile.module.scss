@@ -37,11 +37,11 @@
 }
 
 .btn {
-  @apply mt-6 bg-[#1b2850] hover:bg-[#FFA836] w-[50%];
+  @apply mt-6 bg-orangeBtn hover:bg-darkBlue w-[50%];
 }
 
 .uploadBtn {
-  @apply bg-[#1b2850] hover:bg-[#FFA836];
+  @apply bg-orangeBtn hover:bg-darkBlue;
 }
 
 .personalInfoOuter {
