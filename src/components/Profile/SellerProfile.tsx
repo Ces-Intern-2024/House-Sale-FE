@@ -277,6 +277,29 @@ export default function SellerProfile() {
                 </Button>
               </div>
             )}
+
+            {file && (
+              <div className=" mx-2 grid grid-flow-col grid-cols-2 gap-1">
+                <Button
+                  loading={loading ? true : false}
+                  bg="green"
+                  className={styles.uploadBtn}
+                  onClick={handleUploadAvatar}
+                >
+                  <IconDeviceFloppy className="mr-1" />
+                  Save Avatar
+                </Button>
+                <Button
+                  bg="red"
+                  className={styles.uploadBtn}
+                  onClick={() => setFile(null)}
+                  disabled={loading ? true : false}
+                >
+                  <IconX className="mr-1" />
+                  Cancel
+                </Button>
+              </div>
+            )}
           </div>
           <div className={styles.personalInfoOuter}>
             <h1 className={styles.title}>Personal Information</h1>
