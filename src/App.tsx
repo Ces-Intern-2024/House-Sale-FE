@@ -6,7 +6,6 @@ import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layouts/CommonLayout/Layout'
 import HomePage from './pages/HomePage/HomePage'
 import DetailPage from './pages/DetailPage/DetailPage'
-import SellerLayout from './components/layouts/SellerLayout/SellerLayout'
 import SellerPage from './pages/SellerPage/SellerPage'
 import { Login } from './components/Login/Login'
 import AuthLayout from './components/layouts/AuthLayout/AuthLayout'
@@ -21,7 +20,7 @@ function App() {
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/details" element={<DetailPage></DetailPage>}></Route>
         </Route>
-        <Route path="/" element={<SellerLayout></SellerLayout>}>
+        <Route path="/">
           <Route path="/seller" element={<SellerPage></SellerPage>}></Route>
           <Route
             path="/profile"

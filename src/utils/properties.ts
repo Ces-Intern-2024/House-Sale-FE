@@ -44,8 +44,7 @@ export const properties: Properties[] = [
     numberOfFloor: 1,
     createdAt: '2023-02-01T10:00:00Z',
     updatedAt: '2023-02-05T12:45:00Z',
-    description: `
-    Resale Apartment Da Nang in Fusion Suites, Son Tra District, walk to My Khe Beach
+    description: `Resale Apartment Da Nang in Fusion Suites, Son Tra District, walk to My Khe Beach
     This residence flat provides entirely comfortable feeling of its interiors and architects
     Fully-furnished, 2-bedrooms, 2-bathroom, balcony, kitchen area, laundry, over 62sqm
     RESALE APARTMENT DA NANG

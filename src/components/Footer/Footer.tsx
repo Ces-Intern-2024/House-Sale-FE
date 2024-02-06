@@ -24,16 +24,24 @@ const Footer = () => {
           <div className={style.footerTitleCol}>About us</div>
           <ul className={style.footerContentCol}>
             <li>
-              <a href="/">Homepage</a>
+              <a className={style.footerLink} href="/">
+                Homepage
+              </a>
             </li>
             <li>
-              <a href="/">Introduce</a>
+              <a className={style.footerLink} href="/">
+                Introduce
+              </a>
             </li>
             <li>
-              <a href="/">Real Estate</a>
+              <a className={style.footerLink} href="/">
+                Real Estate
+              </a>
             </li>
             <li>
-              <a href="/">Contact us</a>
+              <a className={style.footerLink} href="/">
+                Contact us
+              </a>
             </li>
           </ul>
         </div>
@@ -41,39 +49,41 @@ const Footer = () => {
           <div className={style.footerTitleCol}>Support</div>
           <ul className={style.footerContentCol}>
             <li>
-              <a href="/">FAQs</a>
+              <a className={style.footerLink} href="/">
+                FAQs
+              </a>
             </li>
             <li>
-              <a href="/">Policy</a>
+              <a className={style.footerLink} href="/">
+                Policy
+              </a>
             </li>
             <li>
-              <a href="/">Benefits</a>
+              <a className={style.footerLink} href="/">
+                Benefits
+              </a>
             </li>
             <li>
-              <a href="/">Site map</a>
+              <a className={style.footerLink} href="/">
+                Site map
+              </a>
             </li>
           </ul>
         </div>
         <div className={style.footerCol}>
           <div className={style.footerTitleCol}>Contact us</div>
           <ul className={`${style.footerContentCol} ${style.footerContact}`}>
-            <li>
-              <a href="/" className={style.footerLink}>
-                <FaLocationDot className={style.iconLink} size={20} />
-                374 Dien Bien Phu Street
-              </a>
+            <li className={style.footerLink}>
+              <FaLocationDot className={style.iconLink} size={20} />
+              374 Dien Bien Phu Street
             </li>
-            <li>
-              <a href="/" className={style.footerLink}>
-                <FiPhoneCall className={style.iconLink} size={20} />
-                +84 587 666 999
-              </a>
+            <li className={style.footerLink}>
+              <FiPhoneCall className={style.iconLink} size={20} />
+              +84 587 666 999
             </li>
-            <li>
-              <a href="/" className={style.footerLink}>
-                <MdOutlineAttachEmail className={style.iconLink} size={20} />
-                bigboss23122001@gmail.com
-              </a>
+            <li className={style.footerLink}>
+              <MdOutlineAttachEmail className={style.iconLink} size={20} />
+              bigboss23122001@gmail.com
             </li>
           </ul>
         </div>

@@ -19,13 +19,9 @@
 }
 
 .footerContentCol {
-  @apply mt-[20px] pl-[20px] cursor-pointer text-[16px] text-blur 
+  @apply mt-[20px] pl-[20px]  text-[16px] text-blur list-none no-underline
   lg:text-justify
   mobile:mt-0 mobile:p-0 mobile:text-center;
-
-  li:hover {
-    @apply text-black;
-  }
 }
 
 .footerCoverLogo {
@@ -41,7 +37,8 @@
 }
 
 .footerLink {
-  @apply flex leading-[24px] items-center justify-start;
+  @apply flex leading-[24px] items-center justify-start no-underline text-blur
+  hover:text-white;
 }
 
 .iconLink {
