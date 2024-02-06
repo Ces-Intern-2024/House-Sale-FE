@@ -3,7 +3,7 @@
 }
 
 .tableContent {
-  @apply border-[1px] border-b-0
+  @apply border-[1px] border-b-0  border-gray-300 
   lg:flex lg:flex-row 
   mobile:flex mobile:flex-col;
 }
@@ -14,7 +14,7 @@
 }
 
 .tableRow {
-  @apply w-full border-b-[1px] px-[16px]  py-[6px] 
+  @apply w-full border-b border-x-0 border-t-0 border-solid border-gray-300  px-[16px]  py-[6px] 
     flex flex-row;
 }
 

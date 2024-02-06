@@ -36,13 +36,10 @@ const TableProperty = () => {
     <Table.Tr className={style.detailContentTable} key={element.propertyId}>
       <Table.Td>{element.propertyId}</Table.Td>
       <Table.Td onClick={() => handlePropertyView(element)}>
-        <Button
-          className={style.propertyNameCover}
-          classNames={{ label: style.propertyNameModal }}
-        >
+        <div className={style.propertyNameCover}>
           <Image className={style.propertyImage} src={element.images} />
           <span className={style.propertyName}>{element.name}</span>
-        </Button>
+        </div>
       </Table.Td>
       <Table.Td>$ {element.price}</Table.Td>
       <Table.Td>{element.featuredId}</Table.Td>

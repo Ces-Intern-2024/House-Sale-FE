@@ -1,4 +1,4 @@
-export type Properties = {
+export interface Properties {
   propertyId: number
   name: string
   featuredId: string

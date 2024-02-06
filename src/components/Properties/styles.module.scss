@@ -29,7 +29,11 @@
 }
 
 .propertyName {
-  @apply h-[24px] text-[16px] px-3 text-nowrap text-ellipsis overflow-hidden
+  @apply h-[24px] text-[16px] px-3 text-nowrap text-ellipsis overflow-hidden;
+}
+
+.propertyNameLink {
+  @apply text-black no-underline;
 }
 
 .propertyCoverImage {

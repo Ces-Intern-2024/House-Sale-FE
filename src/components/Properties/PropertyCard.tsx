@@ -16,15 +16,19 @@ const Properties = ({ data }: Props) => {
       <div className={style.propertyContent}>
         <div className={style.propertyFeatured}>{data.featuredId}</div>
         <div className={style.propertyCoverImage}>
-          <img
-            className={style.propertyImage}
-            src={data.images}
-            alt={data.name}
-          />
+          <a href="/">
+            <img
+              className={style.propertyImage}
+              src={data.images}
+              alt={data.name}
+            />
+          </a>
         </div>
         <div className="w-full">
           <div className={style.propertyName}>
-            <a href="/">{data.name}</a>
+            <a className={style.propertyNameLink} href="/">
+              {data.name}
+            </a>
           </div>
           <div className={style.propertyLocation}>
             <span className={style.propertyCoverIcon}>

@@ -62,18 +62,18 @@
   @apply mt-[40px] h-[600px];
 }
 
-.propertyNameModal {
+.propertyNameCover {
   @apply flex flex-row gap-[8px] items-center;
 }
 
 .propertyName {
-  @apply text-black text-[17px] font-archivo font-[500] min-w-[260px] max-w-[380px] text-start
+  @apply text-black text-[17px] font-archivo font-[500] min-w-[260px] max-w-[380px] text-start cursor-pointer
   truncate;
   // xl:text-balance xl:w-full xl:text-ellipsis
   // lg:text-balance lg:w-[300px] lg:text-start lg:pl-[8px] lg:text-ellipsis
 }
 .thName {
-  @apply w-[400px];
+  @apply w-[400px] cursor-pointer;
 }
 
 .propertyImage {
