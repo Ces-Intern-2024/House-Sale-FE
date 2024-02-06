@@ -6,14 +6,14 @@ export async function getProvinces() {
   return res.data.metaData
 }
 
-export async function getDistricts(provinceCode: string | null) {
+export async function getDistricts(provinceCode: string | null | undefined) {
   const res = await axios.get(
     `${baseURL}/districts?provinceCode=${provinceCode}`,
   )
   return res.data.metaData
 }
 
-export async function getWards(districtCode: string | null) {
+export async function getWards(districtCode: string | null | undefined) {
   const res = await axios.get(`${baseURL}/wards?districtCode=${districtCode}`)
   return res.data.metaData
 }

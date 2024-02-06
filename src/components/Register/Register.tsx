@@ -86,6 +86,7 @@ export default function Register() {
       ? yup.string().required('Address is required')
       : yup.string().nullable(),
   })
+
   const form = useForm({
     initialValues: {
       email: '',

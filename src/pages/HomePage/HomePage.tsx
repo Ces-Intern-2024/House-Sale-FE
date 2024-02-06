@@ -4,21 +4,23 @@ import Container from '../../components/Container/Container'
 import FeaturedProperties from '../../components/FeaturedProperties/FeaturedProperties'
 import BannerValue from '../../components/BannerValue/BannerValue'
 import BannerWelcome from '../../components/BannerWelcome/BannerWelcome'
-import { useSelector } from 'react-redux'
-import { RootState, useAppDispatch } from '../../redux/store'
+import { useAppSelector, useAppDispatch } from '../../redux/hooks'
+import { RootState } from '../../redux/store'
 import {
   getAllPropertiesForSale,
   getAllPropertiesForRent,
 } from '../../redux/reducers/homeReducer'
 import { Properties } from '@/types'
+import SlideShow from '../../components/Slideshow/SlideShow'
 
 const HomePage = () => {
-  const salesList: Properties[] = useSelector(
+  const salesList: Properties[] = useAppSelector(
     (state: RootState) => state.home.propertiesListForSale,
   )
-  const rentsList: Properties[] = useSelector(
+  const rentsList: Properties[] = useAppSelector(
     (state: RootState) => state.home.propertiesListForRent,
   )
+
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -41,6 +43,7 @@ const HomePage = () => {
   return (
     <div>
       <Container>
+        <SlideShow />
         <FeaturedProperties
           properties={properties}
           title="FEATURED FOR RENT"

@@ -1,7 +1,6 @@
 import React from 'react'
 import './App.css'
 import { MantineProvider } from '@mantine/core'
-import '@mantine/core/styles.css'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layouts/CommonLayout/Layout'
 import HomePage from './pages/HomePage/HomePage'
@@ -11,6 +10,8 @@ import { Login } from './components/Login/Login'
 import AuthLayout from './components/layouts/AuthLayout/AuthLayout'
 import SellerProfile from './components/Profile/SellerProfile'
 import Register from './components/Register/Register'
+import SellerLayout from './components/layouts/SellerLayout/SellerLayout'
+import '@mantine/core/styles.css'
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/details" element={<DetailPage></DetailPage>}></Route>
         </Route>
-        <Route path="/">
+        <Route path="/" element={<SellerLayout></SellerLayout>}>
           <Route path="/seller" element={<SellerPage></SellerPage>}></Route>
           <Route
             path="/profile"
