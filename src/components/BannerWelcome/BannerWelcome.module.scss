@@ -3,10 +3,11 @@
 }
 
 .bannerWelcomeContent {
-  @apply relative w-full xl:flex xl:flex-row 
-  mx-auto bg-blur mx-auto 
-  lg:flex lg:flex-row lg:w-full 
-  mobile:flex mobile:flex-col mobile:pt-[20px];
+  @apply relative w-full  mx-auto bg-blur mx-auto 
+  xl:flex xl:flex-row xl:pt-0
+  lg:flex lg:flex-row lg:w-full lg:pt-0
+  mobile:flex mobile:flex-col mobile:pt-[20px]
+  2xl:pt-[60px];
 }
 
 .bannerWelcomeText {
@@ -18,9 +19,10 @@
 
 .bannerWelcomeImage {
   @apply xl:absolute object-cover  justify-center items-center overflow-hidden rounded-tr-[16px] rounded-br-[16px]
-  xl:bottom-0 xl:right-0 xl:h-[90%] xl:bg-[50%] xl:bg-no-repeat xl:bg-scroll 
-  lg:absolute lg:bottom-0 lg:right-0 lg:h-[80%]
-  mobile:pt-[12px];
+  xl:bottom-0 xl:right-0 xl:h-[90%] xl:bg-[50%] xl:bg-no-repeat xl:bg-scroll xl:pt-0
+  lg:absolute lg:bottom-0 lg:right-0 lg:h-[80%] lg:pt-0
+  mobile:pt-[12px]
+  2xl:h-[100%];
 }
 
 .wordWrapper {

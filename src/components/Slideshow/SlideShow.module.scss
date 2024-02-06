@@ -1,5 +1,9 @@
 .outer {
-  @apply relative lg:h-[670px] xs:h-[500px] mobile:h-[400px];
+  @apply relative 
+  lg:h-[670px] 
+  xs:h-[500px] 
+  mobile:h-[400px]
+  mt-[96px];
 }
 
 .indicator {
@@ -24,11 +28,14 @@
 }
 
 .largeText {
-  @apply col-auto text-white font-bold lg:text-6xl xs:text-4xl mobile:text-2xl lg:mb-5 xs:mb-3 mobile:mb-1 mb-1;
+  @apply col-auto text-white font-bold mb-1 mt-0
+  lg:text-6xl lg:mb-5
+  xs:text-4xl xs:mb-3
+  mobile:text-2xl mobile:mb-1;
 }
 
 .smallText {
-  @apply text-white font-bold lg:text-2xl xs:text-xl mobile:text-sm;
+  @apply text-white font-bold lg:text-2xl xs:text-xl mobile:text-sm my-0;
 }
 
 .flexBox {
