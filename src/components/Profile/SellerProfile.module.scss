@@ -1,9 +1,9 @@
 .container {
-  @apply bg-white rounded-[5px] min-h-[500px] p-5;
+  @apply bg-white rounded-[5px] min-h-[500px] p-5 px-10;
 }
 
 .outer {
-  @apply flex gap-7 mobile:items-center md:flex-row mobile:flex-col md:justify-start md:items-start mobile:justify-center;
+  @apply flex gap-7 mobile:items-center lg:flex-row mobile:flex-col lg:justify-start lg:items-start mobile:justify-center;
 }
 
 .heading {
@@ -15,7 +15,7 @@
 }
 
 .imgOuter {
-  @apply w-[250px] h-[250px] flex flex-col justify-center items-center 
+  @apply w-[300px] h-[300px] flex flex-col justify-center items-center 
     py-5 rounded-[14px] md:mt-16 mt-3  flex-shrink-0;
 
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9VW0YJ_BK5Bsh_jC7RV5PjPcIZEznjL4d-g&usqp=CAU');
@@ -25,11 +25,11 @@
 }
 
 .imgInner {
-  @apply flex flex-col h-[100%] justify-between;
+  @apply flex flex-col h-[100%] justify-start items-center gap-y-5 relative;
 }
 
 .avatar {
-  @apply outline outline-2 outline-blue-200;
+  @apply outline outline-2 outline-blue-200 z-0;
 }
 
 .label {
@@ -57,5 +57,5 @@
 }
 
 .pwContainer {
-  @apply flex flex-col w-full justify-center;
+  @apply flex flex-col w-full justify-center mt-5;
 }

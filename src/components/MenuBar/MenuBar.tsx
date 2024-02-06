@@ -116,7 +116,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
                       </Menu.Target>
                       <Menu.Dropdown className=" flex-col justify-center">
                         <Menu.Item className={styles.dropdown}>
-                          PROFILE
+                          <Link to="/profile"> PROFILE</Link>
                         </Menu.Item>
                         <Menu.Item className={styles.dropdown}>
                           <h1 onClick={handleLogout}>LOG OUT</h1>

@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import homeReducer from './reducers/homeReducer'
-import { useDispatch } from 'react-redux'
+import resizeReducer from './reducers/resizeSlice'
 export const store = configureStore({
   reducer: {
     home: homeReducer,
+    resize: resizeReducer,
   },
 })
 
@@ -13,5 +14,3 @@ export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 export default store
-
-export const useAppDispatch = () => useDispatch<AppDispatch>()

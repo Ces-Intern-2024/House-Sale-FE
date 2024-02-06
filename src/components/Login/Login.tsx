@@ -49,9 +49,11 @@ export function Login() {
           withCredentials: true,
         },
       )
-
+      console.log('login')
       setItem('data', res.data.metaData)
-      navigate('/')
+
+      res.data.metaData.user.roleId === 1 ? navigate('/') : navigate('/profile')
+
       console.log(getItem('data'))
     } catch (err) {
       console.error('Login error:', err)
