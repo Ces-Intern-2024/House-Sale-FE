@@ -45,7 +45,7 @@ export default function DetailsImageList() {
             }}
           />
 
-          <ImageList cols={2}>
+          <ImageList className="my-0" cols={2}>
             {images.slice(1).map((item, index) => (
               <ImageListItem key={item}>
                 <img

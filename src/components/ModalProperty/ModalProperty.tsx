@@ -11,16 +11,64 @@ import {
 } from '@mantine/core'
 import style from './ModalProperty.module.scss'
 import { Properties } from '@/types'
+import axios from 'axios'
 
 type Props = {
   property: Properties | null
 }
 const ModalProperty = ({ property }: Props) => {
   const [files, setFiles] = useState<File[]>([])
+  const [images, setImages] = useState<string[]>([])
   const resetRef = useRef<() => void>(null)
+  const [loading, setLoading] = useState('')
   const clearFile = () => {
     setFiles([])
     resetRef.current?.()
+  }
+
+  const handleUpload = () => {
+    const uploaders = files.map(async (file) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('upload_preset', 'ntdit_dev_image')
+      formData.append('api_key', '166589584369138')
+      const response = await axios.post(
+        'https://api.cloudinary.com/v1_1/dzip9qwyz/image/upload',
+        formData,
+        {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        },
+      )
+      const data = response.data
+      const imageUrl = data.secure_url
+      setImages((prevImages) => [...prevImages, imageUrl])
+      setFiles([])
+    })
+    axios.all(uploaders).then(() => {
+      setLoading('false')
+    })
+  }
+
+  const imagePreview = () => {
+    if (loading === 'true') {
+      return <h3>Loading....</h3>
+    }
+    if (loading === 'false') {
+      return (
+        <h3>
+          {images.length <= 0
+            ? 'No images'
+            : images.map((image, index) => (
+                <img
+                  key={index}
+                  alt="uploaded image"
+                  className="w-[125px] h-[70px] bg-cover pr-[15px]"
+                  src={image}
+                />
+              ))}
+        </h3>
+      )
+    }
   }
   return (
     <div>
@@ -161,11 +209,11 @@ const ModalProperty = ({ property }: Props) => {
           >
             {(props) => (
               <Button {...props} classNames={{ root: style.rootButton }}>
-                Upload image
+                Choose images
               </Button>
             )}
           </FileButton>
-
+          <Button onClick={handleUpload}>Upload Images</Button>
           <Button disabled={!files} bg="red" onClick={clearFile}>
             Reset
           </Button>
@@ -182,6 +230,7 @@ const ModalProperty = ({ property }: Props) => {
             <li key={index}>{file.name}</li>
           ))}
         </ul>
+        {imagePreview()}
       </div>
       <div className={style.coverBtn}>
         <Button

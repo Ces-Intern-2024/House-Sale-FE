@@ -24,7 +24,9 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
         <div>
           <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
-              <Button className={styles.button}>ABOUT US</Button>
+              <Button color="transparent" className={styles.button}>
+                ABOUT US
+              </Button>
             </Menu.Target>
           </Menu>
         </div>
@@ -39,7 +41,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
             withArrow
           >
             <Menu.Target>
-              <Button className={styles.button}>
+              <Button color="transparent" className={styles.button}>
                 FOR RENT
                 <IconChevronDown className={styles.icon} />
               </Button>
@@ -62,7 +64,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
             withArrow
           >
             <Menu.Target>
-              <Button className={styles.button}>
+              <Button color="transparent" className={styles.button}>
                 FOR SALE
                 <IconChevronDown className={styles.icon} />
               </Button>
@@ -78,7 +80,9 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
         <div>
           <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
-              <Button className={styles.button}>CONTACT</Button>
+              <Button color="transparent" className={styles.button}>
+                CONTACT
+              </Button>
             </Menu.Target>
           </Menu>
         </div>
@@ -98,7 +102,10 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
                       withArrow
                     >
                       <Menu.Target>
-                        <Button>
+                        <Button
+                          className={styles.btnProfile}
+                          color="transparent"
+                        >
                           <Avatar color="white" />
                           <h3 className=" text-white font-bold ml-1">
                             {data.user.fullName
@@ -119,7 +126,9 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
                   </>
                 ) : (
                   <Link to="/login">
-                    <Button className={styles.button}>LOG IN</Button>
+                    <Button color="transparent" className={styles.button}>
+                      LOG IN
+                    </Button>
                   </Link>
                 )}
               </div>
