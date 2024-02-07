@@ -50,6 +50,7 @@ export default function SlideShow() {
             <h6 className={styles.smallText}>
               Your dreams are in trusted hands
             </h6>
+            <TextSearchBar />
           </div>
 
           <TextSearchBar />
