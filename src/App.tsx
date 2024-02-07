@@ -1,5 +1,6 @@
 import React from 'react'
 import './App.css'
+import '@mantine/core/styles.css'
 import { MantineProvider } from '@mantine/core'
 import { Route, Routes } from 'react-router-dom'
 import Layout from './components/layouts/CommonLayout/Layout'
@@ -11,7 +12,6 @@ import AuthLayout from './components/layouts/AuthLayout/AuthLayout'
 import SellerProfile from './components/Profile/SellerProfile'
 import Register from './components/Register/Register'
 import SellerLayout from './components/layouts/SellerLayout/SellerLayout'
-import '@mantine/core/styles.css'
 
 function App() {
   return (

@@ -3,6 +3,7 @@ import { Carousel } from '@mantine/carousel'
 import { Image } from '@mantine/core'
 import Autoplay from 'embla-carousel-autoplay'
 import styles from './SlideShow.module.scss'
+import TextSearchBar from '../SearchBar/TextSearchBar'
 
 export default function SlideShow() {
   const DELAY_TIME = 7000
@@ -49,6 +50,7 @@ export default function SlideShow() {
             <h6 className={styles.smallText}>
               Your dreams are in trusted hands
             </h6>
+            <TextSearchBar />
           </div>
         </div>
       </div>
