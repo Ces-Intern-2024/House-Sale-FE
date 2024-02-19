@@ -9,12 +9,10 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 export default function MultiCarousel() {
   const responsive = {
     superLargeDesktop: {
-      // the naming can be any, depends on you.
       breakpoint: { max: 6000, min: 2300 },
       items: 5,
     },
     largeDesktop: {
-      // the naming can be any, depends on you.
       breakpoint: { max: 2300, min: 1401 },
       items: 4,
     },
@@ -43,14 +41,12 @@ export default function MultiCarousel() {
           infinite={true}
           customLeftArrow={
             <IconChevronLeft
-              size="xl"
               color="black"
               className={styles.leftArrow}
             ></IconChevronLeft>
           }
           customRightArrow={
             <IconChevronRight
-              size="xl"
               color="black"
               className={styles.rightArrow}
             ></IconChevronRight>

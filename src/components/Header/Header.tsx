@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <div className={style.outer}>
       <div className={style.logoOuter}>
-        <Link to="/">
+        <Link to="/home">
           <img className={style.logo} src={logo}></img>
         </Link>
       </div>

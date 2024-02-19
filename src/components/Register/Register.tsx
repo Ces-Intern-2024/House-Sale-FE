@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Swal from 'sweetalert2'
 import {
   TextInput,
@@ -22,10 +22,10 @@ import styles from './Register.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import { GoogleButton } from '../Login/GoogleButton'
 import {
-  getProvinces,
-  getDistricts,
-  getWards,
-} from '../../service/LocationService'
+  useFetchProvincesQuery,
+  useFetchDistrictsQuery,
+  useFetchWardsQuery,
+} from '../../redux/reducers/locationSlice'
 import { register } from '../../service/RegisterService'
 
 const optionsFilter: OptionsFilter = ({ options, search }) => {
@@ -39,9 +39,12 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
 }
 
 export default function Register() {
-  const [provinces, setProvinces] = useState<[]>([])
-  const [districts, setDistricts] = useState<[]>([])
-  const [wards, setWards] = useState<[]>([])
+  const { data: provinces = [] } = useFetchProvincesQuery()
+  const [provinceCode, setProvinceCode] = useState('')
+  const { data: districts = [] } = useFetchDistrictsQuery(provinceCode)
+  const [districtCode, setDistrictCode] = useState<string | null>('')
+  const { data: wards = [] } = useFetchWardsQuery(districtCode)
+  const [wardCode, setWardCode] = useState<string | null>('')
   const [sellerAccount, setSellerAccount] = useState(false)
   const [errMessage, setErrMessage] = useState('')
   const navigate = useNavigate()
@@ -58,7 +61,11 @@ export default function Register() {
       ? yup.string().required('Name is required')
       : yup.string().nullable(),
     phone: sellerAccount
-      ? yup.string().length(10).required('Phone number is required')
+      ? yup
+          .string()
+          .matches(/^[0-9]+$/, 'Phone number must contain only digits')
+          .length(10, 'The phone number must be 10 digits long.')
+          .required('Phone number is required')
       : yup.string().nullable(),
     password: yup
       .string()
@@ -102,23 +109,6 @@ export default function Register() {
     validate: yupResolver(listSchema),
   })
 
-  const getAllProvinces = async () => {
-    const data = await getProvinces()
-    setProvinces(data)
-    console.log(data)
-  }
-  const getAllDistricts = async (provinceCode: string | null) => {
-    const data = await getDistricts(provinceCode)
-    setDistricts(data)
-    console.log('hi')
-  }
-
-  const getAllWards = async (districtCode: string | null) => {
-    const data = await getWards(districtCode)
-    setWards(data)
-    console.log('hi')
-  }
-
   const handleRegister = async (values: any) => {
     try {
       const data = await register(
@@ -127,7 +117,6 @@ export default function Register() {
       )
       Swal.fire({
         title: 'Register Successfully!',
-
         icon: 'success',
         confirmButtonText: 'OK',
       })
@@ -135,19 +124,16 @@ export default function Register() {
       console.log(data)
     } catch (err: any) {
       setErrMessage(err.response.data.error.message)
+
       form.setErrors({ email: err.response.data.error.message })
     }
   }
-
-  useEffect(() => {
-    getAllProvinces()
-  }, [])
 
   return (
     <>
       <Text className="text-center" size="lg" fw={500}>
         Welcome to{' '}
-        <Link to="/">
+        <Link to="/home">
           <span className="font-[700] text-archivo text-[#399f83]">
             Modern House
           </span>
@@ -160,7 +146,7 @@ export default function Register() {
       </Group>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
-      <form onSubmit={form.onSubmit(async (values) => handleRegister(values))}>
+      <form onSubmit={form.onSubmit((values) => handleRegister(values))}>
         <Stack>
           <TextInput
             error={errMessage}
@@ -228,17 +214,16 @@ export default function Register() {
                 }}
                 {...form.getInputProps('provinceCode')}
                 onChange={(_value: any) => {
-                  form.setFieldValue('districtCode', null)
-                  form.setFieldValue('wardCode', null)
-                  form.setFieldValue('address', null)
                   form.setFieldValue('provinceCode', _value)
-                  getAllDistricts(_value)
+                  setProvinceCode(_value)
+                  setDistrictCode(null)
+                  setWardCode(null)
                 }}
+                value={provinceCode}
               />
               <Select
                 allowDeselect={false}
                 withAsterisk
-                classNames={{ label: styles.label }}
                 checkIconPosition="right"
                 label="District"
                 placeholder="Thanh Khe"
@@ -257,13 +242,11 @@ export default function Register() {
                 }}
                 {...form.getInputProps('districtCode')}
                 onChange={(_value: any) => {
-                  // to clear Ward
-                  form.setFieldValue('wardCode', null)
-                  form.setFieldValue('address', null)
-                  // to display District
                   form.setFieldValue('districtCode', _value)
-                  getAllWards(_value)
+                  setDistrictCode(_value)
+                  setWardCode(null)
                 }}
+                value={districtCode}
               />
               <Select
                 allowDeselect={false}
@@ -286,6 +269,11 @@ export default function Register() {
                   transitionProps: { transition: 'pop', duration: 200 },
                 }}
                 {...form.getInputProps('wardCode')}
+                onChange={(_value: any) => {
+                  form.setFieldValue('wardCode', _value)
+                  setWardCode(_value)
+                }}
+                value={wardCode}
               />
               <TextInput
                 withAsterisk
