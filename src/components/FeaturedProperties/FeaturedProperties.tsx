@@ -10,27 +10,15 @@ type Props = {
   filter?: string | number
   children?: ReactNode
 }
-const FeaturedProperties = ({ title, properties, filter, children }: Props) => {
-  // console.log(properties);
-
-  const quantity = 3
+const FeaturedProperties = ({ title, properties, children }: Props) => {
+  const quantity = 4
   const [visibleProperty, setVisibleProperty] = useState<number>(quantity)
   const [propertiesToShow, setPropertiesToShow] = useState<Properties[]>([])
-  const [filteredList, setFilteredList] = useState<Properties[]>([])
-
-  const filterFeatured = () => {
-    return properties.filter((element) => element.featuredId === `${filter}`)
-  }
 
   useEffect(() => {
-    const listTemp = filterFeatured()
-    setFilteredList(listTemp)
-  }, [properties, filter]) // Add dependencies to the useEffect dependency array
-
-  useEffect(() => {
-    const initList = filteredList.slice(0, visibleProperty)
+    const initList = properties.slice(0, visibleProperty)
     setPropertiesToShow(initList)
-  }, [filteredList, visibleProperty]) // Add dependencies to the useEffect dependency array
+  }, [properties, visibleProperty])
 
   const handleViewMore = () => {
     setVisibleProperty((prevCount) => prevCount + quantity)

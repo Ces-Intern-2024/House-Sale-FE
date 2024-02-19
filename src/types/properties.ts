@@ -1,22 +1,54 @@
 export interface Properties {
   propertyId: number
   name: string
-  featuredId: string
-  categoryId: string
   code: string
-  districtId: string
-  location: string
   price: number
   currencyCode: string
-  status: string
-  landArea: number
-  areaOfUse: number
+  status: boolean
+  landArea: string
+  areaOfUse: string
   numberOfBedroom: number
   numberOfToilet: number
-  direction: string
   numberOfFloor: number
+  direction: string
+  description: string
   createdAt: string
   updatedAt: string
-  description: string
-  images: string
+  feature: Feature
+  category: Category
+  location: Location
+  images: Image[]
+  seller: Seller
+}
+
+export interface Feature {
+  featureId: number
+  name: string
+}
+
+export interface Category {
+  categoryId: number
+  name: string
+}
+
+export interface Location {
+  locationId: number
+  wardCode: string
+  districtCode: string
+  provinceCode: string
+  street: string
+  address: string
+}
+
+export interface Image {
+  imageId: number
+  imageUrl: string
+}
+
+export interface Seller {
+  userId: number
+  fullName: string
+  email: string
+  phone: string
+  avatar: string
 }

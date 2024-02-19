@@ -1,4 +1,4 @@
-export type District = {
+export interface District {
   districtCode: string
   nameEn: string
   fullNameEn: string

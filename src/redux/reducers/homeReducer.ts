@@ -25,7 +25,7 @@ export const getAllPropertiesForSale = createAsyncThunk(
     const res = await axios.get(`/properties?featureId=1`, {
       signal: thunkAPI.signal,
     })
-    const data = res.data.metaData as Properties[] // Adjust the type here
+    const data = res.data.metaData.properties as Properties[] // Adjust the type here
     return data
   },
 )
@@ -36,7 +36,7 @@ export const getAllPropertiesForRent = createAsyncThunk(
     const res = await axios.get(`/properties?featureId=2`, {
       signal: thunkAPI.signal,
     })
-    const data = res.data.metaData as Properties[] // Adjust the type here
+    const data = res.data.metaData.properties as Properties[] // Adjust the type here
     return data
   },
 )

@@ -1,4 +1,4 @@
-export type Province = {
+export interface Province {
   provinceCode: string
   nameEn: string
   fullNameEn: string

@@ -14,14 +14,18 @@ const Properties = ({ data }: Props) => {
   return (
     <div className={style.propertyContainer}>
       <div className={style.propertyContent}>
-        <div className={style.propertyFeatured}>{data.featuredId}</div>
+        <div className={style.propertyFeatured}>{data.feature.name}</div>
         <div className={style.propertyCoverImage}>
           <a href="/">
-            <img
-              className={style.propertyImage}
-              src={data.images}
-              alt={data.name}
-            />
+            {data.images.length > 1 ? (
+              <img
+                className={style.propertyImage}
+                src={data.images[0].imageUrl}
+                alt={data.name}
+              />
+            ) : (
+              <img className={style.propertyImage} alt={data.name} />
+            )}
           </a>
         </div>
         <div className="w-full">
@@ -33,7 +37,7 @@ const Properties = ({ data }: Props) => {
           <div className={style.propertyLocation}>
             <span className={style.propertyCoverIcon}>
               <FaLocationDot className={style.propertyIcon} size={16} />
-              {data.location}
+              {data.location.address}
             </span>
             <span>
               <FaRegHeart size={16} />

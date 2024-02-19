@@ -11,16 +11,16 @@
 }
 
 .bannerWelcomeText {
-  @apply z-[1] relative gap-x-[16px] gap-y-[16px] text-center flex-col justify-center items-center mx-auto  
-  xl:flex xl:max-h-[500px] xl:max-w-[50%] xl:min-h-[500px] xl:min-w-[50%] 
-  lg:flex lg:max-h-[500px] lg:max-w-[50%] lg:min-h-[500px] lg:min-w-[50%]
-  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%] mobile:gap-y-[0px];
+  @apply z-[1] relative gap-x-[16px] gap-y-[16px] text-center flex-col justify-evenly items-center mx-auto  
+  xl:flex xl:max-h-[500px] xl:max-w-[40%] xl:min-h-[500px] xl:min-w-[50%] 
+  lg:flex lg:max-h-[500px] lg:max-w-[40%] lg:min-h-[500px] lg:min-w-[50%]
+  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%] mobile:gap-y-[0px] mobile:gap-y-[30px];
 }
 
 .bannerWelcomeImage {
-  @apply xl:absolute object-cover  justify-center items-center overflow-hidden rounded-tr-[16px] rounded-br-[16px]
+  @apply xl:absolute object-cover justify-center items-center overflow-hidden
   xl:bottom-0 xl:right-0 xl:h-[90%] xl:bg-[50%] xl:bg-no-repeat xl:bg-scroll xl:pt-0
-  lg:absolute lg:bottom-0 lg:right-0 lg:h-[80%] lg:pt-0
+  lg:absolute lg:bottom-0 lg:right-0 lg:h-[80%] lg:pt-0 
   mobile:pt-[12px]
   2xl:h-[100%];
 }
