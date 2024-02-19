@@ -1,7 +1,7 @@
 import { Province } from './province'
 import { District } from './district'
 import { Ward } from './ward'
-export type User = {
+export interface User {
   address: string
   avatar: string | null
   district: District | null

@@ -12,7 +12,7 @@ const DetailsProperty = () => {
           <div className={style.tableCol}>
             <div className={style.tableRow}>
               <span className={style.labelText}>Location:</span>
-              <span className={style.value}>{property.location}</span>
+              <span className={style.value}>{property.location.address}</span>
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Number of floor:</span>

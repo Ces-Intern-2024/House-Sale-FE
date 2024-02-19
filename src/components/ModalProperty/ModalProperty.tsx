@@ -1,9 +1,8 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import {
   FileButton,
   Button,
   Group,
-  Text,
   TextInput,
   Select,
   NumberInput,
@@ -12,9 +11,14 @@ import {
 import style from './ModalProperty.module.scss'
 import { Properties } from '@/types'
 import axios from 'axios'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { RootState } from '@/redux/store'
+import { Province } from '@/types/province'
+import { getAllProvinces } from '../../redux/reducers/locationReducer'
 
 type Props = {
   property: Properties | null
+  // action: string
 }
 const ModalProperty = ({ property }: Props) => {
   const [files, setFiles] = useState<File[]>([])
@@ -25,6 +29,28 @@ const ModalProperty = ({ property }: Props) => {
     setFiles([])
     resetRef.current?.()
   }
+  const [provincesNameEn, setProvincesNameEn] = useState<string[]>([])
+
+  const dispatch = useAppDispatch()
+  //apply API getAllProvinces
+  const provinces: Province[] = useAppSelector(
+    (state: RootState) => state.location.provincesList,
+  )
+  useEffect(() => {
+    const promise = dispatch(getAllProvinces())
+    return () => {
+      promise.abort()
+    }
+  }, [])
+
+  useEffect(() => {
+    setProvincesNameEn(
+      provinces.map((province) => {
+        return province.fullNameEn
+      }),
+    )
+  }, [])
+  console.log(provincesNameEn)
 
   const handleUpload = () => {
     const uploaders = files.map(async (file) => {
@@ -41,6 +67,9 @@ const ModalProperty = ({ property }: Props) => {
       )
       const data = response.data
       const imageUrl = data.secure_url
+      console.log(imageUrl)
+      console.log(files)
+
       setImages((prevImages) => [...prevImages, imageUrl])
       setFiles([])
     })
@@ -91,14 +120,14 @@ const ModalProperty = ({ property }: Props) => {
           label="Featured"
           placeholder="Choose featured "
           data={['Sale', 'Rent']}
-          value={property?.featuredId}
+          value={property?.feature.name}
         />
         <Select
           className={style.colModal}
           label="Category"
           placeholder="Choose featured "
           data={['House', 'Villa', 'Appartment']}
-          value={property?.categoryId}
+          value={property?.category.name}
         />
       </div>
       <div className={style.rowModal}>
@@ -106,7 +135,7 @@ const ModalProperty = ({ property }: Props) => {
           className={style.colModal}
           label="City/Province"
           placeholder="Choose featured "
-          data={['Sale', 'Rent']}
+          data={provincesNameEn}
         />
         <Select
           className={style.colModal}
@@ -213,23 +242,31 @@ const ModalProperty = ({ property }: Props) => {
               </Button>
             )}
           </FileButton>
-          <Button onClick={handleUpload}>Upload Images</Button>
+          <Button
+            onClick={handleUpload}
+            classNames={{ root: style.rootButton }}
+          >
+            Upload Images
+          </Button>
           <Button disabled={!files} bg="red" onClick={clearFile}>
             Reset
           </Button>
         </Group>
 
         {files.length > 0 && (
-          <Text size="sm" mt="sm">
-            Your images:
-          </Text>
+          <div className="border border-grey mt-[12px] bg-white ">
+            <div className="px-[16px] py-[8px] overflow-hidden flex flex-wrap gap-4">
+              {files.map((file, index) => (
+                <img
+                  key={index}
+                  alt="uploaded image"
+                  className="w-1/6 object-scale-down shadow-xl h-[180px]"
+                  src={URL.createObjectURL(file)}
+                />
+              ))}
+            </div>
+          </div>
         )}
-
-        <ul>
-          {files.map((file, index) => (
-            <li key={index}>{file.name}</li>
-          ))}
-        </ul>
         {imagePreview()}
       </div>
       <div className={style.coverBtn}>
