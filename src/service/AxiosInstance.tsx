@@ -5,8 +5,6 @@ import storage from 'redux-persist/lib/storage'
 import { store } from '../redux/store'
 import { signInSuccess } from '../redux/reducers/sessionSlice'
 
-console.log('interceptor')
-
 interface DecodedToken {
   sub: number
   iat: number
@@ -14,7 +12,7 @@ interface DecodedToken {
   type: string
 }
 
-const baseURL = 'http://localhost:8080/v1/api/'
+const baseURL = 'https://housesale.tldev.id.vn/v1/api/'
 
 export const axiosInstance = axios.create({ baseURL })
 axiosInstance.interceptors.request.use(async (req) => {

@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react'
-import { properties } from '../../utils/properties'
 import Container from '../../components/Container/Container'
 import FeaturedProperties from '../../components/FeaturedProperties/FeaturedProperties'
 import BannerValue from '../../components/BannerValue/BannerValue'
 import BannerWelcome from '../../components/BannerWelcome/BannerWelcome'
 import { useAppSelector, useAppDispatch } from '../../redux/hooks'
-import { RootState } from '../../redux/store'
 import {
   getAllPropertiesForSale,
   getAllPropertiesForRent,
@@ -15,10 +13,10 @@ import SlideShow from '../../components/Slideshow/SlideShow'
 
 const HomePage = () => {
   const salesList: Properties[] = useAppSelector(
-    (state: RootState) => state.home.propertiesListForSale,
+    (state) => state.home.propertiesListForSale,
   )
   const rentsList: Properties[] = useAppSelector(
-    (state: RootState) => state.home.propertiesListForRent,
+    (state) => state.home.propertiesListForRent,
   )
 
   const dispatch = useAppDispatch()
@@ -37,25 +35,24 @@ const HomePage = () => {
     }
   }, [dispatch])
 
-  console.log('SALE LIST:', salesList)
-  console.log('RENT LIST:', rentsList)
-
+  // console.log('SALE LIST:', salesList)
+  // console.log('RENT LIST:', rentsList)
   return (
     <div>
       <Container>
         <SlideShow />
         <FeaturedProperties
-          properties={properties}
+          properties={rentsList}
           title="FEATURED FOR RENT"
-          filter="rent"
+          // filter="rent"
         ></FeaturedProperties>
 
         <BannerValue />
 
         <FeaturedProperties
-          properties={properties}
+          properties={salesList}
           title="FEATURED FOR SALE"
-          filter="sale"
+          // filter="sale"
         ></FeaturedProperties>
         <BannerWelcome />
       </Container>

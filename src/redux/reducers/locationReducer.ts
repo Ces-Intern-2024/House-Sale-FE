@@ -1,12 +1,15 @@
-import { createAsyncThunk } from '@reduxjs/toolkit'
+import { District } from '@/types/district'
+import { Province } from '@/types/province'
+import { Ward } from '@/types/ward'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 interface locationState {
   loading: boolean
   error: string | undefined
-  districtsList: string[]
-  provincesList: string[]
-  wardsList: string[]
+  districtsList: District[]
+  provincesList: Province[]
+  wardsList: Ward[]
 }
 
 const initialState: locationState = {
@@ -23,21 +26,86 @@ export const getAllProvinces = createAsyncThunk(
     const res = await axios.get(`/location/provinces`, {
       signal: thunkAPI.signal,
     })
-    const data = res.data.metaData as string[] // Adjust the type here
+    const data = res.data.metaData as Province[] // Adjust the type here
     return data
   },
 )
 
 export const getAllDistricts = createAsyncThunk(
   'location/getAllDistricts',
-  async (idProvince, thunkAPI) => {
+  async (provinceCode, thunkAPI) => {
     const res = await axios.get(
-      `/location/districts?provinceCode=${idProvince}`,
+      `/location/districts?provinceCode=${provinceCode}`,
       {
         signal: thunkAPI.signal,
       },
     )
-    const data = res.data.metaData as string[] // Adjust the type here
+    const data = res.data.metaData as District[] // Adjust the type here
     return data
   },
 )
+
+export const getAllWards = createAsyncThunk(
+  'location/getAllWards',
+  async (districtCode, thunkAPI) => {
+    const res = await axios.get(
+      `/location/wards?districtCode=${districtCode}`,
+      {
+        signal: thunkAPI.signal,
+      },
+    )
+    const data = res.data.metaData as Ward[] // Adjust the type here
+    return data
+  },
+)
+
+export const locationSlice = createSlice({
+  name: 'location',
+  initialState,
+  reducers: {
+    // add other actions here which are not createAsyncThunk
+  },
+  extraReducers: (builder) => {
+    //Province
+    builder.addCase(getAllProvinces.pending, (state) => {
+      state.loading = true
+    })
+    builder.addCase(getAllProvinces.fulfilled, (state, action) => {
+      state.loading = false
+      state.provincesList = action.payload
+      state.error = undefined
+    })
+    builder.addCase(getAllProvinces.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.error.message
+    })
+    //District
+    builder.addCase(getAllDistricts.pending, (state) => {
+      state.loading = true
+    })
+    builder.addCase(getAllDistricts.fulfilled, (state, action) => {
+      state.loading = false
+      state.districtsList = action.payload
+      state.error = undefined
+    })
+    builder.addCase(getAllDistricts.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.error.message
+    })
+    //Ward
+    builder.addCase(getAllWards.pending, (state) => {
+      state.loading = true
+    })
+    builder.addCase(getAllWards.fulfilled, (state, action) => {
+      state.loading = false
+      state.wardsList = action.payload
+      state.error = undefined
+    })
+    builder.addCase(getAllWards.rejected, (state, action) => {
+      state.loading = false
+      state.error = action.error.message
+    })
+  },
+})
+
+export default locationSlice.reducer

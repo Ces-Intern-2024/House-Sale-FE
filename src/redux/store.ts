@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import homeReducer from './reducers/homeReducer'
+import locationReducer from './reducers/locationReducer'
 import resizeReducer from './reducers/resizeSlice'
 import { locationAPISlice } from './reducers/locationSlice'
 import userSlice from './reducers/userSlice'
@@ -16,6 +17,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   home: homeReducer,
   resize: resizeReducer,
+  location: locationReducer,
   user: userSlice,
   session: sessionSlice,
   [locationAPISlice.reducerPath]: locationAPISlice.reducer,

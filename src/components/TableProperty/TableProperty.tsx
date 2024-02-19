@@ -42,8 +42,8 @@ const TableProperty = () => {
         </div>
       </Table.Td>
       <Table.Td>$ {element.price}</Table.Td>
-      <Table.Td>{element.featuredId}</Table.Td>
-      <Table.Td>{element.categoryId}</Table.Td>
+      <Table.Td>{element.feature.featureId}</Table.Td>
+      <Table.Td>{element.category.categoryId}</Table.Td>
       <Table.Td>
         <div className={style.propertyActions}>
           <FaEdit

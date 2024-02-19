@@ -11,8 +11,8 @@ import axios from 'axios'
 import '@mantine/carousel/styles.css'
 import '@mantine/core/styles.css'
 
-// axios.defaults.baseURL = 'https://housesale.tldev.id.vn/v1/api'
-axios.defaults.baseURL = 'http://localhost:8080/v1/api/'
+axios.defaults.baseURL = 'https://housesale.tldev.id.vn/v1/api'
+// axios.defaults.baseURL = 'http://localhost:8080/v1/api/'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <Provider store={store}>

@@ -6,7 +6,7 @@ import { Ward } from '../../types/ward'
 export const locationAPISlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8080/v1/api/location',
+    baseUrl: 'https://housesale.tldev.id.vn/v1/api/location',
   }),
   endpoints(builder) {
     return {
