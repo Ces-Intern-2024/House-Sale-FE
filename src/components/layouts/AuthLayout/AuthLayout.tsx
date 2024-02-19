@@ -1,8 +1,9 @@
 import React from 'react'
-import { Outlet, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import style from './AuthLayout.module.scss'
 import { Paper, PaperProps } from '@mantine/core'
 import { IoIosArrowBack } from 'react-icons/io'
+import Views from '../../../views/Views'
 
 const AuthLayout = (props: PaperProps) => {
   return (
@@ -19,7 +20,7 @@ const AuthLayout = (props: PaperProps) => {
           <Link to="/" className={style.btnBackHome}>
             <IoIosArrowBack />
           </Link>
-          <Outlet />
+          <Views />
         </Paper>
       </div>
     </div>

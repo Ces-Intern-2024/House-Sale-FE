@@ -8,7 +8,10 @@ export type User = {
   fullName: string | number | readonly string[] | undefined
   phone: string | number | readonly string[] | undefined
   province: Province | null
-  role: object
+  role: {
+    roleId: number | null
+    roleName: string
+  }
   street: string | null
   userId: number | undefined
   ward: Ward | null

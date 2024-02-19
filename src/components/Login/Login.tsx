@@ -14,13 +14,18 @@ import style from './Login.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
 import { GoogleButton } from './GoogleButton'
 import axios from 'axios'
-import { getItem, setItem } from '../../utils/localStorage'
+import { setUser } from '../../redux/reducers/userSlice'
+import { signInSuccess } from '../../redux/reducers/sessionSlice'
+import { useAppDispatch } from '../../redux/hooks'
+import appConfig from '../../configs/app.config'
+
 const LOGIN_URL = '/user/login'
 interface Props {
   email: string
   password: string
 }
 export function Login() {
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const form = useForm({
     initialValues: {
@@ -49,12 +54,16 @@ export function Login() {
           withCredentials: true,
         },
       )
-      console.log('login')
-      setItem('data', res.data.metaData)
 
-      res.data.metaData.user.roleId === 1 ? navigate('/') : navigate('/profile')
+      dispatch(setUser(res.data.metaData.user))
+      dispatch(
+        signInSuccess({
+          signedIn: true,
+          tokens: { ...res.data.metaData.tokens },
+        }),
+      )
 
-      console.log(getItem('data'))
+      navigate(appConfig.authenticatedEntryPath)
     } catch (err) {
       console.error('Login error:', err)
     }
@@ -64,7 +73,7 @@ export function Login() {
     <>
       <Text className="text-center" size="lg" fw={500}>
         Welcome to{' '}
-        <Link to="/">
+        <Link to="/home">
           <span className="font-[700] text-archivo text-[#399f83]">
             Modern House
           </span>

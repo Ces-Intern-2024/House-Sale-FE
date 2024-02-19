@@ -7,7 +7,7 @@
 }
 
 .heading {
-  @apply text-[30px] font-semibold;
+  @apply xs:text-[30px] font-semibold mobile:text-[22px];
 }
 
 .title {
@@ -44,6 +44,10 @@
   @apply bg-orangeBtn hover:bg-darkBlue;
 }
 
+.disableBtn {
+  @apply mt-6 bg-orangeBtn text-white w-[50%] opacity-70;
+}
+
 .personalInfoOuter {
   @apply flex flex-col w-full;
 }
@@ -56,6 +60,16 @@
   @apply flex md:justify-end mobile:justify-center;
 }
 
-.pwContainer {
-  @apply flex flex-col w-full justify-center mt-5;
+.pwTitle {
+  @apply font-bold text-[25px] mb-3 text-center;
+}
+
+.clearAvatar {
+  @apply z-10 absolute right-[10px] top-3 cursor-pointer opacity-50;
+}
+
+.saveOrCancel {
+  @apply mx-2 flex;
+  // @apply mx-2 grid grid-rows-2 gap-2;
+  //   grid-template-columns: repeat(2, 1fr);
 }

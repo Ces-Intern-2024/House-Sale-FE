@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TextInput } from '@mantine/core'
 import { IconSearch } from '@tabler/icons-react'
 import styles from './TextSearchBar.module.scss'
@@ -8,6 +8,7 @@ import { setIsSmallScreen } from '../../redux/reducers/resizeSlice'
 export default function TextSearchBar() {
   const dispatch = useAppDispatch()
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
+  const [searchValue, setSearchValue] = useState('')
   console.log(isSmallScreen)
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export default function TextSearchBar() {
   return (
     <>
       <TextInput
+        onChange={(event) => setSearchValue(event.currentTarget.value)}
         className=" cursor-pointer"
         radius="xl"
         size={isSmallScreen ? 'md' : 'lg'}
@@ -36,6 +38,7 @@ export default function TextSearchBar() {
           input: styles.input,
           section: styles.section,
         }}
+        value={searchValue}
       />
     </>
   )

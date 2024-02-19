@@ -52,8 +52,6 @@ export default function SlideShow() {
             </h6>
             <TextSearchBar />
           </div>
-
-          <TextSearchBar />
         </div>
       </div>
     </>
