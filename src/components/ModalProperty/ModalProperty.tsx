@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   FileButton,
   Button,
   Group,
-  TextInput,
   Select,
   NumberInput,
   Textarea,
+  TextInput,
 } from '@mantine/core'
 import style from './ModalProperty.module.scss'
 import { Category, Feature, Properties } from '@/types'
@@ -27,25 +27,34 @@ import { useForm } from '@mantine/form'
 import { yupResolver } from 'mantine-form-yup-resolver'
 import * as yup from 'yup'
 import { axiosInstance } from '../../service/AxiosInstance'
+import Swal from 'sweetalert2'
 
-type Props = {
+interface Props {
   property: Properties | null
-  // action: string
+  onClose: () => void
+  isUpdated: (value: boolean) => void
 }
 
-const ModalProperty = ({ property }: Props) => {
+const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
   const [files, setFiles] = useState<File[]>([])
-  const [images, setImages] = useState<string[]>([])
-  // const resetRef = useRef<() => void>(null)
-  const [loading, setLoading] = useState('')
-  // const clearFile = () => {
-  //   setFiles([])
-  //   resetRef.current?.()
-  // }
-  const [provinceCode, setProvinceCode] = useState<string>('')
-  const [districtCode, setDistrictCode] = useState<string>('')
-  const [wardCode, setWardCode] = useState<string>('')
 
+  const [loading, setLoading] = useState(false)
+
+  const [provinceCode, setProvinceCode] = useState<string | undefined>(
+    property?.location.provinceCode,
+  )
+  const [districtCode, setDistrictCode] = useState<string | undefined>(
+    property?.location.districtCode,
+  )
+  const [wardCode, setWardCode] = useState<string | undefined>(
+    property?.location.wardCode,
+  )
+  const [feature, setFeature] = useState<string | undefined>(
+    String(property?.feature.featureId),
+  )
+  const [category, setCategory] = useState<string | undefined>(
+    String(property?.category.categoryId),
+  )
   const dispatch = useAppDispatch()
   //apply API getAllProvinces
   const provinces: Province[] = useAppSelector(
@@ -57,7 +66,6 @@ const ModalProperty = ({ property }: Props) => {
       promise.abort()
     }
   }, [dispatch])
-  console.log(provinces)
   //apply API getAllDistricts
   const districts: District[] = useAppSelector(
     (state) => state.location.districtsList,
@@ -68,7 +76,6 @@ const ModalProperty = ({ property }: Props) => {
       promise.abort()
     }
   }, [dispatch, provinceCode])
-  console.log(districts)
   //Apply API getAllWards
   const wards: Ward[] = useAppSelector((state) => state.location.wardsList)
   useEffect(() => {
@@ -77,7 +84,6 @@ const ModalProperty = ({ property }: Props) => {
       promise.abort()
     }
   }, [dispatch, districtCode])
-  console.log(wards)
   //Apply API getAllCategory
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
@@ -99,132 +105,160 @@ const ModalProperty = ({ property }: Props) => {
     }
   }, [dispatch])
 
-  const modalSchema = yup.object().shape({
-    name: yup.string().required('Name is required'),
-    code: yup.string().required('Code is required'),
-    featureId: yup.string().required('Featured is required'),
-    categoryId: yup.string().required('Category is required'),
-    provinceCode: yup.string().required('Province Code is required'),
-    districtCode: yup.string().required('District Code is required'),
-    wardCode: yup.string().required('Ward Code is required'),
-    street: yup.string().required('Street is required'),
-    // address: yup.string().nullable(),
-    price: yup.number().positive().required('Price is required'),
-    currencyCode: yup.string().required('Currency code is required'),
-    landArea: yup.string().nullable(),
-    areaOfUse: yup.string().nullable(),
-    numberOfBedRoom: yup
-      .number()
-      .positive()
-      .required('Number of bedrooms is required'),
-    numberOfToilet: yup
-      .number()
-      .positive()
-      .required('Number of toilets is required'),
-    numberOfFloor: yup
-      .number()
-      .positive()
-      .required('Number of floors is required'),
-    direction: yup.string().nullable(),
-    description: yup.string().nullable(),
-  })
+  const modalSchema = useMemo(() => {
+    return yup.object().shape({
+      name: yup.string().required('Name is required'),
+      code: yup.string().required('Code is required'),
+      featureId: yup.string().required('Featured is required'),
+      categoryId: yup.string().required('Category is required'),
+      provinceCode: yup.string().required('Province Code is required'),
+      districtCode: yup.string().required('District Code is required'),
+      wardCode: yup.string().required('Ward Code is required'),
+      street: yup.string().required('Street is required'),
+      address: yup.string().nullable(),
+      price: yup.number().positive().required('Price is required'),
+      currencyCode: yup.string().required('Currency code is required'),
+      landArea: yup.string().nullable(),
+      areaOfUse: yup.string().nullable(),
+      numberOfBedRoom: yup
+        .number()
+        .positive()
+        .required('Number of bedrooms is required'),
+      numberOfToilet: yup
+        .number()
+        .positive()
+        .required('Number of toilets is required'),
+      numberOfFloor: yup
+        .number()
+        .positive()
+        .required('Number of floors is required'),
+      direction: yup.string().nullable(),
+      description: yup.string().nullable(),
+    })
+  }, [])
 
   const form = useForm({
     initialValues: {
-      name: '',
-      code: '',
-      featureId: '',
-      categoryId: '',
-      provinceCode: '',
-      districtCode: '',
-      wardCode: '',
-      street: '',
-      price: '',
-      currencyCode: '',
-      landArea: '',
-      areaOfUse: '',
-      numberOfBedRoom: '',
-      numberOfToilet: '',
-      numberOfFloor: '',
-      direction: '',
-      description: '',
+      name: property?.name,
+      code: property?.code,
+      featureId: feature,
+      categoryId: category,
+      provinceCode: provinceCode,
+      districtCode: districtCode,
+      wardCode: wardCode,
+      street: property?.location.street,
+      address: property?.location.address,
+      price: property?.price,
+      currencyCode: property?.currencyCode,
+      landArea: property?.landArea,
+      areaOfUse: property?.areaOfUse,
+      numberOfBedRoom: property?.numberOfBedRoom,
+      numberOfToilet: property?.numberOfToilet,
+      numberOfFloor: property?.numberOfFloor,
+      direction: property?.direction,
+      description: property?.description,
     },
     validate: yupResolver(modalSchema),
   })
 
-  const handleUpload = () => {
-    const uploaders = files.map(async (file) => {
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('upload_preset', 'ntdit_dev_image')
-      formData.append('api_key', '166589584369138')
-      const response = await axios.post(
-        'https://api.cloudinary.com/v1_1/dzip9qwyz/image/upload',
-        formData,
-        {
-          headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        },
-      )
-      const data = response.data
-      const imageUrl = data.secure_url //get image url
-
-      setImages((prevImages) => [...prevImages, imageUrl])
-      setFiles([])
-    })
-    axios.all(uploaders).then(() => {
-      setLoading('false')
-    })
+  const handleUploadImage = async (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('upload_preset', 'ntdit_dev_image')
+    formData.append('api_key', '166589584369138')
+    setLoading(true)
+    const response = await axios.post(
+      'https://api.cloudinary.com/v1_1/dzip9qwyz/image/upload',
+      formData,
+      {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      },
+    )
+    const data = response.data
+    const imageUrl = data.secure_url //get image url
+    return imageUrl
   }
-
-  // const imagePreview = () => {
-  //   if (loading === 'true') {
-  //     return <h3>Loading....</h3>
-  //   }
-  //   if (loading === 'false') {
-  //     return (
-  //       <h3>
-  //         {images.length <= 0
-  //           ? 'No images'
-  //           : images.map((image, index) => (
-  //               <img
-  //                 key={index}
-  //                 alt="uploaded image"
-  //                 className="w-[125px] h-[70px] bg-cover pr-[15px]"
-  //                 src={image}
-  //               />
-  //             ))}
-  //       </h3>
-  //     )
-  //   }
-  // }
 
   const handleAddNew = async (value: any) => {
     const convertProperty = {
       ...value,
-      featureId: Number(value.featureId),
-      categoryId: Number(value.categoryId),
+      featureId: Number(feature),
+      categoryId: Number(category),
       numberOfBedRoom: Number(value.numberOfBedRoom),
       numberOfToilet: Number(value.numberOfToilet),
       numberOfFloor: Number(value.numberOfFloor),
       price: Number(value.price),
-      address: 'NONE',
     }
     try {
       loading
       // Gọi hàm handleUpload để tải lên hình ảnh
-      await handleUpload()
+      const arr = []
+      for (let i = 0; i < files.length; i++) {
+        // eslint-disable-next-line no-await-in-loop
+        const res = await handleUploadImage(files[i])
+        arr.push(res)
+      }
       // Sau khi tất cả hình ảnh đã được tải lên, gửi dữ liệu lên máy chủ
-      const newProperty = { ...convertProperty, images: images }
+      const newProperty = { ...convertProperty, images: arr }
       const res = await axiosInstance.post(`/seller/properties`, newProperty)
-      console.log(res)
+      setLoading(false)
+      onClose()
+      Swal.fire({
+        title: 'Added successfully',
+        icon: 'success',
+      })
+      isUpdated(true)
+      return res
+    } catch (error) {
+      setLoading(false)
+      console.error('Error adding new property:', error)
+    }
+  }
+
+  const handleUpdate = async (value: any) => {
+    delete value.featureId
+    delete value.categoryId
+    delete value.provinceCode
+    delete value.districtCode
+    delete value.wardCode
+    delete value.street
+    delete value.address
+    delete value.numberOfBedRoom
+    delete value.numberOfToilet
+    delete value.numberOfFloor
+    delete value.currencyCode
+    try {
+      setLoading(true)
+      const res = await axiosInstance.patch(
+        `/seller/properties/${property?.propertyId}`,
+        value,
+      )
+      setLoading(false)
+      onClose()
+      Swal.fire({
+        title: 'Updated successfully',
+        icon: 'success',
+      })
+      isUpdated(true)
+      return res
     } catch (error) {
       console.error('Error adding new property:', error)
+    }
+  }
+
+  const handleSubmit = (value: any) => {
+    // console.log(typeof value);
+
+    if (property === null) {
+      handleAddNew(value)
+    } else {
+      handleUpdate(value)
     }
   }
   return (
     <form
       onSubmit={form.onSubmit((values) => {
-        handleAddNew(values)
+        handleSubmit(values)
       })}
     >
       <div>
@@ -236,7 +270,6 @@ const ModalProperty = ({ property }: Props) => {
             label="Property name"
             placeholder="Enter name "
             withAsterisk
-            value={property?.name}
             onKeyUp={(event) => {
               form.setFieldValue('name', event.currentTarget.value)
             }}
@@ -246,7 +279,6 @@ const ModalProperty = ({ property }: Props) => {
             className={style.colModal}
             label="Property code"
             placeholder="Enter code "
-            value={property?.code}
             withAsterisk
             onKeyUp={(event) => {
               form.setFieldValue('code', event.currentTarget.value)
@@ -264,7 +296,14 @@ const ModalProperty = ({ property }: Props) => {
                 label: feature.name,
               },
             ])}
-            value={property?.feature.name}
+            value={feature}
+            onChange={(_value: any) => {
+              setFeature(_value)
+            }}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
           <Select
             {...form.getInputProps('categoryId')}
@@ -272,18 +311,24 @@ const ModalProperty = ({ property }: Props) => {
             label="Category"
             placeholder="Choose featured "
             withAsterisk
-            value={property?.category.name}
             data={categories.flatMap((category) => [
               {
                 value: category.categoryId.toString(),
                 label: category.name,
               },
             ])}
+            value={category}
+            onChange={(_value: any) => {
+              setCategory(_value)
+            }}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
         </div>
         <div className={`${style.rowModal} ${style.mt}`}>
           <Select
-            {...form.getInputProps('provinceCode')}
             className={style.colModal}
             label="City/Province"
             placeholder="Choose city/province"
@@ -302,6 +347,7 @@ const ModalProperty = ({ property }: Props) => {
               offset: 0,
               transitionProps: { transition: 'pop', duration: 200 },
             }}
+            {...form.getInputProps('provinceCode')}
             onChange={(_value: any) => {
               form.setFieldValue('provinceCode', _value)
               setProvinceCode(_value)
@@ -309,6 +355,10 @@ const ModalProperty = ({ property }: Props) => {
               setWardCode('')
             }}
             value={provinceCode}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
           <Select
             {...form.getInputProps('districtCode')}
@@ -336,6 +386,10 @@ const ModalProperty = ({ property }: Props) => {
               setWardCode('')
             }}
             value={districtCode}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
           <Select
             {...form.getInputProps('wardCode')}
@@ -362,21 +416,32 @@ const ModalProperty = ({ property }: Props) => {
               setWardCode(_value)
             }}
             value={wardCode}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
           <TextInput
             {...form.getInputProps('street')}
             className={style.colModal}
             label="Street"
             placeholder="Enter street"
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
         </div>
         <div className={`${style.rowModal} ${style.mt}`}>
           <TextInput
-            {...form.getInputProps('direction')}
+            {...form.getInputProps('address')}
             className={style.colModal}
-            label="Direction"
-            placeholder="Enter direction"
-            // value={property?.direction}
+            label="Address"
+            placeholder="Enter address"
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
           <NumberInput
             {...form.getInputProps('numberOfFloor')}
@@ -385,7 +450,10 @@ const ModalProperty = ({ property }: Props) => {
             placeholder="Enter number of floor"
             min={0}
             hideControls
-            // value={property?.numberOfFloor}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
           <NumberInput
             {...form.getInputProps('numberOfBedRoom')}
@@ -394,7 +462,10 @@ const ModalProperty = ({ property }: Props) => {
             placeholder="Enter number of bedroom"
             min={0}
             hideControls
-            // value={property?.numberOfBedRoom}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
           <NumberInput
             {...form.getInputProps('numberOfToilet')}
@@ -403,7 +474,10 @@ const ModalProperty = ({ property }: Props) => {
             placeholder="Enter number of toilet"
             min={0}
             hideControls
-            // value={property?.numberOfToilet}
+            readOnly={property === null ? false : true}
+            classNames={{
+              input: property === null ? 'bg-white' : 'bg-slate-200',
+            }}
           />
         </div>
         <div className={`${style.rowModal} ${style.mt}`}>
@@ -412,7 +486,6 @@ const ModalProperty = ({ property }: Props) => {
             className={style.colModal}
             label="Land of Area"
             placeholder="Enter number"
-            // value={property?.landArea}
           />
           <NumberInput
             {...form.getInputProps('areaOfUse')}
@@ -421,25 +494,35 @@ const ModalProperty = ({ property }: Props) => {
             placeholder="Enter number "
             hideControls
             min={0}
-            // value={property?.areaOfUse}
-          />
-          <NumberInput
-            {...form.getInputProps('price')}
-            className={style.colModal}
-            label="Price"
-            placeholder="Enter price "
-            min={0}
-            // value={property?.price}
-            hideControls
           />
           <TextInput
-            {...form.getInputProps('currencyCode')}
+            {...form.getInputProps('direction')}
             className={style.colModal}
-            label="Currency Code"
-            placeholder="Enter currency"
-            // value={property?.currencyCode}
+            label="Direction"
+            placeholder="Enter direction"
           />
+          <div className={style.halfColModal}>
+            <NumberInput
+              {...form.getInputProps('price')}
+              className="w-1/2"
+              label="Price"
+              placeholder="Enter price "
+              min={0}
+              hideControls
+            />
+            <TextInput
+              {...form.getInputProps('currencyCode')}
+              className="w-1/2"
+              label="Currency Code"
+              placeholder="Enter currency"
+              readOnly={property === null ? false : true}
+              classNames={{
+                input: property === null ? 'bg-white' : 'bg-slate-200',
+              }}
+            />
+          </div>
         </div>
+        <div className={`${style.rowModal} ${style.mt}`}></div>
 
         <Textarea
           {...form.getInputProps('description')}
@@ -469,14 +552,14 @@ const ModalProperty = ({ property }: Props) => {
               )}
             </FileButton>
             {/* <Button
-              onClick={handleUpload}
-              classNames={{ root: style.rootButton }}
-            >
-              Upload Images
-            </Button>
-            <Button disabled={!files} bg="red" onClick={clearFile}>
-              Reset
-            </Button> */}
+                  onClick={handleUpload}
+                  classNames={{ root: style.rootButton }}
+                >
+                  Upload Images
+                </Button>
+                <Button disabled={!files} bg="red" onClick={clearFile}>
+                  Reset
+                </Button> */}
           </Group>
 
           {files.length > 0 && (
@@ -496,9 +579,23 @@ const ModalProperty = ({ property }: Props) => {
           {/* {imagePreview()} */}
         </div>
         <div className={style.coverBtn}>
-          <Button type="submit" classNames={{ root: style.rootButton }}>
-            Add New
-          </Button>
+          {property === null ? (
+            <Button
+              type="submit"
+              classNames={{ root: style.rootButton }}
+              loading={loading ? true : false}
+            >
+              Add New
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              classNames={{ root: style.rootButton }}
+              loading={loading ? true : false}
+            >
+              Update
+            </Button>
+          )}
         </div>
       </div>
     </form>

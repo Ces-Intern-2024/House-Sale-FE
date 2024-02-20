@@ -10,6 +10,10 @@
   @apply flex flex-col gap-[8px] w-1/4 mt-[4px];
 }
 
+.halfColModal {
+  @apply flex flex-row gap-[8px] w-1/4 mt-[8px];
+}
+
 .colDirection {
   @apply flex flex-col gap-[8px] mt-[24px]
     xl:w-[280px]
@@ -26,4 +30,8 @@
 
 .mt {
   @apply mt-[16px];
+}
+
+.readOnly {
+  @apply bg-blur;
 }
