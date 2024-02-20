@@ -351,7 +351,7 @@ export default function SellerProfile() {
                       transitionProps: { transition: 'pop', duration: 200 },
                     }}
                     {...form.getInputProps('provinceCode')}
-                    onChange={async (_value: any) => {
+                    onChange={(_value: any) => {
                       form.setFieldValue('provinceCode', _value)
                       setProvinceCode(_value)
                       setDistrictCode(null)
