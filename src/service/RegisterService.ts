@@ -3,7 +3,6 @@ import axios from 'axios'
 export async function register(user: any, isSeller: boolean) {
   let res: any
   delete user.confirmPassword
-  console.log(user)
 
   if (isSeller) {
     res = await axios.post('/user/register-seller', user)

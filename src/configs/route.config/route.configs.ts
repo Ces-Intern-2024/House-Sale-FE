@@ -45,7 +45,7 @@ export const protectedRoutes = [
     key: 'profile',
     path: '/profile',
     component: lazy(() => import('../../components/Profile/UserProfile')),
-    authority: [Roles.Seller, Roles.User],
+    authority: [Roles.Seller],
   },
   {
     key: 'seller-dashboard',

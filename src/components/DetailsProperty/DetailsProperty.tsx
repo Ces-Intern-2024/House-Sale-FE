@@ -20,7 +20,7 @@ const DetailsProperty = () => {
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Number of bedroom:</span>
-              <span className={style.value}>{property.numberOfBedroom}</span>
+              <span className={style.value}>{property.numberOfBedRoom}</span>
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Number of toilet:</span>

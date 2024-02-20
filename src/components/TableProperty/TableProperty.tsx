@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './TableProperty.module.scss'
 import {
   Modal,
@@ -10,18 +10,18 @@ import {
   ScrollArea,
 } from '@mantine/core'
 import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
-import { properties } from '../../utils/properties'
 import { MdDelete } from 'react-icons/md'
 import { useDisclosure } from '@mantine/hooks'
 import ModalProperty from '../ModalProperty/ModalProperty'
 import { Properties } from '@/types'
+import { axiosInstance } from '../../service/AxiosInstance'
 
 const TableProperty = () => {
   const [opened, { open, close }] = useDisclosure(false)
   const [selectedProperty, setSelectedProperty] = useState<Properties | null>(
     null,
   )
-
+  const [properties, setProperties] = useState<Properties[]>([])
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     open()
@@ -32,29 +32,46 @@ const TableProperty = () => {
     open()
   }
 
-  const rows = properties.map((element) => (
-    <Table.Tr className={style.detailContentTable} key={element.propertyId}>
-      <Table.Td>{element.propertyId}</Table.Td>
-      <Table.Td onClick={() => handlePropertyView(element)}>
-        <div className={style.propertyNameCover}>
-          <Image className={style.propertyImage} src={element.images} />
-          <span className={style.propertyName}>{element.name}</span>
-        </div>
-      </Table.Td>
-      <Table.Td>$ {element.price}</Table.Td>
-      <Table.Td>{element.feature.featureId}</Table.Td>
-      <Table.Td>{element.category.categoryId}</Table.Td>
-      <Table.Td>
-        <div className={style.propertyActions}>
-          <FaEdit
-            className={`${style.actionIcon} ${style.editIcon}`}
-            onClick={() => handlePropertyView(element)}
-          />
-          <MdDelete className={`${style.actionIcon} ${style.deleteIcon}`} />
-        </div>
-      </Table.Td>
-    </Table.Tr>
-  ))
+  const getAllPropertiesForSeller = async () => {
+    const res = await axiosInstance.get(`/seller/properties`)
+    setProperties(res.data.metaData.properties)
+    console.log(res.data.metaData.properties)
+
+    console.log(properties.map((property) => property.images[0]))
+  }
+
+  useEffect(() => {
+    getAllPropertiesForSeller()
+  }, [])
+
+  const rows =
+    properties.length > 0 &&
+    properties.map((element) => (
+      <Table.Tr className={style.detailContentTable} key={element.propertyId}>
+        <Table.Td>{element.propertyId}</Table.Td>
+        <Table.Td onClick={() => handlePropertyView(element)}>
+          <div className={style.propertyNameCover}>
+            <Image
+              className={style.propertyImage}
+              src={element.images[0].imageUrl}
+            />
+            <span className={style.propertyName}>{element.name}</span>
+          </div>
+        </Table.Td>
+        <Table.Td>$ {element.price}</Table.Td>
+        <Table.Td>{element.feature.featureId}</Table.Td>
+        <Table.Td>{element.category.categoryId}</Table.Td>
+        <Table.Td>
+          <div className={style.propertyActions}>
+            <FaEdit
+              className={`${style.actionIcon} ${style.editIcon}`}
+              onClick={() => handlePropertyView(element)}
+            />
+            <MdDelete className={`${style.actionIcon} ${style.deleteIcon}`} />
+          </div>
+        </Table.Td>
+      </Table.Tr>
+    ))
 
   return (
     <>

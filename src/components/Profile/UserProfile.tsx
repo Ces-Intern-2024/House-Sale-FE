@@ -8,9 +8,7 @@ import {
   Select,
   ComboboxItem,
   OptionsFilter,
-  PasswordInput,
   Stack,
-  Modal,
 } from '@mantine/core'
 import {
   IconCamera,
@@ -21,12 +19,11 @@ import {
 } from '@tabler/icons-react'
 import styles from './UserProfile.module.scss'
 import { useDisclosure } from '@mantine/hooks'
-
 import {
   getProfile,
   uploadAvatar,
   uploadAvatarToCloudinary,
-  changePassword,
+  updateProfile,
 } from '../../service/ProfileService'
 import { User } from '../../types/user'
 import Swal from 'sweetalert2'
@@ -38,6 +35,9 @@ import {
   useFetchDistrictsQuery,
   useFetchWardsQuery,
 } from '../../redux/reducers/locationSlice'
+import ChangePassword from '../ChangePassword/ChangePassword'
+import { useAppDispatch } from '../../redux/hooks'
+import { setUser } from '../../redux/reducers/userSlice'
 
 const optionsFilter: OptionsFilter = ({ options, search }) => {
   const splittedSearch = search.toLowerCase().trim().split(' ')
@@ -48,24 +48,22 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
     )
   })
 }
-/**
- * The comments are kept in case we wanna use it in the future.
- */
+
 export default function SellerProfile() {
   const [file, setFile] = useState<File | null>(null)
+  const dispatch = useAppDispatch()
 
   const [nameEditing, setNameEditing] = useState(false)
   const [phoneEditing, setPhoneEditing] = useState(false)
   const [addressEditing, setAddressEditing] = useState(false)
   const [locationEditing, setLocationEditing] = useState(false)
 
-  const [visible, { toggle }] = useDisclosure(false)
-  const [visibleCurrentPw, handlers] = useDisclosure(false)
   const [opened, { open, close }] = useDisclosure(false)
 
   const [userInfo, setUserInfo] = useState<User>()
 
   const [loading, setLoading] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(false)
 
   const [showSaveProfileBtn, setShowSaveProfileBtn] = useState(false)
 
@@ -108,61 +106,18 @@ export default function SellerProfile() {
       : yup.string().nullable(),
   })
 
-  const passwordSchema = yup.object().shape({
-    currentPassword: yup
-      .string()
-      .matches(
-        /^(?=.*\d)[a-zA-Z\d]{8,}$/,
-        'Password must contain at least 1 number and 1 character',
-      )
-      .min(8)
-      .required('Current Password is required'),
-    newPassword: yup
-      .string()
-      .matches(
-        /^(?=.*\d)[a-zA-Z\d]{8,}$/,
-        'Password must contain at least 1 number and 1 character',
-      )
-      .min(8)
-      .test(
-        'not-same-as-current',
-        'New password cannot be the same as the current password.',
-        function (value) {
-          return this.parent.currentPassword !== value
-        },
-      )
-      .required('New Password is required'),
-    confirmNewPassword: yup
-      .string()
-      .oneOf([yup.ref('newPassword')], 'Confirm Password must match')
-      .required('Password Confirmation is required'),
-  })
-
   const form = useForm({
     initialValues: {
       email: userInfo?.email,
       fullName: userInfo?.fullName,
       phone: userInfo?.phone,
-      provinceCode: userInfo?.province?.provinceCode,
-      districtCode: userInfo?.district?.districtCode,
-      wardCode: userInfo?.ward?.wardCode,
+      provinceCode: userInfo?.provinceCode,
+      districtCode: userInfo?.districtCode,
+      wardCode: userInfo?.wardCode,
       address: userInfo?.address,
     },
     validate: yupResolver(listSchema),
   })
-
-  const passwordForm = useForm({
-    initialValues: {
-      currentPassword: '',
-      newPassword: '',
-      confirmNewPassword: '',
-    },
-    validate: yupResolver(passwordSchema),
-  })
-
-  const handleToggleCurrentPassword = (prop: boolean) => {
-    prop ? handlers.open() : handlers.close()
-  }
 
   const handleUploadAvatar = async () => {
     if (file) {
@@ -227,48 +182,40 @@ export default function SellerProfile() {
 
   const getUserProfile = async () => {
     const data = await getProfile()
+    const roleId = data.role.roleId
+    setUserInfo({ ...data, roleId: roleId })
 
-    setUserInfo(data)
+    dispatch(setUser({ ...data, roleId: roleId }))
 
     console.log('user ' + JSON.stringify(data))
 
-    if (data.province) {
-      setProvinceCode(data.province.provinceCode)
-      setDistrictCode(data.district.districtCode)
-      setWardCode(data.ward.wardCode)
-    }
+    setProvinceCode(data.provinceCode)
+    setDistrictCode(data.districtCode)
+    setWardCode(data.wardCode)
   }
 
   const handleUpdateProfile = async (values: any) => {
-    alert(JSON.stringify(values))
-  }
-
-  const handleChangePassword = async (values: any) => {
-    console.log(JSON.stringify(values))
-
-    passwordForm.clearErrors()
-    const { currentPassword, newPassword } = values
+    const updateInfo = { ...values }
+    if (values.phone === userInfo?.phone) delete updateInfo.phone
     try {
-      await changePassword({ currentPassword, newPassword })
-      close()
-      passwordForm.reset()
+      await updateProfile(updateInfo)
       Swal.fire({
         position: 'center',
         icon: 'success',
-        title: 'Password has been changed successfully!',
+        title: 'Profile updated successfully!',
         showConfirmButton: false,
-        timer: 1500,
+        timer: 1000,
       })
+      setIsUpdated((prev) => !prev)
+      setShowSaveProfileBtn(false)
     } catch (err: any) {
-      passwordForm.setErrors({
-        currentPassword: err.response.data.error.message,
-      })
+      form.setFieldError('phone', err.response.data.error.message)
     }
   }
 
   useEffect(() => {
     getUserProfile()
-  }, [])
+  }, [isUpdated])
 
   return (
     <>
@@ -340,6 +287,7 @@ export default function SellerProfile() {
               <Stack>
                 <TextInput
                   {...form.getInputProps('fullName')}
+                  defaultValue={userInfo?.fullName}
                   id="name"
                   className="font-semibold"
                   size="md"
@@ -352,7 +300,6 @@ export default function SellerProfile() {
                     setShowSaveProfileBtn(true)
                     form.setFieldValue('fullName', event.currentTarget.value)
                   }}
-                  defaultValue={userInfo?.fullName?.toString().toUpperCase()}
                 />
                 <TextInput
                   {...form.getInputProps('email')}
@@ -361,7 +308,6 @@ export default function SellerProfile() {
                   w="100%"
                   label="Email"
                   placeholder="Email"
-                  defaultValue="roseannepark@gmail.com"
                   readOnly
                   value={userInfo?.email}
                 />
@@ -382,24 +328,7 @@ export default function SellerProfile() {
                   }}
                 />
 
-                <TextInput
-                  withAsterisk
-                  classNames={{ label: styles.label }}
-                  defaultValue={userInfo?.address}
-                  id="address"
-                  size="md"
-                  w="100%"
-                  label="Address"
-                  placeholder="Address"
-                  rightSection={<IconPencil></IconPencil>}
-                  {...form.getInputProps('address')}
-                  onKeyUp={(event) => {
-                    setAddressEditing(true)
-                    setShowSaveProfileBtn(true)
-                    form.setFieldValue('address', event.currentTarget.value)
-                  }}
-                />
-                <div className=" flex gap-x-3 mobile:gap-y-5 xs:flex-row mobile:flex-col">
+                <div className=" flex gap-x-3 mobile:gap-y-5 xs:flex-row mobile:flex-col ">
                   <Select
                     size="md"
                     className=" flex-grow"
@@ -422,7 +351,7 @@ export default function SellerProfile() {
                       transitionProps: { transition: 'pop', duration: 200 },
                     }}
                     {...form.getInputProps('provinceCode')}
-                    onChange={async (_value: any) => {
+                    onChange={(_value: any) => {
                       form.setFieldValue('provinceCode', _value)
                       setProvinceCode(_value)
                       setDistrictCode(null)
@@ -496,6 +425,23 @@ export default function SellerProfile() {
                     value={wardCode}
                   />
                 </div>
+                <TextInput
+                  {...form.getInputProps('address')}
+                  defaultValue={userInfo?.address}
+                  withAsterisk
+                  classNames={{ label: styles.label }}
+                  id="address"
+                  size="md"
+                  w="100%"
+                  label="Address"
+                  placeholder="Address"
+                  rightSection={<IconPencil></IconPencil>}
+                  onKeyUp={(event) => {
+                    setAddressEditing(true)
+                    setShowSaveProfileBtn(true)
+                    form.setFieldValue('address', event.currentTarget.value)
+                  }}
+                />
 
                 <div className={styles.btnContainer}>
                   <Button
@@ -514,74 +460,7 @@ export default function SellerProfile() {
           </div>
         </div>
 
-        <Modal
-          opened={opened}
-          onClose={() => {
-            passwordForm.reset()
-            close()
-          }}
-          centered
-          classNames={{ title: styles.pwTitle }}
-          title="Change Password"
-        >
-          <form
-            onSubmit={passwordForm.onSubmit((values) =>
-              handleChangePassword(values),
-            )}
-          >
-            <Stack>
-              <PasswordInput
-                {...passwordForm.getInputProps('currentPassword')}
-                size="md"
-                label="Current Password"
-                placeholder="Current Password"
-                visible={visibleCurrentPw}
-                onVisibilityChange={() =>
-                  handleToggleCurrentPassword(!visibleCurrentPw)
-                }
-                onChange={(event) =>
-                  passwordForm.setFieldValue(
-                    'currentPassword',
-                    event.currentTarget.value,
-                  )
-                }
-              />
-              <PasswordInput
-                {...passwordForm.getInputProps('newPassword')}
-                size="md"
-                label="New Password"
-                placeholder="New Password"
-                visible={visible}
-                onVisibilityChange={toggle}
-                onChange={(event) =>
-                  passwordForm.setFieldValue(
-                    'newPassword',
-                    event.currentTarget.value,
-                  )
-                }
-              />
-              <PasswordInput
-                {...passwordForm.getInputProps('confirmNewPassword')}
-                size="md"
-                label="Confirm Password"
-                placeholder="Confirm Password"
-                visible={visible}
-                onVisibilityChange={toggle}
-                onChange={(event) =>
-                  passwordForm.setFieldValue(
-                    'confirmNewPassword',
-                    event.currentTarget.value,
-                  )
-                }
-              />
-              <div className={styles.btnContainer}>
-                <Button size="md" type="submit" className={styles.btn}>
-                  Confirm
-                </Button>
-              </div>
-            </Stack>
-          </form>
-        </Modal>
+        <ChangePassword isOpened={opened} onClose={close} />
       </div>
     </>
   )
