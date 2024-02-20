@@ -33,7 +33,7 @@ export const getAllProvinces = createAsyncThunk(
 
 export const getAllDistricts = createAsyncThunk(
   'location/getAllDistricts',
-  async (provinceCode: string, thunkAPI) => {
+  async (provinceCode: string | undefined, thunkAPI) => {
     const res = await axios.get(
       `/location/districts?provinceCode=${provinceCode}`,
       {
@@ -47,7 +47,7 @@ export const getAllDistricts = createAsyncThunk(
 
 export const getAllWards = createAsyncThunk(
   'location/getAllWards',
-  async (districtCode: string, thunkAPI) => {
+  async (districtCode: string | undefined, thunkAPI) => {
     const res = await axios.get(
       `/location/wards?districtCode=${districtCode}`,
       {
