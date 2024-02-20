@@ -23,6 +23,7 @@ module.exports = {
         orangeBtn: '#ff9f43',
         darkBlue: '#1b2850',
         subText: '#555',
+        paleOliveGreen: '#c7d48c',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],

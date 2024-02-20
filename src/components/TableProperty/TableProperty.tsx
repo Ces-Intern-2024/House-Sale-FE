@@ -15,12 +15,14 @@ import { useDisclosure } from '@mantine/hooks'
 import ModalProperty from '../ModalProperty/ModalProperty'
 import { Properties } from '@/types'
 import { axiosInstance } from '../../service/AxiosInstance'
+import Swal from 'sweetalert2'
 
 const TableProperty = () => {
   const [opened, { open, close }] = useDisclosure(false)
   const [selectedProperty, setSelectedProperty] = useState<Properties | null>(
     null,
   )
+  const [isUpdated, setIsUpdated] = useState(false)
   const [properties, setProperties] = useState<Properties[]>([])
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
@@ -32,17 +34,51 @@ const TableProperty = () => {
     open()
   }
 
+  const handleDelete = async (property: Properties) => {
+    // console.log(property);
+    // alert("hahahihi")
+    try {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const res = await axiosInstance.delete(
+            `/seller/properties/${property.propertyId}`,
+          )
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your file has been deleted.',
+            icon: 'success',
+          })
+          console.log(res)
+          setProperties(
+            properties.filter(
+              (item) => item.propertyId !== property.propertyId,
+            ),
+          )
+        }
+      })
+    } catch (error) {
+      console.error('Error deleting new property:', error)
+    }
+  }
+  useEffect(() => setProperties(properties), [properties])
+
   const getAllPropertiesForSeller = async () => {
     const res = await axiosInstance.get(`/seller/properties`)
     setProperties(res.data.metaData.properties)
-    console.log(res.data.metaData.properties)
-
-    console.log(properties.map((property) => property.images[0]))
   }
 
   useEffect(() => {
     getAllPropertiesForSeller()
-  }, [])
+    setIsUpdated(false)
+  }, [isUpdated])
 
   const rows =
     properties.length > 0 &&
@@ -67,7 +103,10 @@ const TableProperty = () => {
               className={`${style.actionIcon} ${style.editIcon}`}
               onClick={() => handlePropertyView(element)}
             />
-            <MdDelete className={`${style.actionIcon} ${style.deleteIcon}`} />
+            <MdDelete
+              className={`${style.actionIcon} ${style.deleteIcon}`}
+              onClick={() => handleDelete(element)}
+            />
           </div>
         </Table.Td>
       </Table.Tr>
@@ -165,7 +204,11 @@ const TableProperty = () => {
           content: style.contentModal,
         }}
       >
-        <ModalProperty property={selectedProperty} />
+        <ModalProperty
+          property={selectedProperty}
+          onClose={close}
+          isUpdated={setIsUpdated}
+        />
       </Modal>
     </>
   )
