@@ -7,7 +7,7 @@ export interface Properties {
   status: boolean
   landArea: string
   areaOfUse: string
-  numberOfBedroom: number
+  numberOfBedRoom: number
   numberOfToilet: number
   numberOfFloor: number
   direction: string

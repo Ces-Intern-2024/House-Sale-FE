@@ -46,7 +46,6 @@ export default function Register() {
   const { data: wards = [] } = useFetchWardsQuery(districtCode)
   const [wardCode, setWardCode] = useState<string | null>('')
   const [sellerAccount, setSellerAccount] = useState(false)
-  const [errMessage, setErrMessage] = useState('')
   const navigate = useNavigate()
 
   const listSchema = yup.object().shape({
@@ -123,9 +122,13 @@ export default function Register() {
       navigate('/login')
       console.log(data)
     } catch (err: any) {
-      setErrMessage(err.response.data.error.message)
-
-      form.setErrors({ email: err.response.data.error.message })
+      const errMess = err.response.data.error.message
+      if (errMess.includes('email')) {
+        form.setErrors({ email: err.response.data.error.message })
+      }
+      if (errMess.includes('password')) {
+        form.setErrors({ password: err.response.data.error.message })
+      }
     }
   }
 
@@ -149,7 +152,6 @@ export default function Register() {
       <form onSubmit={form.onSubmit((values) => handleRegister(values))}>
         <Stack>
           <TextInput
-            error={errMessage}
             required
             radius="md"
             leftSection={<IconMail size={16} color="green" />}
