@@ -27,6 +27,7 @@ interface Props {
 export function Login() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -55,15 +56,18 @@ export function Login() {
         },
       )
 
-      dispatch(setUser(res.data.metaData.user))
-      dispatch(
+      await dispatch(setUser(res.data.metaData.user))
+      await dispatch(
         signInSuccess({
           signedIn: true,
           tokens: { ...res.data.metaData.tokens },
         }),
       )
-
-      navigate(appConfig.authenticatedEntryPath)
+      navigate(
+        String(res.data.metaData.user.roleId) === '1'
+          ? appConfig.tourPath
+          : appConfig.authenticatedEntryPath,
+      )
     } catch (err) {
       console.error('Login error:', err)
     }

@@ -12,9 +12,12 @@ interface DecodedToken {
   type: string
 }
 
+console.log('interceptor')
+
 const baseURL = 'https://housesale.tldev.id.vn/v1/api/'
 
 export const axiosInstance = axios.create({ baseURL })
+
 axiosInstance.interceptors.request.use(async (req) => {
   if (
     req.url?.endsWith('/user/refreshTokens') ||
@@ -31,8 +34,9 @@ axiosInstance.interceptors.request.use(async (req) => {
     const parsedPersistData = JSON.parse(rawPersistData)
     const sessionState = JSON.parse(parsedPersistData.session)
     authToken = sessionState.tokens
+
     if (!authToken) {
-      const state = store.getState()
+      const state: any = store.getState()
       authToken = state.session.tokens
     }
   }
@@ -59,6 +63,7 @@ axiosInstance.interceptors.request.use(async (req) => {
 
   if (authToken?.accessToken) {
     req.headers.Authorization = `Bearer ${authToken.accessToken}`
+
     const decodedToken: DecodedToken = jwtDecode(authToken.accessToken)
     if (moment().isAfter(moment.unix(decodedToken.exp))) {
       const newTokens = await refreshAccessToken(authToken.refreshToken)

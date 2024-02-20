@@ -1,4 +1,4 @@
-import { axiosInstance } from '../service/AxiosInstance'
+import { axiosInstance } from './AxiosInstance'
 import axios from 'axios'
 
 export async function getProfile() {
@@ -6,7 +6,7 @@ export async function getProfile() {
     const res = await axiosInstance.get('/user/profile')
     return res.data.metaData
   } catch (error) {
-    console.error('Error getting profile user:', error)
+    console.error('hihihhihi errrorror:', error)
     throw error
   }
 }
@@ -31,5 +31,10 @@ export async function uploadAvatar(imageUrl: string | null) {
 
 export async function changePassword(values: object) {
   const res = await axiosInstance.post('/user/change-password', { ...values })
+  return res.data
+}
+
+export async function updateProfile(updatedInfo: any) {
+  const res = await axiosInstance.patch('/user/profile', { ...updatedInfo })
   return res.data
 }
