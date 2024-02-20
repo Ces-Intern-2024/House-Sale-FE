@@ -7,6 +7,8 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { signOutSuccess } from '../../redux/reducers/sessionSlice'
 import { resetUser } from '../../redux/reducers/userSlice'
 import { persistor } from '../../redux/store'
+import { useDisclosure } from '@mantine/hooks'
+import ChangePassword from '../ChangePassword/ChangePassword'
 
 interface MenuBarProps {
   isOfDrawers: boolean
@@ -19,6 +21,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
   const dispatch = useAppDispatch()
   const { pathname } = useLocation()
   const [activeLink, setActiveLink] = useState(pathname)
+  const [opened, { open, close }] = useDisclosure(false)
 
   const handleSetActiveLink = (link: string) => {
     setActiveLink(link)
@@ -39,6 +42,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
 
   return (
     <>
+      <ChangePassword isOpened={opened} onClose={close} />
       <div className={isOfDrawers ? styles.outerOfDrawers : styles.outer}>
         <div>
           <Menu openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
@@ -210,10 +214,20 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
                       </Menu.Target>
                       <Menu.Dropdown className=" flex-col justify-center">
                         <Menu.Item className={styles.dropdown}>
-                          <NavLink to="/profile"> PROFILE</NavLink>
+                          {String(user.roleId) === '2' ? (
+                            <NavLink to="/profile"> Profile</NavLink>
+                          ) : (
+                            <h1
+                              onClick={() => {
+                                open()
+                              }}
+                            >
+                              Change Password
+                            </h1>
+                          )}
                         </Menu.Item>
                         <Menu.Item className={styles.dropdown}>
-                          <h1 onClick={handleLogout}>LOG OUT</h1>
+                          <h1 onClick={handleLogout}>Log Out</h1>
                         </Menu.Item>
                       </Menu.Dropdown>
                     </Menu>
