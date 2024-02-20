@@ -17,7 +17,7 @@ const Properties = ({ data }: Props) => {
         <div className={style.propertyFeatured}>{data.feature.name}</div>
         <div className={style.propertyCoverImage}>
           <a href="/">
-            {data.images.length > 1 ? (
+            {data.images.length > 0 ? (
               <img
                 className={style.propertyImage}
                 src={data.images[0].imageUrl}
@@ -53,7 +53,7 @@ const Properties = ({ data }: Props) => {
             </span>
             <span className={style.propertyDesIcon}>
               <IoBedOutline className="mr-[8px]" size={16} />
-              {data.numberOfBedroom}
+              {data.numberOfBedRoom}
             </span>
             <span className={style.propertyDesIcon}>
               <GrSteps className="mr-[8px]" size={16} />

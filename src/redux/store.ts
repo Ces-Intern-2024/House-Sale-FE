@@ -4,6 +4,8 @@ import storage from 'redux-persist/lib/storage'
 import homeReducer from './reducers/homeReducer'
 import locationReducer from './reducers/locationReducer'
 import resizeReducer from './reducers/resizeSlice'
+import categorySlice from './reducers/categorySlice'
+import featureSlice from './reducers/featureSlice'
 import { locationAPISlice } from './reducers/locationSlice'
 import userSlice from './reducers/userSlice'
 import sessionSlice from './reducers/sessionSlice'
@@ -20,6 +22,8 @@ const rootReducer = combineReducers({
   location: locationReducer,
   user: userSlice,
   session: sessionSlice,
+  category: categorySlice,
+  feature: featureSlice,
   [locationAPISlice.reducerPath]: locationAPISlice.reducer,
 })
 
