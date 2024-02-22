@@ -1,10 +1,10 @@
 import React from 'react'
-import SearchBar from '../SearchBar/SearchBar'
+import SearchBar from '../../components/SearchBar/SearchBar'
 
 export default function SearchPage() {
   return (
     <>
-      <div className=" py-52 bg-[#c9d5ce] h-[70vh]">
+      <div className=" py-28 lg:px-14 mobile:px-5">
         <SearchBar />
       </div>
     </>

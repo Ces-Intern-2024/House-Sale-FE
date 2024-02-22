@@ -38,6 +38,8 @@ import {
 import ChangePassword from '../ChangePassword/ChangePassword'
 import { useAppDispatch } from '../../redux/hooks'
 import { setUser } from '../../redux/reducers/userSlice'
+import { Ward } from '../../types/ward'
+import { District } from '../../types/district'
 
 const optionsFilter: OptionsFilter = ({ options, search }) => {
   const splittedSearch = search.toLowerCase().trim().split(' ')
@@ -69,13 +71,21 @@ export default function SellerProfile() {
 
   const { data: provinces = [] } = useFetchProvincesQuery()
   const [provinceCode, setProvinceCode] = useState('')
-  const { data: districts = [] } = useFetchDistrictsQuery(provinceCode, {
-    skip: !provinceCode,
-  })
+
+  const { data: fetchedDistricts = [], isUninitialized: notInit } =
+    useFetchDistrictsQuery(provinceCode, {
+      skip: !provinceCode,
+    })
+  const [districts, setDistricts] = useState<District[]>([])
   const [districtCode, setDistrictCode] = useState<string | null>('')
-  const { data: wards = [] } = useFetchWardsQuery(districtCode, {
-    skip: !districtCode,
-  })
+
+  const { data: fetchedWards = [], isUninitialized } = useFetchWardsQuery(
+    districtCode,
+    {
+      skip: !districtCode,
+    },
+  )
+  const [wards, setWards] = useState<Ward[]>([])
   const [wardCode, setWardCode] = useState<string | null>('')
 
   const listSchema = yup.object().shape({
@@ -216,6 +226,22 @@ export default function SellerProfile() {
   useEffect(() => {
     getUserProfile()
   }, [isUpdated])
+
+  useEffect(() => {
+    if (isUninitialized || !districtCode) {
+      setWards([])
+    } else {
+      setWards(fetchedWards)
+    }
+  }, [districtCode, isUninitialized, fetchedWards])
+
+  useEffect(() => {
+    if (notInit || !provinceCode) {
+      setDistricts([])
+    } else {
+      setDistricts(fetchedDistricts)
+    }
+  }, [provinceCode, notInit, fetchedDistricts])
 
   return (
     <>
@@ -370,7 +396,7 @@ export default function SellerProfile() {
                     checkIconPosition="right"
                     label="District"
                     placeholder="District"
-                    data={districts.flatMap((dist: any) => [
+                    data={districts?.flatMap((dist: any) => [
                       {
                         value: dist.districtCode,
                         label: dist.nameEn,
@@ -402,7 +428,7 @@ export default function SellerProfile() {
                     checkIconPosition="right"
                     label="Ward"
                     placeholder="Ward"
-                    data={wards.flatMap((ward: any) => [
+                    data={wards?.flatMap((ward: any) => [
                       {
                         value: ward.wardCode,
                         label: ward.nameEn,
