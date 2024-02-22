@@ -1,11 +1,9 @@
-@import '../../styles/_variables.scss';
-
 .tablePropertyContainer {
-  @apply mx-[40px];
+  @apply mx-10;
 }
 
 .tablePropertyContent {
-  @apply bg-white px-[20px] py-[8px] rounded-[15px] border-[1px];
+  @apply bg-white rounded-[15px] border-[1px] px-5 py-2;
 }
 
 .tableHeader {
@@ -17,11 +15,11 @@
 }
 
 .title {
-  @apply text-[24px] font-[700] font-archivo text-primary;
+  @apply text-[24px] font-bold font-archivo text-primary;
 }
 
 .subTitle {
-  @apply font-[600] text-[16px];
+  @apply font-semibold text-base;
 }
 
 .coverBtn {
@@ -29,25 +27,25 @@
 }
 
 .iconBtn {
-  @apply text-[16px] mr-[8px] font-[400] text-white;
+  @apply text-base mr-2 font-normal text-white;
 }
 
 .addBtn {
-  @apply text-[16px] hover:bg-darkBlue bg-orangeBtn;
+  @apply text-base hover:bg-darkBlue bg-orangeBtn;
 }
 
 .tableSideBar {
-  @apply flex flex-row justify-between mt-[32px];
+  @apply flex flex-row justify-between mt-8;
 }
 
 .tableSelect {
-  @apply flex flex-row gap-[24px];
+  @apply flex flex-row gap-6;
 }
 
 .tableSearch {
 }
 .input {
-  @apply w-[300px] focus:border-primary;
+  @apply w-75 focus:border-primary;
 }
 
 .elementSelect {
@@ -59,11 +57,11 @@
 }
 
 .tableContent {
-  @apply mt-[40px] h-[600px];
+  @apply h-150 mt-10;
 }
 
 .propertyNameCover {
-  @apply flex flex-row gap-[8px] items-center;
+  @apply flex flex-row gap-2 items-center;
 }
 
 .propertyName {
@@ -73,18 +71,18 @@
   // lg:text-balance lg:w-[300px] lg:text-start lg:pl-[8px] lg:text-ellipsis
 }
 .thName {
-  @apply w-[400px] cursor-pointer;
+  @apply w-100 cursor-pointer;
 }
 
 .propertyImage {
-  @apply min-w-[40px] w-[40px] h-[40px];
+  @apply min-w-[40px] w-10 h-10;
 }
 
 .propertyPrice {
 }
 
 .thPrice {
-  @apply max-w-[200px] min-w-[100px];
+  @apply max-w-[200px] min-w-25;
 }
 .propertyActions {
   @apply flex flex-row items-center justify-evenly h-full;
@@ -99,18 +97,16 @@
 }
 
 .deleteIcon {
-  @apply text-[red];
+  @apply text-red;
 }
 
 .titleTable {
-  @apply text-[16px];
+  @apply text-base;
 }
 
 .detailContentTable {
-  @apply text-[16px];
+  @apply text-base;
 }
-
-// Modal
 
 .headerModal {
   @apply bg-second;
@@ -120,9 +116,9 @@
 }
 
 .bodyModal {
-  @apply px-[40px] py-[20px];
+  @apply px-10 py-5;
 }
 
 .titleModal {
-  @apply text-[20px] font-[700] font-archivo;
+  @apply text-[20px] font-bold font-archivo;
 }

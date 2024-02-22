@@ -1,17 +1,14 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
 .footerContainer {
   @apply w-full bg-primary h-[260px] mobile:h-full bottom-0 relative;
 }
 
 .footerContent {
-  @apply px-[60px] lg:py-[40px] lg:flex lg:flex-row lg:justify-evenly lg:items-start mobile:flex mobile:flex-col mobile:items-center mobile:py-[20px];
+  @apply px-15
+  lg:py-10 lg:flex lg:flex-row lg:justify-evenly lg:items-start 
+  mobile:flex mobile:flex-col mobile:items-center mobile:py-5;
 }
 
 .footerCol {
-  @apply text-[#686c71];
 }
 
 .footerTitleCol {
@@ -19,7 +16,7 @@
 }
 
 .footerContentCol {
-  @apply mt-[20px] pl-[20px]  text-[16px] text-blur list-none no-underline
+  @apply mt-5 pl-5 text-base text-blur list-none no-underline
   lg:text-justify
   mobile:mt-0 mobile:p-0 mobile:text-center;
 }
@@ -29,7 +26,7 @@
 }
 
 .footerImage {
-  @apply w-[230px];
+  @apply w-57.5;
 }
 
 .footerContact {
@@ -42,11 +39,12 @@
 }
 
 .iconLink {
-  @apply mr-[12px];
+  @apply mr-3;
 }
 
 .footerCopyRight {
-  @apply text-white lg:flex lg:items-center lg:justify-center lg:pb-[12px] mobile:flex mobile:items-center mobile:justify-center mobile:pb-[16px];
+  @apply text-white lg:flex lg:items-center lg:justify-center lg:pb-3 
+  mobile:flex mobile:items-center mobile:justify-center mobile:pb-4;
 }
 
 .footerSlogan {

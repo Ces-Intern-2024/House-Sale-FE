@@ -1,76 +1,76 @@
 .creditContainer {
-  @apply px-[40px] w-full my-[30px];
+  @apply px-10 my-7.5  w-full;
 }
 
 .creditContent {
-  @apply flex flex-row gap-[20px] justify-between;
+  @apply flex flex-row gap-5 justify-between;
 }
 
 .creditNoti {
-  @apply flex flex-col border-[1px] w-[60%] py-[8px] px-[20px] rounded-[16px] h-[150px] bg-white;
+  @apply flex flex-col border-[1px] w-[60%] py-2 px-5 rounded-[16px] h-[150px] bg-white;
 }
 
 .title {
-  @apply flex flex-row  items-center gap-[12px];
+  @apply flex flex-row  items-center gap-3;
 }
 
 .titleText {
-  @apply font-archivo text-[24px] font-[600] text-primary text-center;
+  @apply font-archivo text-24 font-semibold text-primary text-center;
 }
 
 .titleIcon {
-  @apply text-primary text-[24px];
+  @apply text-primary text-24;
 }
 
 .detailNoti {
   @apply overflow-y-scroll;
 }
 .row {
-  @apply flex flex-row items-center justify-start border-b-[1px];
+  @apply border-b-[1px] flex flex-row items-center justify-start;
 }
 
 .date {
-  @apply w-[40%];
+  @apply w-2/5;
 }
 
 .content {
-  @apply w-[40%];
+  @apply w-2/5;
 }
 
 .quantity {
-  @apply w-[10%] flex flex-row items-center;
+  @apply w-1/0 flex flex-row items-center;
 }
 
 .symbol {
-  @apply text-[14px] w-[16px] font-[700] text-center;
+  @apply text-sm w-4 font-bold text-center;
 }
 
 .money {
-  @apply font-[600];
+  @apply font-semibold;
 }
 
 .icon {
-  @apply ml-[4px] text-orangeBtn;
+  @apply ml-1 text-orangeBtn;
 }
 
 .creditCurrent {
-  @apply w-[40%] border-[1px] rounded-[16px] py-[8px] px-[12px] bg-white;
+  @apply w-2/5 border-[1px] rounded-[16px] py-2 px-3 bg-white;
 }
 
 .creditCurrentRow {
-  @apply flex flex-row items-center gap-[12px] justify-center;
+  @apply flex flex-row items-center gap-3 justify-center;
 }
 
 .creditAmount {
-  @apply text-[30px] font-[600];
+  @apply text-30 font-semibold;
 }
 
 .creditIcon {
-  @apply text-[30px] text-orangeBtn;
+  @apply text-30 text-orangeBtn;
 }
 
 .creditBtn {
-  @apply text-right mt-[8px] w-full;
+  @apply text-right mt-2 w-full;
 }
 
 .rootButton {

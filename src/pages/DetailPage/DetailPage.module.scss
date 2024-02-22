@@ -1,5 +1,5 @@
 .container {
-  @apply w-full justify-between pt-[40px]
+  @apply w-full justify-between pt-10
      lg:flex  lg:flex-row 
     mobile:flex mobile:flex-col;
 }
@@ -7,14 +7,14 @@
 .containerDesc {
   @apply w-full bg-second rounded-[20px] 
   lg:py-0
-  mobile:py-[20px];
+  mobile:py-5;
 }
 
 .containerContact {
-  @apply lg:pl-[20px] lg:py-0
-     mobile:py-[20px];
+  @apply lg:pl-5 lg:py-0
+     mobile:py-5;
 }
 
 .outer {
-  @apply md:mt-20 mt-16 xl:px-[120px] md:px-[100px] px-[30px] mobile:pt-[20px] md:pt-[40px];
+  @apply md:mt-20 mt-16 xl:px-30 md:px-25 px-7.5 mobile:pt-5 md:pt-10;
 }
