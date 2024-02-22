@@ -14,6 +14,7 @@ const persistConfig = {
   key: 'primary',
   storage,
   whitelist: ['user', 'session'],
+  blacklist: ['api'],
 }
 
 const rootReducer = combineReducers({

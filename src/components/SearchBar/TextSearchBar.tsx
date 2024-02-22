@@ -4,12 +4,18 @@ import { IconSearch } from '@tabler/icons-react'
 import styles from './TextSearchBar.module.scss'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { setIsSmallScreen } from '../../redux/reducers/resizeSlice'
+import { useNavigate } from 'react-router-dom'
 
 export default function TextSearchBar() {
   const dispatch = useAppDispatch()
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
   const [searchValue, setSearchValue] = useState('')
+  const navigate = useNavigate()
   console.log(isSmallScreen)
+
+  const handleSearch = () => {
+    navigate('/search', { state: { searchValue } })
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -23,7 +29,12 @@ export default function TextSearchBar() {
       window.removeEventListener('resize', handleResize)
     }
   }, [dispatch])
-  const rightIcon = <IconSearch className={styles.icon} />
+  const rightIcon = (
+    <div onClick={handleSearch}>
+      <IconSearch className={styles.icon} />
+    </div>
+  )
+
   return (
     <>
       <TextInput

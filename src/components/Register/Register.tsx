@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Swal from 'sweetalert2'
 import {
   TextInput,
@@ -27,6 +27,8 @@ import {
   useFetchWardsQuery,
 } from '../../redux/reducers/locationSlice'
 import { register } from '../../service/RegisterService'
+import { Ward } from '../../types/ward'
+import { District } from '../../types/district'
 
 const optionsFilter: OptionsFilter = ({ options, search }) => {
   const splittedSearch = search.toLowerCase().trim().split(' ')
@@ -41,10 +43,23 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
 export default function Register() {
   const { data: provinces = [] } = useFetchProvincesQuery()
   const [provinceCode, setProvinceCode] = useState('')
-  const { data: districts = [] } = useFetchDistrictsQuery(provinceCode)
+
+  const { data: fetchedDistricts = [], isUninitialized: notInit } =
+    useFetchDistrictsQuery(provinceCode, {
+      skip: !provinceCode,
+    })
+  const [districts, setDistricts] = useState<District[]>([])
   const [districtCode, setDistrictCode] = useState<string | null>('')
-  const { data: wards = [] } = useFetchWardsQuery(districtCode)
+
+  const { data: fetchedWards = [], isUninitialized } = useFetchWardsQuery(
+    districtCode,
+    {
+      skip: !districtCode,
+    },
+  )
+  const [wards, setWards] = useState<Ward[]>([])
   const [wardCode, setWardCode] = useState<string | null>('')
+
   const [sellerAccount, setSellerAccount] = useState(false)
   const navigate = useNavigate()
 
@@ -131,6 +146,22 @@ export default function Register() {
       }
     }
   }
+
+  useEffect(() => {
+    if (isUninitialized || !districtCode) {
+      setWards([])
+    } else {
+      setWards(fetchedWards)
+    }
+  }, [districtCode, isUninitialized, fetchedWards])
+
+  useEffect(() => {
+    if (notInit || !provinceCode) {
+      setDistricts([])
+    } else {
+      setDistricts(fetchedDistricts)
+    }
+  }, [provinceCode, notInit, fetchedDistricts])
 
   return (
     <>
