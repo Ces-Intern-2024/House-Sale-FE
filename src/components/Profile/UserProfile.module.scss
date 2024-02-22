@@ -1,5 +1,5 @@
 .container {
-  @apply bg-white rounded-[5px] min-h-[500px] p-5 px-10;
+  @apply bg-white rounded-[5px] min-h-125 p-5 px-10;
 }
 
 .outer {
@@ -7,11 +7,11 @@
 }
 
 .heading {
-  @apply xs:text-[30px] font-semibold mobile:text-[22px];
+  @apply xs:text-30  mobile:text-[22px] font-semibold;
 }
 
 .title {
-  @apply font-bold text-[30px] mb-3;
+  @apply font-bold text-30 mb-3;
 }
 
 .imgOuter {
@@ -25,7 +25,7 @@
 }
 
 .imgInner {
-  @apply flex flex-col h-[100%] justify-start items-center gap-y-5 relative;
+  @apply flex flex-col h-full justify-start items-center gap-y-5 relative;
 }
 
 .avatar {
@@ -33,11 +33,11 @@
 }
 
 .label {
-  @apply text-[16px];
+  @apply text-base;
 }
 
 .btn {
-  @apply mt-6 bg-orangeBtn hover:bg-darkBlue w-[50%];
+  @apply mt-6 bg-orangeBtn hover:bg-darkBlue w-1/2;
 }
 
 .uploadBtn {
@@ -45,7 +45,7 @@
 }
 
 .disableBtn {
-  @apply mt-6 bg-orangeBtn text-white w-[50%] opacity-70;
+  @apply mt-6 bg-orangeBtn text-white w-1/2 opacity-70;
 }
 
 .personalInfoOuter {

@@ -1,16 +1,16 @@
 .featuredContainer {
-  @apply w-full mt-[20px]
-    lg:px-[60px] lg:mb-[40px] 
-    mobile:px-[20px] 
-    xl:px-[120px];
+  @apply w-full mt-5
+    lg:px-15 lg:mb-10 
+    mobile:px-5 
+    xl:px-30;
 }
 
 .featuredTitle {
-  @apply text-left text-[30px] text-[#313944] font-['Nunito',_sans-serif];
+  @apply text-left  text-[#313944] font-['Nunito',_sans-serif] text-30;
 }
 
 .featuredLineBreak {
-  @apply w-[50px] h-[4px] bg-[#209c24] block mt-[25px] mx-0 mb-[30px];
+  @apply w-12.5 h-1 bg-[#209c24] block mt-6 mx-0 mb-7.5;
 }
 
 .featuredContent {
@@ -25,5 +25,5 @@
 }
 
 .rootButton {
-  @apply bg-primary text-[16px];
+  @apply bg-primary text-base;
 }

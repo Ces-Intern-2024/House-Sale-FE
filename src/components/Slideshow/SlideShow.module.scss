@@ -1,13 +1,12 @@
 .outer {
   @apply relative 
   lg:h-[670px] 
-  xs:h-[500px] 
-  mobile:h-[400px]
-  mt-[96px];
+  xs:h-125 
+  mobile:h-100 mobile:mt-20;
 }
 
 .indicator {
-  @apply h-[50px] w-[50px] z-[2];
+  @apply z-[2] h-12.5 w-12.5;
 }
 
 .controls {
@@ -15,15 +14,15 @@
 }
 
 .slide {
-  @apply lg:h-[670px] xs:h-[500px] mobile:h-[400px];
+  @apply lg:h-[670px] xs:h-125 mobile:h-100;
 }
 
 .slideImage {
-  @apply w-[100%] h-[100%];
+  @apply w-full h-full;
 }
 
 .overlay {
-  @apply lg:h-[670px] xs:h-[500px] mobile:h-[400px] absolute top-0 left-0 right-0 
+  @apply lg:h-[670px] xs:h-125 mobile:h-100 absolute top-0 left-0 right-0 
     bottom-0 bg-black bg-opacity-30 flex flex-col justify-center items-center;
 }
 

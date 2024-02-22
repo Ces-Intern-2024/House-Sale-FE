@@ -7,7 +7,7 @@
 }
 
 .section {
-  @apply bg-teal-100 hover:bg-orange-100 h-[52%] top-[24%] w-[66px];
+  @apply h-[52%] top-[24%] w-[66px] bg-teal-100 hover:bg-orange-100;
 
   &:hover .icon {
     color: rgba(255, 166, 0, 0.961);
