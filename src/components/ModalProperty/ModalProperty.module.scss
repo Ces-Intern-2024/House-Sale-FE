@@ -3,33 +3,33 @@
 }
 
 .rowModal {
-  @apply flex flex-row gap-[20px];
+  @apply flex flex-row gap-5;
 }
 
 .colModal {
-  @apply flex flex-col gap-[8px] w-1/4 mt-[4px];
+  @apply flex flex-col gap-2 w-1/4 mt-1;
 }
 
 .halfColModal {
-  @apply flex flex-row gap-[8px] w-1/4 mt-[8px];
+  @apply flex flex-row gap-2 w-1/4 mt-2;
 }
 
 .colDirection {
-  @apply flex flex-col gap-[8px] mt-[24px]
-    xl:w-[280px]
-    lg:w-[196px];
+  @apply xl:w-[280px]
+    lg:w-[196px]
+    flex flex-col gap-2 mt-6;
 }
 
 .description {
-  @apply w-full mt-[24px];
+  @apply w-full mt-6;
 }
 
 .coverBtn {
-  @apply mt-[24px];
+  @apply mt-6;
 }
 
 .mt {
-  @apply mt-[16px];
+  @apply mt-4;
 }
 
 .readOnly {

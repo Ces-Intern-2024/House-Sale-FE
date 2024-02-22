@@ -1,20 +1,24 @@
 .slide {
-  @apply lg:h-[670px] xs:h-[500px] mobile:h-[400px];
+  @apply lg:h-[670px] xs:h-125 mobile:h-100;
 }
 
 .slideImage {
-  @apply w-[100%] h-[100%] object-contain;
+  @apply w-full h-full object-contain;
 }
 
 .title {
-  @apply font-bold lg:text-[50px] md:text-[40px] text-[30px] font-archivo;
+  @apply font-bold lg:text-[50px] md:text-[40px] text-30 font-archivo;
 }
 
 .imgContainer {
-  @apply grid gap-1 xl:grid-cols-2 xl:grid-rows-1 lg:grid-cols-1 lg:grid-rows-2 md:grid-cols-1 md:grid-rows-2 xs:grid-cols-1 xs:grid-rows-2 mobile:grid-cols-1 mobile:grid-rows-2 cursor-pointer 
-    h-[90vh] mobile:h-[70vh];
+  @apply grid gap-1 h-[90vh] mobile:h-[70vh] 
+  xl:grid-cols-2 xl:grid-rows-1 
+  lg:grid-cols-1 lg:grid-rows-2 
+  md:grid-cols-1 md:grid-rows-2 xs:grid-cols-1 
+  xs:grid-rows-2 
+  mobile:grid-cols-1 mobile:grid-rows-2 cursor-pointer;
 }
 
 .img {
-  @apply w-[100%] h-[100%] object-fill;
+  @apply w-full h-full object-fill;
 }

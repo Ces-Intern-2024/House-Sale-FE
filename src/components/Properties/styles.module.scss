@@ -40,7 +40,7 @@
   @apply overflow-hidden relative w-full p-3;
 }
 .propertyImage {
-  @apply w-[100%] h-[250px];
+  @apply w-full h-62.5;
 }
 
 .propertyLocation {
@@ -56,11 +56,11 @@
   @apply flex items-center;
 }
 .propertyIcon {
-  @apply mr-[5px];
+  @apply mr-1;
 }
 
 .propertyPrice {
-  @apply bg-emerald-600 w-full h-9 items-center flex text-slate-50 px-3 text-[15px];
+  @apply bg-emerald-600 w-full h-9 items-center flex text-slate-50 text-base  px-3;
 }
 
 .propertyDescription {
