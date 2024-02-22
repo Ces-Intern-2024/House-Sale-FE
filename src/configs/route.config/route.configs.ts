@@ -15,27 +15,33 @@ export const publicRoutes = [
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
   {
+    key: 'search',
+    path: `/search`,
+    component: lazy(() => import('../../pages/SearchPage/SearchPage')),
+    authority: [Roles.Admin, Roles.Seller, Roles.User],
+  },
+  {
     key: 'about-us',
     path: `/about-us`,
-    component: lazy(() => import('../../components/SearchPage/SearchPage')),
+    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
   {
     key: 'for-sale',
     path: `/for-sale`,
-    component: lazy(() => import('../../components/SearchPage/SearchPage')),
+    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
   {
     key: 'for-rent',
     path: `/for-rent`,
-    component: lazy(() => import('../../components/SearchPage/SearchPage')),
+    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
   {
     key: 'contact',
     path: `/contact`,
-    component: lazy(() => import('../../components/SearchPage/SearchPage')),
+    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
 ]

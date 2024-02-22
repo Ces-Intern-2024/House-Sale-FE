@@ -20,6 +20,7 @@ const Layouts = () => {
     '/for-sale',
     '/for-rent',
     '/contact',
+    '/search',
   ]
   // const privatePath = ['/seller', '/profile']
 
