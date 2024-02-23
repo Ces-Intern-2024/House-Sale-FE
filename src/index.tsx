@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { store, persistor } from './redux/store'
 import { PersistGate } from 'redux-persist/integration/react'
 import axios from 'axios'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import '@mantine/carousel/styles.css'
 import '@mantine/core/styles.css'
 
@@ -16,11 +17,13 @@ axios.defaults.baseURL = 'https://housesale.tldev.id.vn/v1/api'
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <Provider store={store}>
-    <PersistGate loading={true} persistor={persistor}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </PersistGate>
+    <GoogleOAuthProvider clientId="170035210473-2iq76agv4quik014o80lfhi7c31eveeh.apps.googleusercontent.com">
+      <PersistGate loading={true} persistor={persistor}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </PersistGate>
+    </GoogleOAuthProvider>
   </Provider>,
 )
 

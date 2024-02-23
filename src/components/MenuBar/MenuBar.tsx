@@ -38,6 +38,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
       .catch((error) => console.log('purge persisted state error', error))
 
     navigate('/home')
+    window.location.reload()
   }
 
   return (

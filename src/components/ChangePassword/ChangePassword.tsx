@@ -12,6 +12,11 @@ interface ChangePasswordProps {
   isOpened: boolean
   onClose: () => void
 }
+interface FormValues {
+  currentPassword: string
+  newPassword: string
+  confirmNewPassword: string
+}
 
 export default function ChangePassword({
   isOpened,
@@ -62,9 +67,7 @@ export default function ChangePassword({
     prop ? handlers.open() : handlers.close()
   }
 
-  const handleChangePassword = async (values: any) => {
-    console.log(JSON.stringify(values))
-
+  const handleChangePassword = async (values: FormValues) => {
     passwordForm.clearErrors()
     const { currentPassword, newPassword } = values
     try {
@@ -78,9 +81,9 @@ export default function ChangePassword({
         showConfirmButton: false,
         timer: 1500,
       })
-    } catch (err: any) {
+    } catch (error: any) {
       passwordForm.setErrors({
-        currentPassword: err.response.data.error.message,
+        currentPassword: error.response.data.error.message,
       })
     }
   }

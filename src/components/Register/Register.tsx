@@ -175,11 +175,6 @@ export default function Register() {
         . Register with
       </Text>
 
-      <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
-      </Group>
-
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
       <form onSubmit={form.onSubmit((values) => handleRegister(values))}>
         <Stack>
           <TextInput
@@ -349,6 +344,15 @@ export default function Register() {
           </Button>
         </Group>
       </form>
+      <Divider
+        label="Or continue with "
+        labelPosition="center"
+        my="lg"
+        classNames={{ label: styles.divider }}
+      />
+      <Group grow mb="md" mt="md">
+        <GoogleButton radius="xl">Google</GoogleButton>
+      </Group>
     </>
   )
 }

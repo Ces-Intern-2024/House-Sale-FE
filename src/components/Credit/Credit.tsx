@@ -1,16 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './Credit.module.scss'
 import { BsCoin } from 'react-icons/bs'
 import { IoIosNotifications } from 'react-icons/io'
 import Button from '../CustomButton/ButtonCustom'
+import { getTransactionService } from '../../service/SellerService'
+import { formatDate, formatMoney } from '../../utils/commonFunctions'
+import { getProfile } from '../../service/ProfileService'
+import { User } from '@/types/user'
 
 const Credit = () => {
+  const [userProfile, setUserProfile] = useState<User>()
+
+  const getTransaction = async () => {
+    const res = await getTransactionService()
+    console.log(res.depositTransactions.transactions[0].createdAt)
+    console.log(formatDate(res.depositTransactions.transactions[0].createdAt))
+  }
+
+  const getUserProfile = async () => {
+    const res = await getProfile()
+    console.log(res)
+    setUserProfile(res)
+  }
+  useEffect(() => {
+    getTransaction()
+    getUserProfile()
+  }, [])
+
   return (
     <div className={style.creditContainer}>
       <div className={style.creditContent}>
         <div className={style.creditNoti}>
           <div className={style.title}>
-            <span className={style.titleText}>Notifications</span>
+            <span className={style.titleText}>Transaction history</span>
             <span className={style.titleIcon}>
               <IoIosNotifications />
             </span>
@@ -88,7 +110,11 @@ const Credit = () => {
           <div className={style.creditCurrentHead}>
             <div className={style.titleText}>Current credit</div>
             <div className={style.creditCurrentRow}>
-              <span className={style.creditAmount}>55</span>
+              {userProfile && (
+                <span className={style.creditAmount}>
+                  {formatMoney(userProfile.balance)}
+                </span>
+              )}
               <span className={style.creditIcon}>
                 <BsCoin />
               </span>

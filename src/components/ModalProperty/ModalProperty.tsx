@@ -515,10 +515,11 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
               className="w-1/2"
               label="Currency Code"
               placeholder="Enter currency"
-              readOnly={property === null ? false : true}
+              readOnly
               classNames={{
-                input: property === null ? 'bg-white' : 'bg-slate-200',
+                input: 'bg-slate-200',
               }}
+              value="USD"
             />
           </div>
         </div>
