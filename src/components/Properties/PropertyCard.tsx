@@ -10,6 +10,7 @@ import { FaHeart } from 'react-icons/fa'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
 import Swal from 'sweetalert2'
+import { formatMoney } from '../../utils/commonFunctions'
 interface Props {
   data: PropertiesType
 }
@@ -113,7 +114,7 @@ const Properties = ({ data }: Props) => {
             )}
           </div>
           <div className={style.propertyPrice}>
-            {data.price} {data.currencyCode}
+            {formatMoney(String(data.price))} {data.currencyCode}
           </div>
           <div className={style.propertyDescription}>
             <span className={style.propertyDesIcon}>

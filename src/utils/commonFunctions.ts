@@ -1,3 +1,5 @@
+import { HistoryTransaction } from '@/types/historyTransaction'
+
 export const formatDate = (dateString: string) => {
   const date = new Date(dateString)
 
@@ -15,4 +17,15 @@ export const formatDate = (dateString: string) => {
 export const formatMoney = (numberString: string) => {
   const formattedNumber = parseInt(numberString)
   return formattedNumber
+}
+
+export function sortTransactionsByDate(
+  transactions: HistoryTransaction[],
+): HistoryTransaction[] {
+  // Sắp xếp các giao dịch theo ngày tăng dần
+  return transactions.sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime()
+    const dateB = new Date(b.createdAt).getTime()
+    return dateB - dateA
+  })
 }
