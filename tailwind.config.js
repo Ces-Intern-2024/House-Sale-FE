@@ -35,6 +35,7 @@ module.exports = {
         greatVibes: ['Great Vibes', 'cursive'],
         kanit: ['Kanit', 'sans-serif'],
         archivo: ['Archivo', 'sans-serif'],
+        alice: ['Alice', 'sans-serif'],
       },
       width: {
         7.5: '30px',
