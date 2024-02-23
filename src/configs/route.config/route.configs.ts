@@ -21,12 +21,6 @@ export const publicRoutes = [
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
   {
-    key: 'about-us',
-    path: `/about-us`,
-    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
-  },
-  {
     key: 'for-sale',
     path: `/for-sale`,
     component: lazy(() => import('../../pages/DetailPage/DetailPage')),
@@ -42,6 +36,12 @@ export const publicRoutes = [
     key: 'contact',
     path: `/contact`,
     component: lazy(() => import('../../pages/DetailPage/DetailPage')),
+    authority: [Roles.Admin, Roles.Seller, Roles.User],
+  },
+  {
+    key: 'about-us',
+    path: '/about-us',
+    component: lazy(() => import('../../pages/AboutUsPage/AboutUsPage')),
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
 ]
