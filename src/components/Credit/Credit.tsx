@@ -4,22 +4,30 @@ import { BsCoin } from 'react-icons/bs'
 import { IoIosNotifications } from 'react-icons/io'
 import Button from '../CustomButton/ButtonCustom'
 import { getTransactionService } from '../../service/SellerService'
-import { formatDate, formatMoney } from '../../utils/commonFunctions'
+import {
+  formatDate,
+  formatMoney,
+  sortTransactionsByDate,
+} from '../../utils/commonFunctions'
 import { getProfile } from '../../service/ProfileService'
 import { User } from '@/types/user'
+import { HistoryTransaction } from '@/types/historyTransaction'
 
 const Credit = () => {
   const [userProfile, setUserProfile] = useState<User>()
-
+  const [histories, setHistories] = useState<HistoryTransaction[]>([])
   const getTransaction = async () => {
     const res = await getTransactionService()
-    console.log(res.depositTransactions.transactions[0].createdAt)
-    console.log(formatDate(res.depositTransactions.transactions[0].createdAt))
+    const resultDate = [
+      ...res.depositTransactions.transactions,
+      ...res.expenseTransactions.transactions,
+    ]
+    setHistories(sortTransactionsByDate(resultDate))
+    return res
   }
 
   const getUserProfile = async () => {
     const res = await getProfile()
-    console.log(res)
     setUserProfile(res)
   }
   useEffect(() => {
@@ -38,72 +46,31 @@ const Credit = () => {
             </span>
           </div>
           <div className={style.detailNoti}>
-            <div className={style.row}>
-              <div className={style.date}>2024-01-29 12:24:34</div>
-              <div className={style.content}>Bạn đã nạp vào tài khoản</div>
-              <div className={style.quantity}>
-                <span className={style.symbol}>-</span>
-                <span className={style.money}>20</span>
-                <span className={style.icon}>
-                  <BsCoin />
-                </span>
-              </div>
-            </div>
-            <div className={style.row}>
-              <div className={style.date}>2024-01-29 12:24:34</div>
-              <div className={style.content}>Bạn đã nạp vào tài khoản</div>
-              <div className={style.quantity}>
-                <span className={style.symbol}>+</span>
-                <span className={style.money}>20</span>
-                <span className={style.icon}>
-                  <BsCoin />
-                </span>
-              </div>
-            </div>
-            <div className={style.row}>
-              <div className={style.date}>2024-01-29 12:24:34</div>
-              <div className={style.content}>Bạn đã sử dụng</div>
-              <div className={style.quantity}>
-                <span className={style.symbol}>-</span>
-                <span className={style.money}>20</span>
-                <span className={style.icon}>
-                  <BsCoin />
-                </span>
-              </div>
-            </div>
-            <div className={style.row}>
-              <div className={style.date}>2024-01-29 12:24:34</div>
-              <div className={style.content}>Bạn đã sử dụng</div>
-              <div className={style.quantity}>
-                <span className={style.symbol}>-</span>
-                <span className={style.money}>20</span>
-                <span className={style.icon}>
-                  <BsCoin />
-                </span>
-              </div>
-            </div>
-            <div className={style.row}>
-              <div className={style.date}>2024-01-29 12:24:34</div>
-              <div className={style.content}>Bạn đã sử dụng</div>
-              <div className={style.quantity}>
-                <span className={style.symbol}>-</span>
-                <span className={style.money}>20</span>
-                <span className={style.icon}>
-                  <BsCoin />
-                </span>
-              </div>
-            </div>
-            <div className={style.row}>
-              <div className={style.date}>2024-01-29 12:24:34</div>
-              <div className={style.content}>Bạn đã sử dụng</div>
-              <div className={style.quantity}>
-                <span className={style.symbol}>-</span>
-                <span className={style.money}>20</span>
-                <span className={style.icon}>
-                  <BsCoin />
-                </span>
-              </div>
-            </div>
+            {histories.length > 0 ? (
+              histories.map((history, index) => (
+                <div key={index} className={style.row}>
+                  <div className={style.date}>
+                    {formatDate(history.createdAt)}
+                  </div>
+                  <div className={style.content}>
+                    {history.description
+                      ? 'You have used'
+                      : 'You have deposited into your account'}
+                  </div>
+                  <div className={style.quantity}>
+                    <span className={style.symbol}>
+                      {history.description ? '-' : '+'}
+                    </span>
+                    <span className={style.money}>{history.amount}</span>
+                    <span className={style.icon}>
+                      <BsCoin />
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>You have not made any transactions yet.</div>
+            )}
           </div>
         </div>
         <div className={style.creditCurrent}>

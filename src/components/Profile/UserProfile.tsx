@@ -194,11 +194,7 @@ export default function SellerProfile() {
     const data = await getProfile()
     const roleId = data.role.roleId
     setUserInfo({ ...data, roleId: roleId })
-
     dispatch(setUser({ ...data, roleId: roleId }))
-
-    console.log('user ' + JSON.stringify(data))
-
     setProvinceCode(data.provinceCode)
     setDistrictCode(data.districtCode)
     setWardCode(data.wardCode)

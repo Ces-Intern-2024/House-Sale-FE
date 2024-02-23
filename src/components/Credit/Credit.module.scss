@@ -23,22 +23,14 @@
 }
 
 .detailNoti {
-  @apply overflow-y-scroll;
+  @apply overflow-y-scroll pr-4;
 }
 .row {
-  @apply border-b-[1px] flex flex-row items-center justify-start;
-}
-
-.date {
-  @apply w-2/5;
-}
-
-.content {
-  @apply w-2/5;
+  @apply border-b-[1px] flex flex-row items-center justify-between;
 }
 
 .quantity {
-  @apply w-1/0 flex flex-row items-center;
+  @apply flex flex-row items-center justify-between;
 }
 
 .symbol {
@@ -46,7 +38,7 @@
 }
 
 .money {
-  @apply font-semibold;
+  @apply w-[48px] font-semibold;
 }
 
 .icon {
