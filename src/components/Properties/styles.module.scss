@@ -45,11 +45,20 @@
 
 .propertyLocation {
   @apply flex justify-between items-center
-    text-[14px]
+    text-base
     text-[#7e7e7e]
     leading-[25px]
     text-left
     px-3 pb-1;
+}
+
+.heartCoverIcon {
+  @apply cursor-pointer px-2 mt-1 text-primary 
+  hover:text-red hover:ease-in hover:duration-300;
+}
+
+.heartIsAdded {
+  @apply text-orangeHeart hover:text-[#AA0000] cursor-pointer px-2 mt-1  hover:ease-in hover:duration-300;
 }
 
 .propertyCoverIcon {
