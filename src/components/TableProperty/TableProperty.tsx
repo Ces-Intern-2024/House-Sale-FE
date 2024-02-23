@@ -35,8 +35,6 @@ const TableProperty = () => {
   }
 
   const handleDelete = async (property: Properties) => {
-    // console.log(property);
-    // alert("hahahihi")
     try {
       Swal.fire({
         title: 'Are you sure?',
