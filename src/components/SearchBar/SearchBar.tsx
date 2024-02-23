@@ -160,6 +160,10 @@ export default function SearchBar() {
     setPage(page)
   }
 
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') handleSubmitSearch()
+  }
+
   useEffect(() => {
     dispatch(getAllFeatures())
     dispatch(getAllCategories())
@@ -199,6 +203,7 @@ export default function SearchBar() {
                   placeholder="Search Here..."
                   size="md"
                   className=" mobile:w-[225px] lg:w-[300px] "
+                  onKeyDown={handleKeyDown}
                 />
                 <Button
                   className={styles.searchButton3}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { TextInput } from '@mantine/core'
+import { Button, TextInput } from '@mantine/core'
 import { IconSearch } from '@tabler/icons-react'
 import styles from './TextSearchBar.module.scss'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -17,6 +17,10 @@ export default function TextSearchBar() {
     navigate('/search', { state: { searchValue } })
   }
 
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') handleSearch()
+  }
+
   useEffect(() => {
     const handleResize = () => {
       dispatch(setIsSmallScreen(window.innerWidth < 600))
@@ -30,15 +34,16 @@ export default function TextSearchBar() {
     }
   }, [dispatch])
   const rightIcon = (
-    <div onClick={handleSearch}>
+    <Button onClick={handleSearch}>
       <IconSearch className={styles.icon} />
-    </div>
+    </Button>
   )
 
   return (
     <>
       <TextInput
         onChange={(event) => setSearchValue(event.currentTarget.value)}
+        onKeyDown={handleKeyDown}
         className=" cursor-pointer"
         radius="xl"
         size={isSmallScreen ? 'md' : 'lg'}
