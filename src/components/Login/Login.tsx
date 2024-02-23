@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from '@mantine/form'
 import {
   TextInput,
@@ -18,6 +18,7 @@ import { setUser } from '../../redux/reducers/userSlice'
 import { signInSuccess } from '../../redux/reducers/sessionSlice'
 import { useAppDispatch } from '../../redux/hooks'
 import appConfig from '../../configs/app.config'
+import { useGoogleLogin } from '@react-oauth/google'
 
 const LOGIN_URL = '/user/login'
 interface Props {
@@ -27,6 +28,65 @@ interface Props {
 export function Login() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const [error, setError] = useState<string | null>(null)
+  const [userGoogle, setUserGoogle] = useState<string | null>(null)
+
+  const login = useGoogleLogin({
+    onSuccess: (response) => {
+      setUserGoogle(response.access_token)
+    },
+    onError: () => console.log('Login Failed:'),
+  })
+
+  useEffect(() => {
+    if (userGoogle) {
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${userGoogle}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userGoogle}`,
+              Accept: 'application/json',
+            },
+          },
+        )
+        .then(async (res) => {
+          try {
+            const userServer = await axios.post(`/user/login-with-google`, {
+              email: res.data.email,
+              fullName: res.data.name,
+            })
+            await dispatch(setUser(userServer.data.metaData.userInfo))
+            await dispatch(
+              signInSuccess({
+                signedIn: true,
+                tokens: { ...userServer.data.metaData.tokens },
+              }),
+            )
+            navigate(
+              String(userServer.data.metaData.userInfo.roleId) === '1'
+                ? appConfig.tourPath
+                : appConfig.authenticatedEntryPath,
+            )
+          } catch (error: any) {
+            if (error.response) {
+              if (error.response.status === 400) {
+                setError(
+                  'An error occurred while logging in. Please try again later!',
+                )
+              } else if (error.response.status === 404) {
+                setError('Not Found!')
+              }
+            } else {
+              setError(
+                'An error occurred while logging in. Please try again later!',
+              )
+            }
+          }
+        })
+        .catch((err) => console.log(err))
+    }
+  }, [userGoogle])
 
   const form = useForm({
     initialValues: {
@@ -45,7 +105,7 @@ export function Login() {
   })
 
   const handleLogin = async (value: Props) => {
-    // e.preventDefault()
+    setError('')
     try {
       const res = await axios.post(
         LOGIN_URL,
@@ -68,8 +128,19 @@ export function Login() {
           ? appConfig.tourPath
           : appConfig.authenticatedEntryPath,
       )
-    } catch (err) {
-      console.error('Login error:', err)
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401 || error.response.status === 403) {
+          // Unauthorized or Forbidden: Tên đăng nhập hoặc mật khẩu không chính xác
+          setError('Email or password is incorrect.')
+        } else if (error.response.status === 400) {
+          // Other server errors
+          setError('Email is not registered!')
+        }
+      } else {
+        // Network errors or other client-side errors
+        setError('An error occurred while logging in. Please try again later')
+      }
     }
   }
 
@@ -82,14 +153,9 @@ export function Login() {
             Modern House
           </span>
         </Link>
-        . Log In with
+        . Log In with email
       </Text>
 
-      <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
-      </Group>
-
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
       <form
         onSubmit={form.onSubmit((values) => {
           handleLogin(values)
@@ -121,23 +187,34 @@ export function Login() {
             }
             radius="md"
           />
+          {error && <div className="text-red">{error}</div>}
         </Stack>
 
+        <Button
+          size="md"
+          type="submit"
+          radius="xl"
+          classNames={{ root: style.btnLogIn }}
+        >
+          Sign In
+        </Button>
         <Group justify="space-between" mt="xl">
           <Anchor>
             <Link to="/register">Do not have an account? Register</Link>
           </Anchor>
-
-          <Button
-            size="md"
-            type="submit"
-            radius="xl"
-            classNames={{ root: style.btnLogIn }}
-          >
-            Log In
-          </Button>
         </Group>
       </form>
+      <Divider
+        label="Or continue with "
+        labelPosition="center"
+        my="lg"
+        classNames={{ label: style.divider }}
+      />
+      <Group grow mb="md" mt="md">
+        <GoogleButton radius="xl" onClick={() => login()}>
+          Google
+        </GoogleButton>
+      </Group>
     </>
   )
 }

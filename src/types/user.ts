@@ -1,6 +1,3 @@
-import { Province } from './province'
-import { District } from './district'
-import { Ward } from './ward'
 export interface User {
   address: string
   avatar: string | null
@@ -16,4 +13,5 @@ export interface User {
   userId: number | undefined
   wardCode: string | null
   email: string
+  balance: string
 }

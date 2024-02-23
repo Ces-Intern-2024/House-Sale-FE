@@ -9,13 +9,15 @@ import { axiosInstance } from '../../service/AxiosInstance'
 import { FaHeart } from 'react-icons/fa'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
-
+import Swal from 'sweetalert2'
 interface Props {
   data: PropertiesType
 }
 
 const Properties = ({ data }: Props) => {
   const [isAddedWishlist, setIsAddedWishlist] = useState(false)
+  // const [isLogIn, setIsLogIn] = useState(false)
+  const [user, setUser] = useState<string | null>(null)
 
   const wishList: PropertiesType[] = useAppSelector(
     (state) => state.property.listFavorites,
@@ -24,12 +26,27 @@ const Properties = ({ data }: Props) => {
 
   useEffect(() => {
     dispatch(getAllWishList())
+  }, [dispatch])
+
+  useEffect(() => {
+    setUser(localStorage.getItem('persist:primary'))
   }, [])
 
   const handleAddToWishlist = async (propertyId: number) => {
-    const res = await axiosInstance.post(`/favorites-list`, { propertyId })
-    setIsAddedWishlist(true)
-    return res
+    try {
+      const res = await axiosInstance.post(`/favorites-list`, { propertyId })
+      setIsAddedWishlist(true)
+      return res
+    } catch (error: any) {
+      if (error.response.status === 401) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'You need to login first!',
+          showConfirmButton: false,
+          timer: 1400,
+        })
+      }
+    }
   }
 
   return (
@@ -60,8 +77,8 @@ const Properties = ({ data }: Props) => {
               <FaLocationDot className={style.propertyIcon} size={16} />
               {data.location.address}
             </span>
-            {wishList.length > 0 &&
-              (wishList.filter(
+            {user !== null ? (
+              wishList.filter(
                 (property: PropertiesType) =>
                   property.propertyId === data.propertyId,
               ).length > 0 ? (
@@ -85,7 +102,15 @@ const Properties = ({ data }: Props) => {
                 >
                   <FaRegHeart size={24} />
                 </span>
-              ))}
+              )
+            ) : (
+              <span
+                className={style.heartCoverIcon}
+                onClick={() => handleAddToWishlist(data.propertyId)}
+              >
+                <FaRegHeart size={24} />
+              </span>
+            )}
           </div>
           <div className={style.propertyPrice}>
             {data.price} {data.currencyCode}
