@@ -8,8 +8,11 @@ import {
   Table,
   Image,
   ScrollArea,
+  Group,
+  Collapse,
 } from '@mantine/core'
 import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
+import { FaFilter } from 'react-icons/fa6'
 import { MdDelete } from 'react-icons/md'
 import { useDisclosure } from '@mantine/hooks'
 import ModalProperty from '../ModalProperty/ModalProperty'
@@ -19,11 +22,17 @@ import Swal from 'sweetalert2'
 
 const TableProperty = () => {
   const [opened, { open, close }] = useDisclosure(false)
+  const [collapse, { toggle }] = useDisclosure(false)
   const [selectedProperty, setSelectedProperty] = useState<Properties | null>(
     null,
   )
   const [isUpdated, setIsUpdated] = useState(false)
   const [properties, setProperties] = useState<Properties[]>([])
+
+  const toggleCollapse = () => {
+    toggle()
+  }
+
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     open()
@@ -54,12 +63,12 @@ const TableProperty = () => {
             text: 'Your file has been deleted.',
             icon: 'success',
           })
-          console.log(res)
           setProperties(
             properties.filter(
               (item) => item.propertyId !== property.propertyId,
             ),
           )
+          return res
         }
       })
     } catch (error) {
@@ -123,26 +132,34 @@ const TableProperty = () => {
 
           <div className={style.tableSideBar}>
             <div className={style.tableSelect}>
+              <Group justify="center" mb={5}>
+                <FaFilter onClick={toggleCollapse} />
+              </Group>
               <div className={style.tableSearch}>
                 <TextInput
                   classNames={{ input: style.input }}
                   placeholder="Search property......"
                 />
               </div>
-              <div>
-                <Select
-                  classNames={{ input: style.elementSelect }}
-                  placeholder="Choose Featured"
-                  data={['Rent', 'Sale']}
-                />
-              </div>
-              <div>
-                <Select
-                  classNames={{ input: style.elementSelect }}
-                  placeholder="Choose Category"
-                  data={['House', 'Villa', 'Department']}
-                />
-              </div>
+              <Collapse
+                in={collapse}
+                transitionDuration={1000}
+                transitionTimingFunction="linear"
+              >
+                <div>
+                  <Select
+                    classNames={{ input: style.elementSelect }}
+                    placeholder="Choose Featured"
+                    data={['Rent', 'Sale']}
+                  />
+
+                  <Select
+                    classNames={{ input: style.elementSelect }}
+                    placeholder="Choose Category"
+                    data={['House', 'Villa', 'Department']}
+                  />
+                </div>
+              </Collapse>
               <div>
                 <Button className={style.iconSearch}>
                   <FaSearch size={16} />
