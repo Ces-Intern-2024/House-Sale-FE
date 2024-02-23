@@ -29,6 +29,7 @@ module.exports = {
         turquoiseLoginHover: '#50dfb6',
         springGreenLogin: '#55efc4',
         red: '#FF0000',
+        orangeHeart: '#FF6347',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],
