@@ -1,48 +1,49 @@
 import React, { useEffect, useState } from 'react'
 import style from './TableProperty.module.scss'
 import {
-  Modal,
   Button,
   Select,
   TextInput,
   Table,
   Image,
   ScrollArea,
-  Group,
-  Collapse,
+  Modal,
 } from '@mantine/core'
 import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
-import { FaFilter } from 'react-icons/fa6'
 import { MdDelete } from 'react-icons/md'
 import { useDisclosure } from '@mantine/hooks'
 import ModalProperty from '../ModalProperty/ModalProperty'
-import { Properties } from '@/types'
+import { Category, Feature, Properties } from '@/types'
 import { axiosInstance } from '../../service/AxiosInstance'
 import Swal from 'sweetalert2'
+import { formatMoneyToUSD } from '../../utils/commonFunctions'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { getAllCategories } from '../../redux/reducers/categorySlice'
+import { getAllFeatures } from '../../redux/reducers/featureSlice'
+import { PiArrowsDownUp } from 'react-icons/pi'
+import {
+  searchPropertyForSeller,
+  SearchProps,
+} from '../../service/SearchService'
+import { CODE_RESPONSE_400, CODE_RESPONSE_401, CODE_RESPONSE_404 } from '../../constants/codeResponse'
 
 const TableProperty = () => {
   const [opened, { open, close }] = useDisclosure(false)
-  const [collapse, { toggle }] = useDisclosure(false)
   const [selectedProperty, setSelectedProperty] = useState<Properties | null>(
     null,
   )
   const [isUpdated, setIsUpdated] = useState(false)
   const [properties, setProperties] = useState<Properties[]>([])
-
-  const toggleCollapse = () => {
-    toggle()
-  }
-
+  const [sort, setSort] = useState(true)
+  const [statusProperty, setStatusProperty] = useState(false)
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     open()
   }
-
   const handlePropertyAdd = () => {
     setSelectedProperty(null)
     open()
   }
-
   const handleDelete = async (property: Properties) => {
     try {
       Swal.fire({
@@ -60,7 +61,7 @@ const TableProperty = () => {
           )
           Swal.fire({
             title: 'Deleted!',
-            text: 'Your file has been deleted.',
+            text: 'Your property has been deleted.',
             icon: 'success',
           })
           setProperties(
@@ -75,18 +76,134 @@ const TableProperty = () => {
       // console.error('Error deleting new property:', error)
     }
   }
-  useEffect(() => setProperties(properties), [properties])
+  useEffect(() => {
+    setProperties(properties)
+  }, [properties])
 
   const getAllPropertiesForSeller = async () => {
-    const res = await axiosInstance.get(`/seller/properties`)
-    setProperties(res.data.metaData.properties)
+    try {
+      const res = await axiosInstance.get(`/seller/properties`)
+      setProperties(res.data.metaData.data)
+    } catch (error: any) {
+      if (error.response.status === CODE_RESPONSE_400) {
+        console.error('This feature is not available yet. Please try again')
+      } else if (error.response.status === CODE_RESPONSE_401) {
+        console.error('Please Authenticate')
+      } else {
+        console.error(error)
+      }
+    }
   }
 
   useEffect(() => {
     getAllPropertiesForSeller()
     setIsUpdated(false)
   }, [isUpdated])
+  //Apply API getAllCategory
+  const dispatch = useAppDispatch()
+  const categories: Category[] = useAppSelector(
+    (state) => state.category.categoriesList,
+  )
+  useEffect(() => {
+    const promise = dispatch(getAllCategories())
+    return () => {
+      promise.abort()
+    }
+  }, [dispatch])
+  //Apply API getAllFeatures
+  const features: Feature[] = useAppSelector(
+    (state) => state.feature.featuresList,
+  )
+  useEffect(() => {
+    const promise = dispatch(getAllFeatures())
+    return () => {
+      promise.abort()
+    }
+  }, [dispatch])
 
+  const getPropertiesSortByPrice = async () => {
+    try {
+      setSort(!sort)
+      if (sort) {
+        const res = await axiosInstance.get(
+          `/seller/properties`,{params: {sortBy: 'asc', orderBy: 'price'}}
+        )
+        setProperties(res.data.metaData.data)
+      } else {
+        const res = await axiosInstance.get(
+          `/seller/properties`,{params: {sortBy: 'desc', orderBy: 'price'}}
+        )
+        setProperties(res.data.metaData.data)
+      }
+    } catch (error: any) {
+      if (error.response.status === CODE_RESPONSE_400) {
+        console.error('This feature is not available yet. Please try again')
+      } else if (error.response.status === CODE_RESPONSE_401) {
+        console.error('Please Authenticate')
+      } else {
+        console.error(error)
+      }
+    }
+  }
+
+  const [featureId, setFeatureId] = useState('')
+  const [categoryId, setCategoryId] = useState('')
+  const [name, setName] = useState('')
+
+  const handleFiltering = async (
+    name: string,
+    featureId: string,
+    categoryId: string,
+  ) => {
+    const data: SearchProps = {
+      keyword: name ? name : null,
+      categoryId: categoryId ? Number(categoryId) : null,
+      featureId: featureId ? Number(featureId) : null,
+    }
+    const res = await searchPropertyForSeller(data)
+    setProperties(res.data)
+  }
+
+  const handleUpdateStatus = async (status:boolean, propertyId: number) => {
+    setStatusProperty(!status)
+    try{Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, disable it!',
+    }).then(async (result) =>{
+      if (result.isConfirmed) {
+        const res = await axiosInstance.patch(`/seller/properties/${propertyId}`, {status: statusProperty})
+        Swal.fire({
+          title: 'Updated!',
+          text: 'Your property is updated.',
+          icon: 'success',
+        })
+        setIsUpdated(prev => !prev)
+        return res
+      }
+    })
+      
+    }catch(error:any) {
+      if (error.response.status === CODE_RESPONSE_400) {
+        Swal.fire({
+          title: 'Failed to update property',
+          icon: 'error',
+        })
+      } else if (error.response.status === CODE_RESPONSE_404) {
+        Swal.fire({
+          title:
+            'This property is not available now. Please try another property!',
+          icon: 'error',
+        })
+      } else {
+        console.error('Error updating property:', error)
+      }
+    }
+  }
   const rows =
     properties.length > 0 &&
     properties.map((element) => (
@@ -101,9 +218,25 @@ const TableProperty = () => {
             <span className={style.propertyName}>{element.name}</span>
           </div>
         </Table.Td>
-        <Table.Td>$ {element.price}</Table.Td>
-        <Table.Td>{element.feature.featureId}</Table.Td>
-        <Table.Td>{element.category.categoryId}</Table.Td>
+        <Table.Td>{element.code}</Table.Td>
+        <Table.Td>{element.feature.name}</Table.Td>
+        <Table.Td>{element.category.name}</Table.Td>
+        <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
+
+        {element.status ? (
+          <Table.Td>
+            <Button
+              onClick={() => handleUpdateStatus(element.status, element.propertyId)}
+              className={style.enable}
+            >
+              Enable
+            </Button>
+          </Table.Td>
+        ) : (
+          <Table.Td>
+            <Button className={style.disable}>Disable</Button>
+          </Table.Td>
+        )}
         <Table.Td>
           <div className={style.propertyActions}>
             <FaEdit
@@ -132,36 +265,56 @@ const TableProperty = () => {
 
           <div className={style.tableSideBar}>
             <div className={style.tableSelect}>
-              <Group justify="center" mb={5}>
-                <FaFilter onClick={toggleCollapse} />
-              </Group>
               <div className={style.tableSearch}>
                 <TextInput
                   classNames={{ input: style.input }}
                   placeholder="Search property......"
+                  onChange={(event) => setName(event.target.value)}
                 />
               </div>
-              <Collapse
-                in={collapse}
-                transitionDuration={1000}
-                transitionTimingFunction="linear"
-              >
-                <div>
-                  <Select
-                    classNames={{ input: style.elementSelect }}
-                    placeholder="Choose Featured"
-                    data={['Rent', 'Sale']}
-                  />
+              <Select
+                classNames={{ input: style.elementSelect }}
+                placeholder="Choose Featured"
+                data={features.flatMap((feature) => [
+                  {
+                    value: feature.featureId.toString(),
+                    label: feature.name,
+                  },
+                ])}
+                onChange={(value: string | null) => {
+                  if (value !== null) {
+                    setFeatureId(value)
+                  } else {
+                    setFeatureId('')
+                  }
+                }}
+                allowDeselect
+              />
 
-                  <Select
-                    classNames={{ input: style.elementSelect }}
-                    placeholder="Choose Category"
-                    data={['House', 'Villa', 'Department']}
-                  />
-                </div>
-              </Collapse>
+              <Select
+                classNames={{ input: style.elementSelect }}
+                placeholder="Choose Category"
+                data={categories.flatMap((category) => [
+                  {
+                    value: category.categoryId.toString(),
+                    label: category.name,
+                  },
+                ])}
+                onChange={(value: string | null) => {
+                  if (value !== null) {
+                    setCategoryId(value)
+                  } else {
+                    setCategoryId('')
+                  }
+                }}
+                allowDeselect
+              />
+
               <div>
-                <Button className={style.iconSearch}>
+                <Button
+                  className={style.iconSearch}
+                  onClick={() => handleFiltering(name, featureId, categoryId)}
+                >
                   <FaSearch size={16} />
                 </Button>
               </div>
@@ -190,11 +343,19 @@ const TableProperty = () => {
                     <Table.Th classNames={{ th: style.thName }}>
                       Property Name
                     </Table.Th>
-                    <Table.Th classNames={{ th: style.thPrice }}>
-                      Price
-                    </Table.Th>
+                    <Table.Th>Code</Table.Th>
                     <Table.Th>Featured</Table.Th>
                     <Table.Th>Category</Table.Th>
+                    <Table.Th classNames={{ th: style.thPrice }}>
+                      <span>Price</span>
+
+                      <PiArrowsDownUp
+                        onClick={() => getPropertiesSortByPrice()}
+                        className="cursor-pointer"
+                        size={20}
+                      />
+                    </Table.Th>
+                    <Table.Th>Status</Table.Th>
                     <Table.Th>Actions</Table.Th>
                   </Table.Tr>
                 </Table.Thead>

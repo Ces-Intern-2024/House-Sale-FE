@@ -1,9 +1,9 @@
 .tablePropertyContainer {
-  @apply mx-10;
+  @apply xl:mx-5 lg:mx-5;
 }
 
 .tablePropertyContent {
-  @apply bg-white rounded-[15px] border-[1px] px-5 py-2;
+  @apply bg-white rounded-[15px] shadow-xl px-5 py-2;
 }
 
 .tableHeader {
@@ -39,17 +39,23 @@
 }
 
 .tableSelect {
-  @apply flex flex-row gap-6;
+  @apply flex flex-row 
+  xl:gap-6
+  lg:gap-3;
 }
 
 .tableSearch {
 }
 .input {
-  @apply w-75 focus:border-primary;
+  @apply focus:border-primary
+  xl:w-75
+  lg:w-40;
 }
 
 .elementSelect {
-  @apply focus:border-primary;
+  @apply focus:border-primary
+  xl:w-full
+  lg:w-36;
 }
 .iconSearch {
   @apply w-full leading-[36px] cursor-pointer py-[8px] h-full text-white rounded-[2px]
@@ -82,10 +88,10 @@
 }
 
 .thPrice {
-  @apply max-w-[200px] min-w-25;
+  @apply max-w-[200px] min-w-25 flex flex-row items-center gap-2;
 }
 .propertyActions {
-  @apply flex flex-row items-center justify-evenly h-full;
+  @apply flex flex-row items-center justify-start gap-4 h-full;
 }
 
 .actionIcon {
@@ -121,4 +127,12 @@
 
 .titleModal {
   @apply text-[20px] font-bold font-archivo;
+}
+
+.enable {
+  @apply text-base bg-darkBlue hover:bg-orangeBtn min-w-25;
+}
+
+.disable {
+  @apply text-base text-black bg-slate-300 cursor-default min-w-25;
 }

@@ -14,8 +14,12 @@ export const formatDate = (dateString: string) => {
   return formattedDate
 }
 
-export const formatMoney = (numberString: string) => {
-  const formattedNumber = parseInt(numberString)
+export const formatMoneyToUSD = (numberString: number) => {
+  const formatter = new Intl.NumberFormat('en-US',{
+    style: 'currency',
+    currency: 'USD',
+  })
+  const formattedNumber = formatter.format(numberString)
   return formattedNumber
 }
 

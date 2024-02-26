@@ -1,0 +1,58 @@
+.img {
+    @apply w-[170px] h-12.5;
+  }
+  
+  .header {
+    @apply bg-primary flex items-center px-7 justify-between;
+  }
+  
+  .navBar {
+    @apply bg-white flex flex-col
+    md:justify-between md:items-center sm:justify-start sm:items-center 
+    py-10 mobile:items-center mobile:justify-start;
+  }
+  
+  .navBarInner {
+    @apply flex flex-col gap-3 cursor-pointer md:w-auto mobile:w-9/0;
+  }
+  
+  .navItem {
+    @apply flex items-center gap-3 py-3 px-4 text-darkSlateBlue;
+  }
+  
+  .navIcon {
+    @apply text-darkSlateBlue;
+  }
+  
+  .navText {
+    @apply font-bold mobile:visible;
+  }
+  
+  .navItemActive {
+    @apply rounded-[4px] bg-darkBlue;
+  }
+  
+  .navItemActive .navIcon {
+    @apply text-white;
+  }
+  
+  .navItemActive .navText {
+    @apply text-white;
+  }
+  
+  .burger {
+    @apply text-white;
+  }
+  
+  .main {
+    @apply bg-second;
+  }
+  
+  .root {
+    @apply lg:hidden md:hidden mobile:visible;
+  }
+  
+  .rootBreadCrumb {
+    @apply border-b;
+  }
+  

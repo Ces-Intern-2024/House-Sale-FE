@@ -110,7 +110,7 @@ export default function Feedback() {
 
       form.reset()
     } catch (err) {
-      // console.log(err)
+      console.error(err)
     }
   }
 

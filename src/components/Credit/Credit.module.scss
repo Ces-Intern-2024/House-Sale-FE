@@ -1,5 +1,6 @@
 .creditContainer {
-  @apply px-10 my-7.5  w-full;
+  @apply my-7.5
+  xl:mx-5 lg:mx-5;
 }
 
 .creditContent {
@@ -7,7 +8,7 @@
 }
 
 .creditNoti {
-  @apply flex flex-col border-[1px] w-[60%] py-2 px-5 rounded-[16px] h-[150px] bg-white;
+  @apply w-3/5 flex flex-col gap-2 py-2 px-5 rounded-[16px] h-[150px] bg-white shadow-xl;
 }
 
 .title {
@@ -26,9 +27,12 @@
   @apply overflow-y-scroll pr-4;
 }
 .row {
-  @apply border-b-[1px] flex flex-row items-center justify-between;
+  @apply border-b-[1px] flex flex-row items-start justify-between;
 }
 
+.content {
+  @apply w-75;
+}
 .quantity {
   @apply flex flex-row items-center justify-between;
 }
@@ -46,7 +50,7 @@
 }
 
 .creditCurrent {
-  @apply w-2/5 border-[1px] rounded-[16px] py-2 px-3 bg-white;
+  @apply w-2/5 rounded-[16px] py-2 px-3 bg-white shadow-xl;
 }
 
 .creditCurrentRow {
