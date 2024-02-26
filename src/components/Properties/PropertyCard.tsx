@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FaLocationDot, FaRegHeart } from 'react-icons/fa6'
 import { MdOutlineZoomOutMap } from 'react-icons/md'
 import { IoBedOutline } from 'react-icons/io5'
@@ -27,17 +27,11 @@ const Properties = ({ data }: Props) => {
   )
   const dispatch = useAppDispatch()
 
-  useEffect(() => {
-    if (loggedIn) {
-      dispatch(getAllWishList())
-    }
-  }, [isLoading])
-
   const handleAddToWishlist = async (propertyId: number) => {
     try {
       setIsLoading(true)
       await axiosInstance.post(`/favorites-list`, { propertyId })
-      setIsLoading(false)
+      await dispatch(getAllWishList())
     } catch (error: any) {
       if (error.response.status === CODE_RESPONSE_401) {
         Swal.fire({
@@ -47,6 +41,8 @@ const Properties = ({ data }: Props) => {
           timer: 1400,
         })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 

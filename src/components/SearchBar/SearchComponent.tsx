@@ -16,9 +16,8 @@ import {
   useFetchDistrictsQuery,
   useFetchWardsQuery,
 } from '../../redux/reducers/locationSlice'
-import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getAllCategories } from '../../redux/reducers/categorySlice'
-import { getAllFeatures } from '../../redux/reducers/featureSlice'
+import { useAppSelector } from '../../redux/hooks'
+
 import {
   IconMapPin,
   IconMeterSquare,
@@ -36,12 +35,11 @@ import CustomSelect from './CustomSelect'
 import { searchProperty } from '../../service/SearchService'
 import PropertyCard from '../Properties/PropertyCard'
 import { useLocation } from 'react-router-dom'
-import { useDisclosure, useDebouncedState } from '@mantine/hooks'
+import { useDisclosure } from '@mantine/hooks'
 import { Properties } from '../../types/properties'
 
 export default function SearchBar() {
   const query = useLocation()
-  const dispatch = useAppDispatch()
   const [opened, { open, close }] = useDisclosure(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -51,35 +49,41 @@ export default function SearchBar() {
   const [totalItems, setTotalItems] = useState<number>(0)
   const [properties, setProperties] = useState<Properties[]>([])
 
-  const [priceRange, setPriceRange] = useDebouncedState<[number, number]>(
-    [0, 100000],
-    300,
-  )
+  const [maxPrice, setMaxPrice] = useState<number>(0)
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice])
 
   const { data: provinces = [] } = useFetchProvincesQuery()
 
   const [provinceCode, setProvinceCode] = useState('')
+  const [openProvince, setOpenProvince] = useState(false)
 
   const { data: districts = [] } = useFetchDistrictsQuery(provinceCode, {
     skip: !provinceCode,
   })
   const [districtCode, setDistrictCode] = useState<string>('')
+  const [openDistrict, setOpenDistrict] = useState(false)
 
   const { data: wards = [] } = useFetchWardsQuery(districtCode, {
     skip: !provinceCode,
   })
   const [wardCode, setWardCode] = useState<string>('')
+  const [openWard, setOpenWard] = useState(false)
 
   const categories = useAppSelector((state) => state.category.categoriesList)
   const [bedNum, setBedNum] = useState<[string, string] | null>(null)
+  const [openBedNum, setOpenBedNum] = useState(false)
   const [bathNum, setBathNum] = useState<[string, string] | null>(null)
+  const [openBathNum, setOpenBathNum] = useState(false)
   const [categoryNum, setCategoryNum] = useState<string>(
     query.state && query.state.categoryId ? String(query.state.categoryId) : '',
   )
+  const [openCategory, setOpenCategory] = useState(false)
   const [featureNum, setFeatureNum] = useState<string>(
     query.state && query.state.featureId ? String(query.state.featureId) : '',
   )
+  const [openFeature, setOpenFeature] = useState(false)
   const [areaNum, setAreaNum] = useState<[string, string] | null>(null)
+  const [openAreaNum, setOpenAreaNum] = useState(false)
   const [sortBy, setSortBy] = useState('ASC')
   const [numOfFilters, setNumOfFilters] = useState(0)
 
@@ -144,16 +148,14 @@ export default function SearchBar() {
   const handleCheckNumOfFilter = () => {
     setNumOfFilters(0)
     if (provinceCode) setNumOfFilters((prev) => prev + 1)
-
     if (districtCode) setNumOfFilters((prev) => prev + 1)
-
     if (wardCode) setNumOfFilters((prev) => prev + 1)
     if (bedNum) setNumOfFilters((prev) => prev + 1)
     if (bathNum) setNumOfFilters((prev) => prev + 1)
     if (areaNum) setNumOfFilters((prev) => prev + 1)
     if (categoryNum) setNumOfFilters((prev) => prev + 1)
     if (featureNum) setNumOfFilters((prev) => prev + 1)
-    if (priceRange[0] !== 0 || priceRange[1] !== 100000)
+    if (priceRange[0] !== 0 || priceRange[1] !== maxPrice)
       setNumOfFilters((prev) => prev + 1)
   }
 
@@ -166,11 +168,15 @@ export default function SearchBar() {
     setAreaNum(null)
     setCategoryNum('')
     setFeatureNum('')
-    setPriceRange([0, 100000])
+    setPriceRange([0, maxPrice])
     setSortBy('ASC')
-    // setSearchValue('')
-    // setTempSearchValue('')
     handleCheckNumOfFilter()
+  }
+
+  const handleGetMaxPrice = async () => {
+    const data = await searchProperty({ orderBy: 'price', sortBy: 'desc' })
+    setMaxPrice(Number(data.data[0].price))
+    setPriceRange([0, Number(data.data[0].price)])
   }
 
   const handleSubmitSearch = async () => {
@@ -207,6 +213,8 @@ export default function SearchBar() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
       // console.log(err)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -223,8 +231,7 @@ export default function SearchBar() {
   }
 
   useEffect(() => {
-    dispatch(getAllFeatures())
-    dispatch(getAllCategories())
+    handleGetMaxPrice()
   }, [])
 
   useEffect(() => {
@@ -251,11 +258,13 @@ export default function SearchBar() {
       setSearchValue('')
       handleResetFilter()
     }
-  }, [query.state, query.state])
+  }, [query.state])
 
   useEffect(() => {
-    handleSubmitSearch()
-    handleCheckNumOfFilter()
+    if (priceRange[1] !== 0) {
+      handleSubmitSearch()
+      handleCheckNumOfFilter()
+    }
   }, [
     activePage,
     provinceCode,
@@ -279,6 +288,8 @@ export default function SearchBar() {
           setSelectValue={setProvinceCode}
           icon={<IconMapCheck></IconMapCheck>}
           placeHolder="Province"
+          open={openProvince}
+          setOpen={setOpenProvince}
         />
         <CustomSelect
           selectValue={districtCode}
@@ -286,6 +297,8 @@ export default function SearchBar() {
           setSelectValue={setDistrictCode}
           icon={<IconMapPins></IconMapPins>}
           placeHolder="District"
+          open={openDistrict}
+          setOpen={setOpenDistrict}
         />
         <CustomSelect
           selectValue={wardCode}
@@ -293,6 +306,8 @@ export default function SearchBar() {
           setSelectValue={setWardCode}
           icon={<IconMapPin></IconMapPin>}
           placeHolder="Ward"
+          open={openWard}
+          setOpen={setOpenWard}
         />
       </div>
 
@@ -307,6 +322,8 @@ export default function SearchBar() {
         radio={true}
         customStyle={true}
         isRadioRange={true}
+        open={openBedNum}
+        setOpen={setOpenBedNum}
       />
 
       <Divider my="sm" />
@@ -319,6 +336,8 @@ export default function SearchBar() {
         radio={true}
         customStyle={true}
         isRadioRange={true}
+        open={openBathNum}
+        setOpen={setOpenBathNum}
       />
       <Divider my="sm" />
       <CustomSelect
@@ -330,6 +349,8 @@ export default function SearchBar() {
         radio={true}
         customStyle={true}
         isRadioRange={true}
+        open={openAreaNum}
+        setOpen={setOpenAreaNum}
       />
       <Divider my="sm" />
 
@@ -342,6 +363,8 @@ export default function SearchBar() {
         customStyle={true}
         radio={true}
         isRadioRange={false}
+        open={openCategory}
+        setOpen={setOpenCategory}
       />
       <Divider my="sm" />
       <CustomSelect
@@ -353,6 +376,8 @@ export default function SearchBar() {
         customStyle={true}
         radio={true}
         isRadioRange={false}
+        open={openFeature}
+        setOpen={setOpenFeature}
       />
       <Divider mb="lg" mt="sm" />
       <div className={styles.priceRangeBlock}>
@@ -362,10 +387,10 @@ export default function SearchBar() {
           classNames={{ label: styles.label }}
           w="100%"
           color="#396651"
-          minRange={0.2}
+          minRange={0}
           min={0}
-          max={100000}
-          step={1000}
+          max={maxPrice}
+          step={500}
           defaultValue={priceRange}
           onChangeEnd={setPriceRange}
           labelAlwaysOn
@@ -385,8 +410,9 @@ export default function SearchBar() {
         Filter
         {numOfFilters > 0 && <h1 className="ml-1">({numOfFilters})</h1>}
       </Button>
+
       <Button
-        className="w-[100px] h-[50px] font-bold px-0 rounded-none text-primary mobile:hidden lg:block"
+        className="w-[100px] h-[50px] text-primary font-bold px-0 rounded-none hover:text-[#5625d0] mobile:hidden lg:block"
         onClick={handleResetFilter}
       >
         Clear Filters
@@ -491,7 +517,6 @@ export default function SearchBar() {
           >
             <div className=" flex items-center justify-center mb-5">
               <Button
-                disabled
                 leftSection={<IconAdjustmentsHorizontal />}
                 variant="outline"
                 className=" w-[150px] h-[50px] rounded-none border-primary text-primary"
@@ -538,11 +563,13 @@ export default function SearchBar() {
                 zIndex={2}
               />
               <Text className=" lg:text-3xl mobile:text-[16px] font-bold truncate line-clamp-1 text-ellipsis">
-                Sorry, we couldn&apos;t find any result for:
+                We couldn&apos;t find anything that quite matches your search.
               </Text>
-              <Text className="lg:text-xl mobile:text-sm w-[80%] text-center font-bold truncate line-clamp-1 text-ellipsis">
-                &quot;{searchValue}&quot;
-              </Text>
+              {searchValue && (
+                <Text className="lg:text-xl mobile:text-sm w-[80%] text-center font-bold truncate line-clamp-1 text-ellipsis">
+                  &quot;{searchValue}&quot;
+                </Text>
+              )}
               <Text className=" lg:text-lg mobile:text-xs font-bold">
                 Try adjusting your search. Here are some ideas:
               </Text>
