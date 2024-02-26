@@ -105,7 +105,7 @@ export default function MenuBar({
                       openDelay={OPEN_DELAY}
                       closeDelay={CLOSE_DELAY}
                       width={150}
-                      position={isOfDrawers ? 'right-start' : 'bottom'}
+                      position={isOfDrawers ? 'right-end' : 'bottom'}
                       withArrow
                       transitionProps={{
                         transition: 'pop',
@@ -142,15 +142,17 @@ export default function MenuBar({
                             </Menu.Item>
                           </>
                         ) : (
-                          <h1
-                            onClick={() => {
-                              open()
-                            }}
-                          >
-                            Change Password
-                          </h1>
+                          <Menu.Item className={styles.dropdown}>
+                            <h1
+                              className={styles.dropdown}
+                              onClick={() => {
+                                open()
+                              }}
+                            >
+                              Change Password
+                            </h1>
+                          </Menu.Item>
                         )}
-
                         <Menu.Item
                           className={styles.dropdown}
                           onClick={closeDrawer}

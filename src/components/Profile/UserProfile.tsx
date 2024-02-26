@@ -65,6 +65,7 @@ export default function SellerProfile() {
   const [userInfo, setUserInfo] = useState<User>()
 
   const [loading, setLoading] = useState(false)
+  const [saveChangeLoading, setSaveChangeLoading] = useState(false)
   const [isUpdated, setIsUpdated] = useState(false)
 
   const [showSaveProfileBtn, setShowSaveProfileBtn] = useState(false)
@@ -204,6 +205,7 @@ export default function SellerProfile() {
     const updateInfo = { ...values }
     if (values.phone === userInfo?.phone) delete updateInfo.phone
     try {
+      setSaveChangeLoading(true)
       await updateProfile(updateInfo)
       Swal.fire({
         position: 'center',
@@ -216,6 +218,8 @@ export default function SellerProfile() {
       setShowSaveProfileBtn(false)
     } catch (err: any) {
       form.setFieldError('phone', err.response.data.error.message)
+    } finally {
+      setSaveChangeLoading(false)
     }
   }
 
@@ -376,7 +380,9 @@ export default function SellerProfile() {
                     onChange={(_value: any) => {
                       form.setFieldValue('provinceCode', _value)
                       setProvinceCode(_value)
+                      form.setFieldValue('districtCode', null)
                       setDistrictCode(null)
+                      form.setFieldValue('wardCode', null)
                       setWardCode(null)
                       setLocationEditing(true)
                       setShowSaveProfileBtn(true)
@@ -409,6 +415,7 @@ export default function SellerProfile() {
                     onChange={(_value: any) => {
                       form.setFieldValue('districtCode', _value)
                       setDistrictCode(_value)
+                      form.setFieldValue('wardCode', null)
                       setWardCode(null)
                       setLocationEditing(true)
                       setShowSaveProfileBtn(true)
@@ -467,6 +474,7 @@ export default function SellerProfile() {
 
                 <div className={styles.btnContainer}>
                   <Button
+                    loading={saveChangeLoading}
                     size="md"
                     type="submit"
                     className={

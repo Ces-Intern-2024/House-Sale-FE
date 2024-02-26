@@ -28,9 +28,19 @@ export default function SlideShow() {
     <>
       <div className={styles.outer}>
         <Carousel
-          classNames={{
-            indicator: styles.indicator,
-            controls: styles.controls,
+          styles={{
+            indicator: {
+              zIndex: 2,
+              background: 'white',
+              height: '20px',
+              width: '20px',
+            },
+            controls: {
+              zIndex: 2,
+            },
+            control: {
+              background: 'white',
+            },
           }}
           withIndicators
           plugins={[autoplay.current]}
@@ -39,7 +49,6 @@ export default function SlideShow() {
           loop
           dragFree
           height="100%"
-          // className={styles.carousel}
         >
           {slides}
         </Carousel>

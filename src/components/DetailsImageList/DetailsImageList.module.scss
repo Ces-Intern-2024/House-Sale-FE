@@ -7,7 +7,7 @@
 }
 
 .title {
-  @apply font-bold lg:text-[50px] md:text-[40px] text-30 font-archivo;
+  @apply font-bold lg:text-[50px] mobile:text-[35px] lg:leading-[50px] mobile:leading-[35px] mb-3 text-30 font-archivo ;
 }
 
 .imgContainer {
