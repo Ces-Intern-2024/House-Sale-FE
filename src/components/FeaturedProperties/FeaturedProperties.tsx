@@ -3,7 +3,7 @@ import { Properties } from '@/types'
 import PropertyCard from '../Properties/PropertyCard'
 import style from './styles.module.scss'
 import { Button } from '@mantine/core'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 type Props = {
   title?: string
@@ -34,12 +34,7 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
           propertiesToShow.filter((propertyItem) => propertyItem.status === true)
           .map((property) => {
             return (
-              <Link
-                to={`/details/${property.propertyId}`}
-                key={property.propertyId}
-              >
-                <PropertyCard key={property.propertyId} data={property} />
-              </Link>
+              <PropertyCard key={property.propertyId} data={property} />
             )
           })
         ) : (
