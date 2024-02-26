@@ -10,7 +10,7 @@ import {
   Drawer,
   LoadingOverlay,
 } from '@mantine/core'
-import styles from './SearchBar.module.scss'
+import styles from './SearchComponent.module.scss'
 import {
   useFetchProvincesQuery,
   useFetchDistrictsQuery,
@@ -27,18 +27,17 @@ import {
   IconBed,
   IconBath,
   IconHome,
-  // IconSortAscending,
   IconTexture,
   IconSearch,
-  // IconSortDescending,
   IconAdjustmentsHorizontal,
   IconSortAscending,
 } from '@tabler/icons-react'
 import CustomSelect from './CustomSelect'
 import { searchProperty } from '../../service/SearchService'
 import PropertyCard from '../Properties/PropertyCard'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useDisclosure, useDebouncedState } from '@mantine/hooks'
+import { Properties } from '../../types/properties'
 
 export default function SearchBar() {
   const query = useLocation()
@@ -50,10 +49,8 @@ export default function SearchBar() {
   const [resetPage, setResetPage] = useState(true)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [totalItems, setTotalItems] = useState<number>(0)
-  const [properties, setProperties] = useState([])
+  const [properties, setProperties] = useState<Properties[]>([])
 
-  // const  = useState
-  // const [debounced] = useDebouncedValue(priceRange, 300)
   const [priceRange, setPriceRange] = useDebouncedState<[number, number]>(
     [0, 100000],
     300,
@@ -76,15 +73,19 @@ export default function SearchBar() {
   const categories = useAppSelector((state) => state.category.categoriesList)
   const [bedNum, setBedNum] = useState<[string, string] | null>(null)
   const [bathNum, setBathNum] = useState<[string, string] | null>(null)
-  const [categoryNum, setCategoryNum] = useState<string>('')
-  const [featureNum, setFeatureNum] = useState<string>('')
+  const [categoryNum, setCategoryNum] = useState<string>(
+    query.state && query.state.categoryId ? String(query.state.categoryId) : '',
+  )
+  const [featureNum, setFeatureNum] = useState<string>(
+    query.state && query.state.featureId ? String(query.state.featureId) : '',
+  )
   const [areaNum, setAreaNum] = useState<[string, string] | null>(null)
   const [sortBy, setSortBy] = useState('ASC')
   const [numOfFilters, setNumOfFilters] = useState(0)
 
   const features = useAppSelector((state) => state.feature.featuresList)
   const [searchValue, setSearchValue] = useState(
-    query.state ? query.state.searchValue : '',
+    query.state && query.state.searchValue ? query.state.searchValue : '',
   )
 
   const [tempSearchValue, setTempSearchValue] = useState(searchValue)
@@ -143,15 +144,15 @@ export default function SearchBar() {
   const handleCheckNumOfFilter = () => {
     setNumOfFilters(0)
     if (provinceCode) setNumOfFilters((prev) => prev + 1)
+
     if (districtCode) setNumOfFilters((prev) => prev + 1)
+
     if (wardCode) setNumOfFilters((prev) => prev + 1)
     if (bedNum) setNumOfFilters((prev) => prev + 1)
     if (bathNum) setNumOfFilters((prev) => prev + 1)
     if (areaNum) setNumOfFilters((prev) => prev + 1)
-    if (categoryNum.length > 0)
-      setNumOfFilters((prev) => prev + categoryNum.length)
-    if (featureNum.length > 0)
-      setNumOfFilters((prev) => prev + featureNum.length)
+    if (categoryNum) setNumOfFilters((prev) => prev + 1)
+    if (featureNum) setNumOfFilters((prev) => prev + 1)
     if (priceRange[0] !== 0 || priceRange[1] !== 100000)
       setNumOfFilters((prev) => prev + 1)
   }
@@ -177,8 +178,9 @@ export default function SearchBar() {
       provinceCode: provinceCode ? provinceCode : null,
       districtCode: districtCode ? districtCode : null,
       wardCode: wardCode ? wardCode : null,
-      featureId: featureNum ? Number(featureNum[0]) : null,
-      categoryId: categoryNum ? Number(categoryNum[0]) : null,
+      featureId:
+        featureNum && featureNum !== undefined ? Number(featureNum) : null,
+      categoryId: categoryNum ? Number(categoryNum) : null,
       landAreaFrom: areaNum ? Number(areaNum[0]) : null,
       landAreaTo: areaNum ? Number(areaNum[1]) : null,
       numberOfBedRoomFrom: bedNum ? Number(bedNum[0]) : null,
@@ -193,12 +195,10 @@ export default function SearchBar() {
       page: resetPage ? 1 : activePage,
     }
     try {
-      // toggle()
       setIsLoading(true)
       const data = await searchProperty(searchValues)
       setIsLoading(false)
       setProperties(data.data)
-
       setTotalPages(data.totalPages)
       setTotalItems(data.totalItems)
       setPage(resetPage ? 1 : activePage)
@@ -225,10 +225,6 @@ export default function SearchBar() {
   useEffect(() => {
     dispatch(getAllFeatures())
     dispatch(getAllCategories())
-    return () => {
-      setTempSearchValue('')
-      setSearchValue('')
-    }
   }, [])
 
   useEffect(() => {
@@ -241,13 +237,27 @@ export default function SearchBar() {
   }, [districtCode])
 
   useEffect(() => {
-    handleSubmitSearch()
-  }, [activePage])
+    setFeatureNum(
+      query.state && query.state.featureId ? String(query.state.featureId) : '',
+    )
+    setCategoryNum(
+      query.state && query.state.categoryId
+        ? String(query.state.categoryId)
+        : '',
+    )
+
+    return () => {
+      setTempSearchValue('')
+      setSearchValue('')
+      handleResetFilter()
+    }
+  }, [query.state, query.state])
 
   useEffect(() => {
     handleSubmitSearch()
     handleCheckNumOfFilter()
   }, [
+    activePage,
     provinceCode,
     districtCode,
     wardCode,
@@ -556,7 +566,9 @@ export default function SearchBar() {
               <div className={styles.propertyStyle}>
                 {properties.length > 0 &&
                   properties.map((el, index) => (
-                    <PropertyCard key={index} data={el} />
+                    <Link to={`/details/${el.propertyId}`} key={el.propertyId}>
+                      <PropertyCard key={index} data={el} />
+                    </Link>
                   ))}
               </div>
 

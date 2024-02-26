@@ -42,6 +42,7 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
 }
 
 export default function Register() {
+  const [isLoading, setIsLoading] = useState(false)
   const { data: provinces = [] } = useFetchProvincesQuery()
   const [provinceCode, setProvinceCode] = useState('')
 
@@ -126,6 +127,7 @@ export default function Register() {
 
   const handleRegister = async (values: any) => {
     try {
+      setIsLoading(true)
       await register({ ...values, street: values.address }, sellerAccount)
       Swal.fire({
         title: 'Register Successfully!',
@@ -141,6 +143,8 @@ export default function Register() {
       if (errMess.includes('password')) {
         form.setErrors({ password: err.response.data.error.message })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -202,6 +206,7 @@ export default function Register() {
           {sellerAccount && (
             <>
               <TextInput
+                withAsterisk={sellerAccount ? true : false}
                 defaultValue=""
                 radius="md"
                 placeholder="Full Name"
@@ -210,6 +215,7 @@ export default function Register() {
                 {...form.getInputProps('fullName')}
               ></TextInput>
               <TextInput
+                withAsterisk={sellerAccount ? true : false}
                 radius="md"
                 leftSection={<IconPhone size={16} color="green" />}
                 label="Phone"
@@ -243,7 +249,9 @@ export default function Register() {
                 onChange={(_value: any) => {
                   form.setFieldValue('provinceCode', _value)
                   setProvinceCode(_value)
+                  form.setFieldValue('districtCode', null)
                   setDistrictCode(null)
+                  form.setFieldValue('wardCode', null)
                   setWardCode(null)
                 }}
                 value={provinceCode}
@@ -271,6 +279,7 @@ export default function Register() {
                 onChange={(_value: any) => {
                   form.setFieldValue('districtCode', _value)
                   setDistrictCode(_value)
+                  form.setFieldValue('wardCode', null)
                   setWardCode(null)
                 }}
                 value={districtCode}
@@ -334,6 +343,7 @@ export default function Register() {
           </Anchor>
 
           <Button
+            loading={isLoading}
             size="md"
             type="submit"
             radius="xl"

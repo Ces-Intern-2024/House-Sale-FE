@@ -2,6 +2,8 @@ import React, { useMemo, lazy, Suspense } from 'react'
 import useAuth from '../../hooks/useAuth'
 import { useLocation } from 'react-router-dom'
 import '@mantine/core/styles.css'
+import { Roles } from '../../types/role'
+
 const layouts = {
   LAYOUT_COMMON: lazy(() => import('./CommonLayout/CommonLayout')),
   LAYOUT_AUTH: lazy(() => import('./AuthLayout/AuthLayout')),
@@ -20,24 +22,22 @@ const Layouts = () => {
     '/feedback',
     '/search',
   ]
-  const sellerPaths = ['/seller', '/profile', '/report']
-  const adminPaths = ['/admin', '/report', '/admin-property']
-  // const privatePaths = ['/seller', '/profile', '/admin']
+
   const AppLayout = useMemo(() => {
     if (authenticated) {
-      if (adminPaths.includes(pathname) && Number(roleId) === 3) {
-        return layouts.LAYOUT_ADMIN
-      } else if (sellerPaths.includes(pathname) && Number(roleId) === 2) {
-        return layouts.LAYOUT_SELLER
-      } else {
-        console.log('00')
-
-        return layouts.LAYOUT_COMMON
+      if (Number(roleId) === Roles.Admin) {
+        return publicPaths.some((publicPath) => pathname.includes(publicPath))
+          ? layouts.LAYOUT_COMMON
+          : layouts.LAYOUT_ADMIN
       }
+      if (Number(roleId) === Roles.Seller) {
+        return publicPaths.some((publicPath) => pathname.includes(publicPath))
+          ? layouts.LAYOUT_COMMON
+          : layouts.LAYOUT_SELLER
+      }
+      return layouts.LAYOUT_COMMON
     } else {
-      console.log('0')
-
-      return publicPaths.includes(pathname)
+      return publicPaths.some((publicPath) => pathname.includes(publicPath))
         ? layouts.LAYOUT_COMMON
         : layouts.LAYOUT_AUTH
     }
