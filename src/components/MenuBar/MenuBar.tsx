@@ -18,6 +18,9 @@ import {
 import AuthorityCheck from '../shared/AuthorityCheck'
 import CollapseMenuItem from './CollapseMenuItem'
 import SingleMenuItem from './SingleMenuItem'
+import { getAllFeatures } from '../../redux/reducers/featureSlice'
+import { getAllCategories } from '../../redux/reducers/categorySlice'
+
 interface MenuBarProps {
   isOfDrawers: boolean
   closeDrawer?: () => void
@@ -51,6 +54,11 @@ export default function MenuBar({
     navigate('/home')
     window.location.reload()
   }
+
+  useEffect(() => {
+    dispatch(getAllCategories())
+    dispatch(getAllFeatures())
+  }, [])
   useEffect(() => {
     setActiveLink(pathname)
   }, [pathname])
@@ -62,35 +70,33 @@ export default function MenuBar({
         {navigationConfigs.map((nav) => {
           if (nav.type === NAV_ITEM_TYPE_COLLAPSE) {
             return (
-              <>
-                <AuthorityCheck
-                  authority={nav.authority}
-                  userAuthority={userAuthority}
-                >
-                  <CollapseMenuItem
-                    nav={nav}
-                    isOfDrawers={isOfDrawers}
-                    activeLink={activeLink}
-                    closeDrawer={closeDrawer}
-                  />
-                </AuthorityCheck>
-              </>
+              <AuthorityCheck
+                authority={nav.authority}
+                userAuthority={userAuthority}
+                key={nav.key}
+              >
+                <CollapseMenuItem
+                  nav={nav}
+                  isOfDrawers={isOfDrawers}
+                  activeLink={activeLink}
+                  closeDrawer={closeDrawer}
+                />
+              </AuthorityCheck>
             )
           }
           if (nav.type === NAV_ITEM_TYPE_ITEM) {
             return (
-              <>
-                <AuthorityCheck
-                  authority={nav.authority}
-                  userAuthority={userAuthority}
-                >
-                  <SingleMenuItem
-                    nav={nav}
-                    activeLink={activeLink}
-                    closeDrawer={closeDrawer}
-                  />
-                </AuthorityCheck>
-              </>
+              <AuthorityCheck
+                authority={nav.authority}
+                userAuthority={userAuthority}
+                key={nav.key}
+              >
+                <SingleMenuItem
+                  nav={nav}
+                  activeLink={activeLink}
+                  closeDrawer={closeDrawer}
+                />
+              </AuthorityCheck>
             )
           }
         })}

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 import { axiosInstance } from './AxiosInstance'
+import {NUM_OF_RETURN_ELEMENTS, NUM_OF_RETURN_ELEMENTS_FOR_CAROUSEL} from '../constants/numOfReturnElements.constant'
 
 export interface SearchProps {
   keyword?: string | null
@@ -38,8 +39,8 @@ export async function searchProperty(searchValues: SearchProps, isAll?:boolean) 
 
   const res = await axios.get(
     `/properties${queryString}${queryString.length === 0 
-      ? `?limit=${isAll ? 50 : 9}` 
-      : `&limit=${isAll ? 50 : 9}`}`,
+      ? `?limit=${isAll ? NUM_OF_RETURN_ELEMENTS_FOR_CAROUSEL : NUM_OF_RETURN_ELEMENTS}` 
+      : `&limit=${isAll ? NUM_OF_RETURN_ELEMENTS_FOR_CAROUSEL : NUM_OF_RETURN_ELEMENTS}`}`,
   )
 
   return res.data.metaData
