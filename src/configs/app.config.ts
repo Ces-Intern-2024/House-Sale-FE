@@ -5,7 +5,7 @@ export type AppConfig = {
 }
 
 const appConfig: AppConfig = {
-  authenticatedEntryPath: '/profile',
+  authenticatedEntryPath: '/seller',
   unAuthenticatedEntryPath: '/login',
   tourPath: '/home',
 }

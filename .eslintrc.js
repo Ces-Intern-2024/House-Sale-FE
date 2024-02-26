@@ -39,7 +39,7 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
-    'no-console': 1,
+    'no-console': 'error',
     eqeqeq: 'error',
     'no-await-in-loop': 'error',
     'no-class-assign': 'error',

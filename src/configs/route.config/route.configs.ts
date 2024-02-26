@@ -10,7 +10,7 @@ export const publicRoutes = [
   },
   {
     key: 'details',
-    path: `/details`,
+    path: `/details/:id`,
     component: lazy(() => import('../../pages/DetailPage/DetailPage')),
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
@@ -34,8 +34,8 @@ export const publicRoutes = [
   },
   {
     key: 'contact',
-    path: `/contact`,
-    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
+    path: `/feedback`,
+    component: lazy(() => import('../../pages/FeedbackPage/FeedbackPage')),
     authority: [Roles.Admin, Roles.Seller, Roles.User],
   },
   {

@@ -50,8 +50,8 @@ export default function SellerLayout() {
       </Anchor>
     ))
 
-  const [activeLink, setActiveLink] = useState('/seller')
-  console.log(activeLink)
+  const [_activeLink, setActiveLink] = useState('/seller')
+  // console.log(activeLink)
 
   const handleSetActiveLink = (link: string) => {
     setActiveLink(link)
@@ -69,7 +69,7 @@ export default function SellerLayout() {
         dispatch(signOutSuccess())
         dispatch(resetUser())
       })
-      .catch((error) => console.log('purge persisted state error', error))
+      // .catch((error) => console.log('purge persisted state error', error))
 
     navigate('/home')
   }

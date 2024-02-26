@@ -11,9 +11,9 @@ export default function TextSearchBar() {
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
   const [searchValue, setSearchValue] = useState('')
   const navigate = useNavigate()
-  console.log(isSmallScreen)
 
   const handleSearch = () => {
+    if (!searchValue) return
     navigate('/search', { state: { searchValue } })
   }
 

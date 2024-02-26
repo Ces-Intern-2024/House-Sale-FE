@@ -19,7 +19,7 @@ const Layouts = () => {
     '/about-us',
     '/for-sale',
     '/for-rent',
-    '/contact',
+    '/feedback',
     '/search',
   ]
   // const privatePath = ['/seller', '/profile']

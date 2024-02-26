@@ -34,7 +34,7 @@
 }
 
 .navText {
-  @apply font-bold text-white hover:text-orange-100 active:text-orange-100;
+  @apply font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
 }
 
 .outer {
@@ -42,7 +42,7 @@
 }
 
 .icon {
-  @apply w-[20px] px-1;
+  @apply w-[25px] px-1;
 }
 
 .outerOfDrawers {

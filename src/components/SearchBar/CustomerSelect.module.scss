@@ -1,0 +1,12 @@
+.textInput {
+  &::placeholder {
+    color: black;
+  }
+}
+
+.customTextInput {
+  cursor: pointer;
+  &::placeholder {
+    color: black;
+  }
+}
