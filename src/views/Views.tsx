@@ -61,6 +61,7 @@ const AllRoutes = () => {
         </Route>
 
         <Route path="/access-denied" element={<Unauthorized />} />
+        <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </>
   )

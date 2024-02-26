@@ -12,14 +12,15 @@ import { getAllWishList } from '../../redux/reducers/propertySlice'
 import Swal from 'sweetalert2'
 import { formatMoneyToUSD } from '../../utils/commonFunctions'
 import { CODE_RESPONSE_401 } from '../../constants/codeResponse'
+import { Link } from 'react-router-dom'
+import { Button } from '@mantine/core'
 interface Props {
   data: PropertiesType
 }
 
 const Properties = ({ data }: Props) => {
-  const [isAddedWishlist, setIsAddedWishlist] = useState(false)
-  // const [isLogIn, setIsLogIn] = useState(false)
-  const [user, setUser] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const loggedIn = useAppSelector((state) => state.session.signedIn)
 
   const wishList: PropertiesType[] = useAppSelector(
     (state) => state.property.listFavorites,
@@ -27,20 +28,16 @@ const Properties = ({ data }: Props) => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    if (user !== null) {
+    if (loggedIn) {
       dispatch(getAllWishList())
     }
-  }, [dispatch])
-
-  useEffect(() => {
-    setUser(localStorage.getItem('persist:primary'))
-  }, [])
+  }, [isLoading])
 
   const handleAddToWishlist = async (propertyId: number) => {
     try {
-      const res = await axiosInstance.post(`/favorites-list`, { propertyId })
-      setIsAddedWishlist(true)
-      return res
+      setIsLoading(true)
+      await axiosInstance.post(`/favorites-list`, { propertyId })
+      setIsLoading(false)
     } catch (error: any) {
       if (error.response.status === CODE_RESPONSE_401) {
         Swal.fire({
@@ -58,7 +55,7 @@ const Properties = ({ data }: Props) => {
       <div className={style.propertyContent}>
         <div className={style.propertyFeatured}>{data.feature.name}</div>
         <div className={style.propertyCoverImage}>
-          <a href="/">
+          <Link to={`/details/${data.propertyId}`} key={data.propertyId}>
             {data.images.length > 0 ? (
               <img
                 className={style.propertyImage}
@@ -68,20 +65,20 @@ const Properties = ({ data }: Props) => {
             ) : (
               <img className={style.propertyImage} alt={data.name} />
             )}
-          </a>
+          </Link>
         </div>
         <div className="w-full">
           <div className={style.propertyName}>
-            <a className={style.propertyNameLink} href="/">
+            <Link to={`/details/${data.propertyId}`} key={data.propertyId}>
               {data.name}
-            </a>
+            </Link>
           </div>
           <div className={style.propertyLocation}>
             <span className={style.propertyCoverIcon}>
               <FaLocationDot className={style.propertyIcon} size={16} />
               {data.location.address}
             </span>
-            {user !== null ? (
+            {/* {user !== null ? (
               wishList.filter(
                 (property: PropertiesType) =>
                   property.propertyId === data.propertyId,
@@ -114,6 +111,28 @@ const Properties = ({ data }: Props) => {
               >
                 <FaRegHeart size={24} />
               </span>
+            )} */}
+            {loggedIn &&
+            wishList &&
+            wishList.find(
+              (property: PropertiesType) =>
+                property.propertyId === data.propertyId,
+            ) ? (
+              <Button
+                loading={isLoading}
+                className={style.heartIsAdded}
+                onClick={() => handleAddToWishlist(data.propertyId)}
+              >
+                <FaHeart size={24} />
+              </Button>
+            ) : (
+              <Button
+                loading={isLoading}
+                className={style.heartIsAdded}
+                onClick={() => handleAddToWishlist(data.propertyId)}
+              >
+                <FaRegHeart size={24} />
+              </Button>
             )}
           </div>
           <div className={style.propertyPrice}>

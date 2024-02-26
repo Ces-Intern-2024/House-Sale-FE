@@ -35,7 +35,7 @@ import {
 import CustomSelect from './CustomSelect'
 import { searchProperty } from '../../service/SearchService'
 import PropertyCard from '../Properties/PropertyCard'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { useDisclosure, useDebouncedState } from '@mantine/hooks'
 import { Properties } from '../../types/properties'
 
@@ -566,9 +566,7 @@ export default function SearchBar() {
               <div className={styles.propertyStyle}>
                 {properties.length > 0 &&
                   properties.map((el, index) => (
-                    <Link to={`/details/${el.propertyId}`} key={el.propertyId}>
-                      <PropertyCard key={index} data={el} />
-                    </Link>
+                    <PropertyCard key={index} data={el} />
                   ))}
               </div>
 

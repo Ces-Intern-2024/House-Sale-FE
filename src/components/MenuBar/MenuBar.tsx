@@ -104,7 +104,7 @@ export default function MenuBar({
                       trigger="hover"
                       openDelay={OPEN_DELAY}
                       closeDelay={CLOSE_DELAY}
-                      width={150}
+                      width={170}
                       position={isOfDrawers ? 'right-end' : 'bottom'}
                       withArrow
                       transitionProps={{
@@ -132,7 +132,7 @@ export default function MenuBar({
                         </NavLink>
                       </Menu.Target>
                       <Menu.Dropdown className=" flex-col justify-center">
-                        {Number(user.roleId) === Roles.Seller ? (
+                        {Number(user.roleId) === Roles.Seller && (
                           <>
                             <Menu.Item className={styles.dropdown}>
                               <NavLink to="/seller"> Dashboard</NavLink>
@@ -141,18 +141,24 @@ export default function MenuBar({
                               <NavLink to="/profile"> Profile</NavLink>
                             </Menu.Item>
                           </>
-                        ) : (
-                          <Menu.Item className={styles.dropdown}>
-                            <h1
-                              className={styles.dropdown}
-                              onClick={() => {
-                                open()
-                              }}
-                            >
-                              Change Password
-                            </h1>
-                          </Menu.Item>
                         )}
+                        {Number(user.roleId) === Roles.Admin && (
+                          <>
+                            <Menu.Item className={styles.dropdown}>
+                              <NavLink to="/admin"> Dashboard</NavLink>
+                            </Menu.Item>
+                          </>
+                        )}
+                        <Menu.Item className={styles.dropdown}>
+                          <h1
+                            className={styles.dropdown}
+                            onClick={() => {
+                              open()
+                            }}
+                          >
+                            Change Password
+                          </h1>
+                        </Menu.Item>
                         <Menu.Item
                           className={styles.dropdown}
                           onClick={closeDrawer}
