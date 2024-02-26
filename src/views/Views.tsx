@@ -18,10 +18,7 @@ import Unauthorized from '../components/Unauthorized/Unauthorize'
 const { tourPath } = appConfig
 
 const AllRoutes = () => {
-  console.log('Gegege')
-
   const userAuthority = useAppSelector((state) => state.user.roleId)
-  console.log('role : ' + userAuthority)
 
   return (
     <>

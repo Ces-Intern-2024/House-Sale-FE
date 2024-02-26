@@ -2,13 +2,8 @@ import { axiosInstance } from './AxiosInstance'
 import axios from 'axios'
 
 export async function getProfile() {
-  try {
     const res = await axiosInstance.get('/user/profile')
     return res.data.metaData
-  } catch (error) {
-    console.error('hihihhihi errrorror:', error)
-    throw error
-  }
 }
 
 export async function uploadAvatarToCloudinary(formData: FormData) {

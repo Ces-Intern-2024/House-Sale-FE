@@ -3,6 +3,7 @@ import { Properties } from '@/types'
 import PropertyCard from '../Properties/PropertyCard'
 import style from './styles.module.scss'
 import { Button } from '@mantine/core'
+import { Link } from 'react-router-dom'
 
 type Props = {
   title?: string
@@ -31,7 +32,14 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
       <div className={style.featuredContent}>
         {propertiesToShow.length > 0 ? (
           propertiesToShow.map((property) => {
-            return <PropertyCard key={property.propertyId} data={property} />
+            return (
+              <Link
+                to={`/details/${property.propertyId}`}
+                key={property.propertyId}
+              >
+                <PropertyCard key={property.propertyId} data={property} />
+              </Link>
+            )
           })
         ) : (
           <p>No featured properties available.</p>

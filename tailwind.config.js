@@ -30,6 +30,7 @@ module.exports = {
         springGreenLogin: '#55efc4',
         red: '#FF0000',
         orangeHeart: '#FF6347',
+        feedbackBackground: '#f3f3fe',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],
@@ -84,6 +85,7 @@ module.exports = {
         15: '60px',
         30: '120px',
         25: '100px',
+        45: '180px',
       },
       margin: {
         7.5: '30px',

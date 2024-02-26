@@ -29,6 +29,7 @@ import {
 import { register } from '../../service/RegisterService'
 import { Ward } from '../../types/ward'
 import { District } from '../../types/district'
+import { validateEmail } from '../../utils/validate'
 
 const optionsFilter: OptionsFilter = ({ options, search }) => {
   const splittedSearch = search.toLowerCase().trim().split(' ')
@@ -67,7 +68,7 @@ export default function Register() {
     email: yup
       .string()
       .matches(
-        /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+        validateEmail,
         'Must match the following pattern: abc123@gmail.com',
       )
       .required('Email is required'),
@@ -125,17 +126,13 @@ export default function Register() {
 
   const handleRegister = async (values: any) => {
     try {
-      const data = await register(
-        { ...values, street: values.address },
-        sellerAccount,
-      )
+      await register({ ...values, street: values.address }, sellerAccount)
       Swal.fire({
         title: 'Register Successfully!',
         icon: 'success',
         confirmButtonText: 'OK',
       })
       navigate('/login')
-      console.log(data)
     } catch (err: any) {
       const errMess = err.response.data.error.message
       if (errMess.includes('email')) {
@@ -184,6 +181,7 @@ export default function Register() {
             label="Email"
             placeholder="your@email.com"
             {...form.getInputProps('email')}
+            withAsterisk
           />
 
           <PasswordInput
@@ -192,6 +190,7 @@ export default function Register() {
             placeholder="Your password"
             radius="md"
             {...form.getInputProps('password')}
+            withAsterisk
           />
           <PasswordInput
             required

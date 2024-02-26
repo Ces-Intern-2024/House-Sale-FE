@@ -5,10 +5,11 @@ export interface User {
   fullName: string | number | readonly string[] | undefined
   phone: string | number | readonly string[] | undefined
   provinceCode: string | null
-  role: {
-    roleId: number | null
-    roleName: string
-  }
+  // role: {
+  //   roleId: number | null
+  //   roleName: string
+  // }
+  roleId: number | null
   street: string | null
   userId: number | undefined
   wardCode: string | null

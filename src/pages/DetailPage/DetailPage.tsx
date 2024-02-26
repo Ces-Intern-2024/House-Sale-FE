@@ -6,8 +6,12 @@ import ContactUs from '../../components/ContactUs/ContactUs'
 import DetailsProperty from '../../components/DetailsProperty/DetailsProperty'
 import style from './DetailPage.module.scss'
 import { Anchor, Breadcrumbs } from '@mantine/core'
+import { useParams } from 'react-router-dom'
 
 export default function DetailPage() {
+  const { id } = useParams()
+  alert(id)
+
   const paths = [
     { title: 'Home', href: '#' },
     { title: 'Details', href: '#' },
