@@ -73,7 +73,7 @@ export default function CollapseMenuItem({
               onClick={closeDrawer}
             >
               <NavLink
-                to={`/search`}
+                to={nav.path}
                 state={{
                   categoryId: category.categoryId,
                   featureId: nav.key === 'for-sale' ? 1 : 2,
