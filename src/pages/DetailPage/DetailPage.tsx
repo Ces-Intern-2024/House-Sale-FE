@@ -66,7 +66,10 @@ export default function DetailPage() {
   return (
     <>
       <div className={style.outer}>
-        <Breadcrumbs my="md">{paths}</Breadcrumbs>
+        <Breadcrumbs my="md" className="overflow-hidden text-ellipsis ">
+          {paths}
+        </Breadcrumbs>
+
         <DetailsImageList images={property?.images} name={property?.name} />
         <div className={style.container}>
           <div className={style.containerDesc}>

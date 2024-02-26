@@ -10,6 +10,7 @@ import {
 } from '../../redux/reducers/homeReducer'
 import { Properties } from '@/types'
 import SlideShow from '../../components/Slideshow/SlideShow'
+import { getAllWishList } from '../../redux/reducers/propertySlice'
 
 const HomePage = () => {
   const salesList: Properties[] = useAppSelector(
@@ -34,6 +35,11 @@ const HomePage = () => {
       promise.abort()
     }
   }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getAllWishList())
+  }, [])
+  
   return (
     <div>
       <Container>

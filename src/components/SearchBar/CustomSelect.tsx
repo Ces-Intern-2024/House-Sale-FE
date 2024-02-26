@@ -35,6 +35,8 @@ interface SearchBarProps {
   radio?: boolean
   isRadioRange?: boolean
   customStyle?: boolean
+  open: boolean
+  setOpen: (value: boolean) => void
 }
 
 export default function CustomSelect({
@@ -50,6 +52,8 @@ export default function CustomSelect({
   radio,
   isRadioRange,
   customStyle,
+  open,
+  setOpen,
 }: SearchBarProps) {
   const viewportRef = useRef<HTMLDivElement>(null)
   const [query, setQuery] = useState<string>('')
@@ -57,17 +61,13 @@ export default function CustomSelect({
 
   const [hovered, setHovered] = useState(-1)
 
-  const [opened, setOpened] = useState(false)
-
   const [selectedKey, setSelectedKey] = useState('')
 
-  const toggleDropdown = () => setOpened((prev) => !prev)
+  const toggleDropdown = () => setOpen(!open)
 
   const IconElement = React.cloneElement(icon, {
     onClick: toggleDropdown,
-    className: customStyle
-      ? 'cursor-pointer text-primary'
-      : 'cursor-text text-primary',
+    className: 'cursor-pointer text-primary',
   })
 
   const filtered = dataList.filter((item) =>
@@ -104,7 +104,7 @@ export default function CustomSelect({
       setSelectedKey(key)
       setSelectValue!(value)
     }
-    setOpened(true)
+    setOpen(true)
     setQuery('')
   }
 
@@ -115,7 +115,7 @@ export default function CustomSelect({
   }, [selectedKey])
 
   useEffect(() => {
-    setInputValue(selectValue ? findKeyByValue(selectValue) : '')
+    setSelectedKey(selectValue ? findKeyByValue(selectValue) : '')
   }, [selectValue, dataList])
 
   return (
@@ -130,27 +130,26 @@ export default function CustomSelect({
           }}
           leftSection={IconElement}
           rightSection={
-            opened ? (
+            open ? (
               <IconChevronUp
-                onClick={() => setOpened((prev) => !prev)}
+                onClick={() => setOpen(false)}
                 size={17}
-                className={customStyle ? 'cursor-pointer' : 'cursor-text'}
+                className="cursor-pointer"
               ></IconChevronUp>
             ) : (
               <IconChevronDown
-                onClick={() => setOpened((prev) => !prev)}
+                onClick={() => setOpen(true)}
                 size={17}
-                className={customStyle ? 'cursor-pointer' : 'cursor-text'}
+                className="cursor-pointer"
               ></IconChevronDown>
             )
           }
           value={inputValue}
-          onClick={() => setOpened((prev) => !prev)}
+          onClick={() => (customStyle ? setOpen(!open) : setOpen(true))}
           onChange={(event) => {
-            setOpened(true)
+            setOpen(true)
             setInputValue(event.currentTarget.value)
             setQuery(event.currentTarget.value)
-
             setHovered(-1)
           }}
           onKeyDown={(event) => {
@@ -180,7 +179,7 @@ export default function CustomSelect({
           placeholder={placeHolder}
         />
 
-        <Collapse in={opened}>
+        <Collapse in={open}>
           {customStyle ? (
             radio ? (
               <>

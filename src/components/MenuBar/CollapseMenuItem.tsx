@@ -1,12 +1,11 @@
 import { Menu } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import React, { useEffect } from 'react'
+import React from 'react'
 import styles from './MenuBar.module.scss'
 import { NavigationTree } from '../../types/navigation'
 import { NavLink } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { useAppSelector } from '../../redux/hooks'
 import { Category } from '../../types'
-import { getAllCategories } from '../../redux/reducers/categorySlice'
 
 interface CollapseMenuItemProps {
   nav: NavigationTree
@@ -22,14 +21,9 @@ export default function CollapseMenuItem({
 }: CollapseMenuItemProps) {
   const OPEN_DELAY = 50
   const CLOSE_DELAY = 50
-  const dispatch = useAppDispatch()
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
-
-  useEffect(() => {
-    dispatch(getAllCategories())
-  }, [])
 
   return (
     <>
