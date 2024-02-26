@@ -7,17 +7,14 @@ function useAuthority(
   authority: Roles[] = [],
   emptyCheck = false,
   ) {
-  const roleMatched = useMemo(() => {
+  const roleMatched = useMemo(() => {    
     return authority.some(
-      (role) => userAuthority?.toString() === role.toString().trim(),
-    )
+      (role) => Number(userAuthority) === Number(role))
   }, [authority, userAuthority])
 
-
-   if (
-    isEmpty(authority) ||
-    isEmpty(userAuthority) ||
-    typeof authority === 'undefined'
+  if (
+    isEmpty(authority) &&
+    isEmpty(userAuthority) 
   ) {
     return !emptyCheck
   }

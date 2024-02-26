@@ -1,9 +1,12 @@
 import { Menu } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './MenuBar.module.scss'
 import { NavigationTree } from '../../types/navigation'
 import { NavLink } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { Category } from '../../types'
+import { getAllCategories } from '../../redux/reducers/categorySlice'
 
 interface CollapseMenuItemProps {
   nav: NavigationTree
@@ -19,6 +22,14 @@ export default function CollapseMenuItem({
 }: CollapseMenuItemProps) {
   const OPEN_DELAY = 50
   const CLOSE_DELAY = 50
+  const dispatch = useAppDispatch()
+  const categories: Category[] = useAppSelector(
+    (state) => state.category.categoriesList,
+  )
+
+  useEffect(() => {
+    dispatch(getAllCategories())
+  }, [])
 
   return (
     <>
@@ -39,6 +50,7 @@ export default function CollapseMenuItem({
         <Menu.Target>
           <NavLink
             to={nav.path}
+            state={{ featureId: nav.key === 'for-sale' ? 1 : 2 }}
             className={styles.navLink}
             onClick={closeDrawer}
           >
@@ -54,9 +66,23 @@ export default function CollapseMenuItem({
           </NavLink>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item className={styles.dropdown}>Search</Menu.Item>
-          <Menu.Item className={styles.dropdown}>House</Menu.Item>
-          <Menu.Item className={styles.dropdown}>Apartment</Menu.Item>
+          {categories.map((category) => (
+            <Menu.Item
+              key={category.categoryId}
+              className={styles.dropdown}
+              onClick={closeDrawer}
+            >
+              <NavLink
+                to={`/search`}
+                state={{
+                  categoryId: category.categoryId,
+                  featureId: nav.key === 'for-sale' ? 1 : 2,
+                }}
+              >
+                {category.name}
+              </NavLink>
+            </Menu.Item>
+          ))}
         </Menu.Dropdown>
       </Menu>
     </>

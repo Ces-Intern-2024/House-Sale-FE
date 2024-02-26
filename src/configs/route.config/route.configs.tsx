@@ -1,48 +1,49 @@
 import { lazy } from 'react'
 import { Roles } from '../../types/role'
+// import {LAYOUT_AUTH, LAYOUT_COMMON, LAYOUT_SELLER} from '../../constants/layout.constant'
 
 export const publicRoutes = [
   {
     key: 'home',
     path: `/home`,
     component: lazy(() => import('../../pages/HomePage/HomePage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    authority: [],
   },
   {
     key: 'details',
     path: `/details/:id`,
     component: lazy(() => import('../../pages/DetailPage/DetailPage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    authority: [],
   },
   {
     key: 'search',
     path: `/search`,
     component: lazy(() => import('../../pages/SearchPage/SearchPage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    authority: [],
   },
   {
     key: 'for-sale',
     path: `/for-sale`,
-    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    component: lazy(() => import('../../pages/SearchPage/SearchPage')),
+    authority: [],
   },
   {
     key: 'for-rent',
     path: `/for-rent`,
-    component: lazy(() => import('../../pages/DetailPage/DetailPage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    component: lazy(() => import('../../pages/SearchPage/SearchPage')),
+    authority: [],
   },
   {
-    key: 'contact',
+    key: 'feedback',
     path: `/feedback`,
     component: lazy(() => import('../../pages/FeedbackPage/FeedbackPage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    authority: [],
   },
   {
     key: 'about-us',
     path: '/about-us',
     component: lazy(() => import('../../pages/AboutUsPage/AboutUsPage')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    authority: [],
   },
 ]
 
@@ -82,12 +83,12 @@ export const authRoutes = [
         default: module.Login,
       })),
     ),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    authority: [],
   },
   {
     key: 'register',
     path: `/register`,
     component: lazy(() => import('../../components/Register/Register')),
-    authority: [Roles.Admin, Roles.Seller, Roles.User],
+    authority: [],
   },
 ]

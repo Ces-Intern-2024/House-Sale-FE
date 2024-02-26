@@ -5,14 +5,6 @@
   mobile:h-100 mobile:mt-20;
 }
 
-.indicator {
-  @apply z-[2] h-12.5 w-12.5;
-}
-
-.controls {
-  @apply z-[999] col-auto;
-}
-
 .slide {
   @apply lg:h-[670px] xs:h-125 mobile:h-100;
 }

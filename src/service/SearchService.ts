@@ -26,15 +26,20 @@ export interface SearchProps {
   orderBy?: string | null
   sortBy?: string | null
 }
-export async function searchProperty(searchValues: SearchProps) {
+export async function searchProperty(searchValues: SearchProps, isAll?:boolean) {
+
   const queryString = qs.stringify(searchValues, {
     skipNulls: true,
     addQueryPrefix: true,
     encode: false,
   })
 
+  
+
   const res = await axios.get(
-    `/properties${queryString}${queryString.length === 0 ? '?limit=9' : '&limit=9'}`,
+    `/properties${queryString}${queryString.length === 0 
+      ? `?limit=${isAll ? 50 : 9}` 
+      : `&limit=${isAll ? 50 : 9}`}`,
   )
 
   return res.data.metaData
