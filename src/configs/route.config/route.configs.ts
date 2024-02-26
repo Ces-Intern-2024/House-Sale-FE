@@ -59,6 +59,18 @@ export const protectedRoutes = [
     component: lazy(() => import('../../pages/SellerPage/SellerPage')),
     authority: [Roles.Seller],
   },
+  {
+    key: 'admin-dashboard',
+    path: '/admin',
+    component: lazy(() => import('../../pages/AdminDashboardPage/AdminDashboardPage')),
+    authority: [Roles.Admin],
+  },
+  {
+    key: 'admin-property',
+    path: '/admin-property',
+    component: lazy(() => import('../../pages/AdminPropertyPage/AdminPropertyPage')),
+    authority: [Roles.Admin],
+  }
 ]
 
 export const authRoutes = [

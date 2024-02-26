@@ -28,6 +28,7 @@ import { yupResolver } from 'mantine-form-yup-resolver'
 import * as yup from 'yup'
 import { axiosInstance } from '../../service/AxiosInstance'
 import Swal from 'sweetalert2'
+import { CODE_RESPONSE_400, CODE_RESPONSE_401, CODE_RESPONSE_404 } from '../../constants/codeResponse'
 
 interface Props {
   property: Properties | null
@@ -36,6 +37,7 @@ interface Props {
 }
 
 const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
+
   const [files, setFiles] = useState<File[]>([])
 
   const [loading, setLoading] = useState(false)
@@ -117,7 +119,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       street: yup.string().required('Street is required'),
       address: yup.string().nullable(),
       price: yup.number().positive().required('Price is required'),
-      currencyCode: yup.string().required('Currency code is required'),
+      // currencyCode: yup.string().required('Currency code is required'),
       landArea: yup.string().nullable(),
       areaOfUse: yup.string().nullable(),
       numberOfBedRoom: yup
@@ -149,7 +151,6 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       street: property?.location.street,
       address: property?.location.address,
       price: property?.price,
-      currencyCode: property?.currencyCode,
       landArea: property?.landArea,
       areaOfUse: property?.areaOfUse,
       numberOfBedRoom: property?.numberOfBedRoom,
@@ -188,6 +189,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       numberOfToilet: Number(value.numberOfToilet),
       numberOfFloor: Number(value.numberOfFloor),
       price: Number(value.price),
+      currencyCode: 'USD',
     }
     try {
       loading
@@ -209,9 +211,22 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       })
       isUpdated(true)
       return res
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false)
-      // console.error('Error adding new property:', error)
+      if (error.response.status === CODE_RESPONSE_400) {
+        Swal.fire({
+          title:
+            'Your balance is not enough to create new property. Please refill your balance!',
+          icon: 'error',
+        })
+      } else if (error.response.status === CODE_RESPONSE_401) {
+        Swal.fire({
+          title: 'Please Authenticate!',
+          icon: 'error',
+        })
+      } else {
+        console.error('Error adding new property:', error)
+      }
     }
   }
 
@@ -226,7 +241,6 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
     delete value.numberOfBedRoom
     delete value.numberOfToilet
     delete value.numberOfFloor
-    delete value.currencyCode
     try {
       setLoading(true)
       const res = await axiosInstance.patch(
@@ -241,14 +255,25 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       })
       isUpdated(true)
       return res
-    } catch (error) {
-      // console.error('Error adding new property:', error)
+    } catch (error: any) {
+      if (error.response.status === CODE_RESPONSE_400) {
+        Swal.fire({
+          title: 'Failed to update property',
+          icon: 'error',
+        })
+      } else if (error.response.status === CODE_RESPONSE_404) {
+        Swal.fire({
+          title:
+            'This property is not available now. Please try another property!',
+          icon: 'error',
+        })
+      } else {
+        console.error('Error updating property:', error)
+      }
     }
   }
 
   const handleSubmit = (value: any) => {
-    // console.log(typeof value);
-
     if (property === null) {
       handleAddNew(value)
     } else {
@@ -511,7 +536,6 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
               hideControls
             />
             <TextInput
-              {...form.getInputProps('currencyCode')}
               className="w-1/2"
               label="Currency Code"
               placeholder="Enter currency"
@@ -519,7 +543,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
               classNames={{
                 input: 'bg-slate-200',
               }}
-              value="USD"
+              defaultValue="USD"
             />
           </div>
         </div>
@@ -536,35 +560,28 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
         />
 
         <div className="mt-[20px]">
-          <Group justify="start">
-            <FileButton
-              onChange={setFiles}
-              accept="image/png,image/jpeg"
-              multiple
-            >
-              {(props) => (
-                <Button
-                  type="button"
-                  {...props}
-                  classNames={{ root: style.rootButton }}
-                >
-                  Choose images
-                </Button>
-              )}
-            </FileButton>
-            {/* <Button
-                  onClick={handleUpload}
-                  classNames={{ root: style.rootButton }}
-                >
-                  Upload Images
-                </Button>
-                <Button disabled={!files} bg="red" onClick={clearFile}>
-                  Reset
-                </Button> */}
-          </Group>
+          {property === null && (
+            <Group justify="start">
+              <FileButton
+                onChange={setFiles}
+                accept="image/png,image/jpeg"
+                multiple
+              >
+                {(props) => (
+                  <Button
+                    type="button"
+                    {...props}
+                    classNames={{ root: style.rootButton }}
+                  >
+                    Choose images
+                  </Button>
+                )}
+              </FileButton>
+            </Group>
+          )}
 
-          {files.length > 0 && (
-            <div className="border border-grey mt-[12px] bg-white ">
+          <div className="border border-grey mt-[12px] bg-white min-h-25">
+            {files.length > 0 && (
               <div className="px-[16px] py-[8px] overflow-hidden flex flex-wrap gap-4">
                 {files.map((file, index) => (
                   <img
@@ -575,9 +592,20 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
                   />
                 ))}
               </div>
-            </div>
-          )}
-          {/* {imagePreview()} */}
+            )}
+            {property !== null && (
+              <div className="px-[16px] py-[8px] overflow-hidden flex flex-wrap gap-4">
+                {property?.images.map((image, index) => (
+                  <img
+                    key={index}
+                    alt="uploaded image"
+                    className="w-1/6 object-scale-down shadow-xl h-[180px]"
+                    src={image.imageUrl}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         <div className={style.coverBtn}>
           {property === null ? (

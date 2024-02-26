@@ -31,7 +31,8 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
       <span className={style.featuredLineBreak}></span>
       <div className={style.featuredContent}>
         {propertiesToShow.length > 0 ? (
-          propertiesToShow.map((property) => {
+          propertiesToShow.filter((propertyItem) => propertyItem.status === true)
+          .map((property) => {
             return (
               <Link
                 to={`/details/${property.propertyId}`}
