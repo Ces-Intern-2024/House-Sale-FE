@@ -12,9 +12,7 @@ interface DecodedToken {
   type: string
 }
 
-console.log('interceptor')
-
-const baseURL = 'https://housesale.tldev.id.vn/v1/api/'
+const baseURL = process.env.REACT_APP_BASE_URL
 
 export const axiosInstance = axios.create({ baseURL })
 
@@ -28,7 +26,6 @@ axiosInstance.interceptors.request.use(async (req) => {
   }
 
   const rawPersistData = await storage.getItem('persist:primary')
-  console.log('persist: ' + JSON.stringify(rawPersistData))
   let authToken
   if (rawPersistData !== null) {
     const parsedPersistData = JSON.parse(rawPersistData)
@@ -56,7 +53,7 @@ axiosInstance.interceptors.request.use(async (req) => {
 
       return response.data.metaData
     } catch (error) {
-      console.error('Error refreshing access token:', error)
+      // console.error('Error refreshing access token:', error)
       return null
     }
   }

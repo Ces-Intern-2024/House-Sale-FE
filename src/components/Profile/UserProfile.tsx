@@ -90,11 +90,11 @@ export default function SellerProfile() {
 
   const listSchema = yup.object().shape({
     fullName:
-      nameEditing && userInfo?.role.roleName === 'Seller'
+      nameEditing && userInfo?.roleId === 2
         ? yup.string().required('Name is required')
         : yup.string().nullable(),
     phone:
-      phoneEditing && userInfo?.role.roleName === 'Seller'
+      phoneEditing && userInfo?.roleId === 2
         ? yup
             .string()
             .matches(/^[0-9]+$/, 'Phone number must contain only digits')
@@ -192,7 +192,7 @@ export default function SellerProfile() {
 
   const getUserProfile = async () => {
     const data = await getProfile()
-    const roleId = data.role.roleId
+    const roleId = data.roleId
     setUserInfo({ ...data, roleId: roleId })
     dispatch(setUser({ ...data, roleId: roleId }))
     setProvinceCode(data.provinceCode)

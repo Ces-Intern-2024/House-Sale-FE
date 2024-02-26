@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Menu, Avatar } from '@mantine/core'
-import { IconChevronDown } from '@tabler/icons-react'
+// import { IconChevronDown } from '@tabler/icons-react'
 import styles from './MenuBar.module.scss'
 import { useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -9,11 +9,26 @@ import { resetUser } from '../../redux/reducers/userSlice'
 import { persistor } from '../../redux/store'
 import { useDisclosure } from '@mantine/hooks'
 import ChangePassword from '../ChangePassword/ChangePassword'
-
+import { Roles } from '../../types/role'
+import { navigationConfigs } from '../../configs/navigation.config/navigation.configs'
+import {
+  NAV_ITEM_TYPE_COLLAPSE,
+  NAV_ITEM_TYPE_ITEM,
+} from '../../constants/navigation.constant'
+import AuthorityCheck from '../shared/AuthorityCheck'
+import CollapseMenuItem from './CollapseMenuItem'
+import SingleMenuItem from './SingleMenuItem'
 interface MenuBarProps {
   isOfDrawers: boolean
+  closeDrawer?: () => void
+  userAuthority?: string
 }
-export default function MenuBar({ isOfDrawers }: MenuBarProps) {
+
+export default function MenuBar({
+  isOfDrawers,
+  closeDrawer,
+  userAuthority,
+}: MenuBarProps) {
   const OPEN_DELAY = 50
   const CLOSE_DELAY = 50
   const user = useAppSelector((state) => state.user)
@@ -23,10 +38,6 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
   const [activeLink, setActiveLink] = useState(pathname)
   const [opened, { open, close }] = useDisclosure(false)
 
-  const handleSetActiveLink = (link: string) => {
-    setActiveLink(link)
-  }
-
   const handleLogout = async () => {
     persistor
       .purge()
@@ -35,147 +46,54 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
         dispatch(signOutSuccess())
         dispatch(resetUser())
       })
-      .catch((error) => console.log('purge persisted state error', error))
+    // .catch((error) => console.log('purge persisted state error', error))
 
     navigate('/home')
     window.location.reload()
   }
+  useEffect(() => {
+    setActiveLink(pathname)
+  }, [pathname])
 
   return (
     <>
       <ChangePassword isOpened={opened} onClose={close} />
       <div className={isOfDrawers ? styles.outerOfDrawers : styles.outer}>
-        <div>
-          <Menu openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
-            <Menu.Target>
-              <NavLink
-                to="/home"
-                className={styles.navLink}
-                onClick={() => {
-                  handleSetActiveLink('/home')
-                }}
-              >
-                <div className=" flex flex-col justify-center">
-                  <h1 className={styles.navText}>HOME</h1>
-                  <span
-                    className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/home' ? 'opacity-100' : 'opacity-0'}`}
-                  ></span>
-                </div>
-              </NavLink>
-            </Menu.Target>
-          </Menu>
-        </div>
-        <div>
-          <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
-            <Menu.Target>
-              <NavLink
-                to="/about-us"
-                className={styles.navLink}
-                onClick={() => {
-                  handleSetActiveLink('/about-us')
-                }}
-              >
-                <div className=" flex flex-col justify-center">
-                  <h1 className={styles.navText}>ABOUT US</h1>
-                  <span
-                    className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/about-us' ? 'opacity-100' : 'opacity-0'}`}
-                  ></span>
-                </div>
-              </NavLink>
-            </Menu.Target>
-          </Menu>
-        </div>
-
-        <div>
-          <Menu
-            trigger="hover"
-            openDelay={OPEN_DELAY}
-            closeDelay={CLOSE_DELAY}
-            width={150}
-            position={isOfDrawers ? 'right-start' : 'bottom'}
-            withArrow
-          >
-            <Menu.Target>
-              <NavLink
-                to="/for-rent"
-                className={styles.navLink}
-                onClick={() => {
-                  handleSetActiveLink('/for-rent')
-                }}
-              >
-                <div className=" flex flex-col justify-center">
-                  <h1 className={styles.navText}>FOR RENT</h1>
-                  <span
-                    className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/for-rent' ? 'opacity-100' : 'opacity-0'}`}
-                  ></span>
-                </div>
-
-                <IconChevronDown className={styles.icon} />
-              </NavLink>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item className={styles.dropdown}>Search</Menu.Item>
-              <Menu.Item className={styles.dropdown}>House</Menu.Item>
-              <Menu.Item className={styles.dropdown}>Apartment</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </div>
-
-        <div>
-          <Menu
-            trigger="hover"
-            openDelay={OPEN_DELAY}
-            closeDelay={CLOSE_DELAY}
-            width={150}
-            position={isOfDrawers ? 'right-start' : 'bottom'}
-            withArrow
-          >
-            <Menu.Target>
-              <NavLink
-                to="/for-sale"
-                className={styles.navLink}
-                onClick={() => {
-                  handleSetActiveLink('/for-sale')
-                }}
-              >
-                <div className=" flex flex-col justify-center">
-                  <h1 className={styles.navText}>FOR SALE</h1>
-                  <span
-                    className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/for-sale' ? 'opacity-100' : 'opacity-0'}`}
-                  ></span>
-                </div>
-                <IconChevronDown className={styles.icon} />
-              </NavLink>
-            </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item className={styles.dropdown}>Search</Menu.Item>
-              <Menu.Item className={styles.dropdown}>House</Menu.Item>
-              <Menu.Item className={styles.dropdown}>Apartment</Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-        </div>
-
-        <div>
-          <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
-            <Menu.Target>
-              <NavLink
-                to="/contact"
-                className={styles.navLink}
-                onClick={() => {
-                  handleSetActiveLink('/contact')
-                }}
-              >
-                <div className=" flex flex-col justify-center">
-                  <h1 className={styles.navText}>CONTACT</h1>
-                  <span
-                    className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/contact' ? 'opacity-100' : 'opacity-0'}`}
-                  ></span>
-                </div>
-              </NavLink>
-            </Menu.Target>
-          </Menu>
-        </div>
-
+        {navigationConfigs.map((nav) => {
+          if (nav.type === NAV_ITEM_TYPE_COLLAPSE) {
+            return (
+              <>
+                <AuthorityCheck
+                  authority={nav.authority}
+                  userAuthority={userAuthority}
+                >
+                  <CollapseMenuItem
+                    nav={nav}
+                    isOfDrawers={isOfDrawers}
+                    activeLink={activeLink}
+                    closeDrawer={closeDrawer}
+                  />
+                </AuthorityCheck>
+              </>
+            )
+          }
+          if (nav.type === NAV_ITEM_TYPE_ITEM) {
+            return (
+              <>
+                <AuthorityCheck
+                  authority={nav.authority}
+                  userAuthority={userAuthority}
+                >
+                  <SingleMenuItem
+                    nav={nav}
+                    activeLink={activeLink}
+                    closeDrawer={closeDrawer}
+                  />
+                </AuthorityCheck>
+              </>
+            )
+          }
+        })}
         <div>
           <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
@@ -189,19 +107,19 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
                       width={150}
                       position={isOfDrawers ? 'right-start' : 'bottom'}
                       withArrow
+                      transitionProps={{
+                        transition: 'pop',
+                        duration: 300,
+                        timingFunction: 'ease-in-out',
+                        exitDuration: 100,
+                      }}
                     >
                       <Menu.Target>
-                        <NavLink
-                          to="#"
-                          className={styles.navLink}
-                          onClick={() => {
-                            handleSetActiveLink('#')
-                          }}
-                        >
-                          <div className=" flex flex-col justify-center gap-y-1">
+                        <NavLink to="#" className={styles.navLink}>
+                          <div className=" flex flex-col justify-center gap-y-1 flex-wrap">
                             <div className="flex items-center">
                               <Avatar size={28} color="white" />
-                              <h3 className=" text-white font-bold ml-1 hover:text-orange-100">
+                              <h3 className=" text-white font-bold ml-1  hover:text-orange-100">
                                 {user.fullName
                                   ? user.fullName.toUpperCase()
                                   : 'USER'}
@@ -214,20 +132,29 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
                         </NavLink>
                       </Menu.Target>
                       <Menu.Dropdown className=" flex-col justify-center">
-                        <Menu.Item className={styles.dropdown}>
-                          {String(user.roleId) === '2' ? (
-                            <NavLink to="/profile"> Profile</NavLink>
-                          ) : (
-                            <h1
-                              onClick={() => {
-                                open()
-                              }}
-                            >
-                              Change Password
-                            </h1>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item className={styles.dropdown}>
+                        {Number(user.roleId) === Roles.Seller ? (
+                          <>
+                            <Menu.Item className={styles.dropdown}>
+                              <NavLink to="/seller"> Dashboard</NavLink>
+                            </Menu.Item>
+                            <Menu.Item className={styles.dropdown}>
+                              <NavLink to="/profile"> Profile</NavLink>
+                            </Menu.Item>
+                          </>
+                        ) : (
+                          <h1
+                            onClick={() => {
+                              open()
+                            }}
+                          >
+                            Change Password
+                          </h1>
+                        )}
+
+                        <Menu.Item
+                          className={styles.dropdown}
+                          onClick={closeDrawer}
+                        >
                           <h1 onClick={handleLogout}>Log Out</h1>
                         </Menu.Item>
                       </Menu.Dropdown>
@@ -237,9 +164,7 @@ export default function MenuBar({ isOfDrawers }: MenuBarProps) {
                   <NavLink
                     to="/login"
                     className={styles.navLink}
-                    onClick={() => {
-                      handleSetActiveLink('/login')
-                    }}
+                    onClick={closeDrawer}
                   >
                     <div className=" flex flex-col justify-center">
                       <h1 className={styles.navText}>LOG IN</h1>

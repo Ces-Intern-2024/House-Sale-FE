@@ -3,10 +3,12 @@ import { Province } from '../../types/province'
 import { District } from '../../types/district'
 import { Ward } from '../../types/ward'
 
+const baseURL = `${process.env.REACT_APP_BASE_URL}/location`
+
 export const locationAPISlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://housesale.tldev.id.vn/v1/api/location',
+    baseUrl: baseURL,
   }),
   endpoints(builder) {
     return {

@@ -72,7 +72,7 @@ const TableProperty = () => {
         }
       })
     } catch (error) {
-      console.error('Error deleting new property:', error)
+      // console.error('Error deleting new property:', error)
     }
   }
   useEffect(() => setProperties(properties), [properties])

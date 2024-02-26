@@ -26,28 +26,11 @@ interface SearchProps {
   sortBy?: string | null
 }
 export async function searchProperty(searchValues: SearchProps) {
-  let queryString = qs.stringify(searchValues, {
+  const queryString = qs.stringify(searchValues, {
     skipNulls: true,
     addQueryPrefix: true,
     encode: false,
   })
-
-  let isFirstParam = queryString.includes('?')
-  const appendParameter = (param: any, value: any) => {
-    const separator = isFirstParam ? '&' : '?'
-    queryString += `${separator}${param}=${value}`
-    isFirstParam = true
-  }
-  if (searchValues.landAreaTo) {
-    appendParameter('areaOfUseFrom', '1')
-  }
-  if (searchValues.numberOfBedRoomTo) {
-    appendParameter('numberOfBedRoomFrom', '1')
-  }
-  if (searchValues.numberOfToiletTo) {
-    appendParameter('numberOfToiletFrom', '1')
-  }
-  console.log(queryString)
 
   const res = await axios.get(
     `/properties${queryString}${queryString.length === 0 ? '?limit=9' : '&limit=9'}`,

@@ -8,7 +8,6 @@ const { unAuthenticatedEntryPath } = appConfig
 
 const ProtectedRoute = () => {
   const { authenticated } = useAuth()
-  console.log('protect: ' + authenticated)
 
   if (!authenticated) {
     Swal.fire({

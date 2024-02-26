@@ -211,7 +211,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       return res
     } catch (error) {
       setLoading(false)
-      console.error('Error adding new property:', error)
+      // console.error('Error adding new property:', error)
     }
   }
 
@@ -242,7 +242,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       isUpdated(true)
       return res
     } catch (error) {
-      console.error('Error adding new property:', error)
+      // console.error('Error adding new property:', error)
     }
   }
 
