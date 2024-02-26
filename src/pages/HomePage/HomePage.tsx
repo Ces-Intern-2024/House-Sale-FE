@@ -34,26 +34,26 @@ const HomePage = () => {
       promise.abort()
     }
   }, [dispatch])
-
-  // console.log('SALE LIST:', salesList)
-  // console.log('RENT LIST:', rentsList)
   return (
     <div>
       <Container>
         <SlideShow />
-        <FeaturedProperties
-          properties={rentsList}
-          title="FEATURED FOR RENT"
-          // filter="rent"
-        ></FeaturedProperties>
+        {rentsList && (
+          <FeaturedProperties
+            properties={rentsList}
+            title="FEATURED FOR RENT"
+          ></FeaturedProperties>
+        )}
 
         <BannerValue />
 
-        <FeaturedProperties
-          properties={salesList}
-          title="FEATURED FOR SALE"
-          // filter="sale"
-        ></FeaturedProperties>
+        {salesList && (
+          <FeaturedProperties
+            properties={salesList}
+            title="FEATURED FOR SALE"
+          ></FeaturedProperties>
+        )}
+
         <BannerWelcome />
       </Container>
     </div>

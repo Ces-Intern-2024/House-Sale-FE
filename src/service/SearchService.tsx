@@ -1,7 +1,8 @@
 import axios from 'axios'
 import qs from 'qs'
+import { axiosInstance } from './AxiosInstance'
 
-interface SearchProps {
+export interface SearchProps {
   keyword?: string | null
   featureId?: number | null
   categoryId?: number | null
@@ -36,5 +37,15 @@ export async function searchProperty(searchValues: SearchProps) {
     `/properties${queryString}${queryString.length === 0 ? '?limit=9' : '&limit=9'}`,
   )
 
+  return res.data.metaData
+}
+
+export async function searchPropertyForSeller(searchValues: SearchProps) {
+  const queryString = qs.stringify(searchValues, {
+    skipNulls: true,
+    addQueryPrefix: true,
+    encode: false,
+  })
+  const res = await axiosInstance.get(`/seller/properties${queryString}`)
   return res.data.metaData
 }

@@ -19,6 +19,13 @@ import { signInSuccess } from '../../redux/reducers/sessionSlice'
 import { useAppDispatch } from '../../redux/hooks'
 import appConfig from '../../configs/app.config'
 import { useGoogleLogin } from '@react-oauth/google'
+import {
+  CODE_RESPONSE_401,
+  CODE_RESPONSE_404,
+  CODE_RESPONSE_403,
+  CODE_RESPONSE_400,
+} from '../../constants/codeResponse'
+import { Roles } from '../../types/role'
 
 const LOGIN_URL = '/user/login'
 interface Props {
@@ -55,6 +62,7 @@ export function Login() {
             const userServer = await axios.post(`/user/login-with-google`, {
               email: res.data.email,
               fullName: res.data.name,
+              accessToken: userGoogle,
             })
             await dispatch(setUser(userServer.data.metaData.userInfo))
             await dispatch(
@@ -63,18 +71,21 @@ export function Login() {
                 tokens: { ...userServer.data.metaData.tokens },
               }),
             )
-            navigate(
-              String(userServer.data.metaData.userInfo.roleId) === '1'
-                ? appConfig.tourPath
-                : appConfig.authenticatedEntryPath,
-            )
+            const roleId = userServer.data.metaData.userInfo.roleId
+
+            if (roleId === Roles.User) {
+              navigate(appConfig.tourPath)
+            }
+            if (roleId === Roles.Seller) {
+              navigate(appConfig.authenticatedEntryPath)
+            }
           } catch (error: any) {
             if (error.response) {
-              if (error.response.status === 400) {
+              if (error.response.status === CODE_RESPONSE_400) {
                 setError(
                   'An error occurred while logging in. Please try again later!',
                 )
-              } else if (error.response.status === 404) {
+              } else if (error.response.status === CODE_RESPONSE_404) {
                 setError('Not Found!')
               }
             } else {
@@ -84,7 +95,7 @@ export function Login() {
             }
           }
         })
-        // .catch((err) => console.log(err))
+      // .catch((err) => console.log(err))
     }
   }, [userGoogle])
 
@@ -123,17 +134,25 @@ export function Login() {
           tokens: { ...res.data.metaData.tokens },
         }),
       )
-      navigate(
-        String(res.data.metaData.user.roleId) === '1'
-          ? appConfig.tourPath
-          : appConfig.authenticatedEntryPath,
-      )
+      const roleId = res.data.metaData.user.roleId
+      if (roleId === Roles.User) {
+        navigate(appConfig.tourPath)
+      }
+      if (roleId === Roles.Seller) {
+        navigate(appConfig.authenticatedEntryPath)
+      }
+      if (roleId === Roles.Admin) {
+        navigate(appConfig.adminEntryPath)
+      }
     } catch (error: any) {
       if (error.response) {
-        if (error.response.status === 401 || error.response.status === 403) {
+        if (
+          error.response.status === CODE_RESPONSE_401 ||
+          error.response.status === CODE_RESPONSE_403
+        ) {
           // Unauthorized or Forbidden: Tên đăng nhập hoặc mật khẩu không chính xác
           setError('Email or password is incorrect.')
-        } else if (error.response.status === 400) {
+        } else if (error.response.status === CODE_RESPONSE_400) {
           // Other server errors
           setError('Email is not registered!')
         }

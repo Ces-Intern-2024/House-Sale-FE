@@ -10,7 +10,8 @@ import { FaHeart } from 'react-icons/fa'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
 import Swal from 'sweetalert2'
-import { formatMoney } from '../../utils/commonFunctions'
+import { formatMoneyToUSD } from '../../utils/commonFunctions'
+import { CODE_RESPONSE_401 } from '../../constants/codeResponse'
 interface Props {
   data: PropertiesType
 }
@@ -26,7 +27,9 @@ const Properties = ({ data }: Props) => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    dispatch(getAllWishList())
+    if (user !== null) {
+      dispatch(getAllWishList())
+    }
   }, [dispatch])
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const Properties = ({ data }: Props) => {
       setIsAddedWishlist(true)
       return res
     } catch (error: any) {
-      if (error.response.status === 401) {
+      if (error.response.status === CODE_RESPONSE_401) {
         Swal.fire({
           icon: 'warning',
           title: 'You need to login first!',
@@ -114,7 +117,7 @@ const Properties = ({ data }: Props) => {
             )}
           </div>
           <div className={style.propertyPrice}>
-            {formatMoney(String(data.price))} {data.currencyCode}
+            {formatMoneyToUSD(data.price)} {data.currencyCode}
           </div>
           <div className={style.propertyDescription}>
             <span className={style.propertyDesIcon}>

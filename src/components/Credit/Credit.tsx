@@ -4,26 +4,27 @@ import { BsCoin } from 'react-icons/bs'
 import { IoIosNotifications } from 'react-icons/io'
 import Button from '../CustomButton/ButtonCustom'
 import { getTransactionService } from '../../service/SellerService'
-import {
-  formatDate,
-  formatMoney,
-  sortTransactionsByDate,
-} from '../../utils/commonFunctions'
+import { formatDate, sortTransactionsByDate } from '../../utils/commonFunctions'
 import { getProfile } from '../../service/ProfileService'
 import { User } from '@/types/user'
 import { HistoryTransaction } from '@/types/historyTransaction'
+import { IoCalendarNumberOutline } from 'react-icons/io5'
 
 const Credit = () => {
   const [userProfile, setUserProfile] = useState<User>()
   const [histories, setHistories] = useState<HistoryTransaction[]>([])
   const getTransaction = async () => {
-    const res = await getTransactionService()
-    const resultDate = [
-      ...res.depositTransactions.transactions,
-      ...res.expenseTransactions.transactions,
-    ]
-    setHistories(sortTransactionsByDate(resultDate))
-    return res
+    try {
+      const res = await getTransactionService()
+      const resultCombine = [
+        ...res.depositTransactions.transactions,
+        ...res.expenseTransactions.transactions,
+      ]
+      setHistories(sortTransactionsByDate(resultCombine))
+      return res
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const getUserProfile = async () => {
@@ -39,10 +40,15 @@ const Credit = () => {
     <div className={style.creditContainer}>
       <div className={style.creditContent}>
         <div className={style.creditNoti}>
-          <div className={style.title}>
-            <span className={style.titleText}>Transaction history</span>
-            <span className={style.titleIcon}>
-              <IoIosNotifications />
+          <div className="flex flex-row items-center justify-between relative">
+            <div className={style.title}>
+              <span className={style.titleText}>Transaction history</span>
+              <span className={style.titleIcon}>
+                <IoIosNotifications />
+              </span>
+            </div>
+            <span>
+              <IoCalendarNumberOutline className="w-8 h-auto text-primary cursor-pointer hover:text-darkBlue" />
             </span>
           </div>
           <div className={style.detailNoti}>
@@ -54,7 +60,7 @@ const Credit = () => {
                   </div>
                   <div className={style.content}>
                     {history.description
-                      ? 'You have used'
+                      ? history.description
                       : 'You have deposited into your account'}
                   </div>
                   <div className={style.quantity}>
@@ -79,7 +85,7 @@ const Credit = () => {
             <div className={style.creditCurrentRow}>
               {userProfile && (
                 <span className={style.creditAmount}>
-                  {formatMoney(userProfile.balance)}
+                  {userProfile.balance}
                 </span>
               )}
               <span className={style.creditIcon}>

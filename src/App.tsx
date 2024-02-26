@@ -4,6 +4,7 @@ import Layouts from './components/layouts/Layouts'
 import { MantineProvider } from '@mantine/core'
 import '@mantine/carousel/styles.css'
 import '@mantine/core/styles.css'
+import '@mantine/charts/styles.css';
 // import { Route, Routes } from 'react-router-dom'
 // import Layout from './components/layouts/CommonLayout/CommonLayout'
 // import HomePage from './pages/HomePage/HomePage'
