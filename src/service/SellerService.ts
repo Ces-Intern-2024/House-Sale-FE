@@ -19,3 +19,20 @@ export const getTransactionService = async () => {
     }
   }
 }
+
+export const getAllPropertiesForSellerService = async () => {
+  const res = await axiosInstance.get('/seller/properties')
+  if(res.data){
+    return res
+  }
+}
+
+export const deletePropertiesForSellerService = async (propertyId:number) => {
+  const res = await axiosInstance.delete(`/seller/properties/${propertyId}`)
+  return res
+}
+
+export const updateStatusPropertiesForSellerService = async (propertyId:number, status:string) => {
+  const res = await axiosInstance.patch(`/seller/properties/${propertyId}/status`,{status})
+  return res
+}

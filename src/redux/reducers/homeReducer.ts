@@ -17,7 +17,6 @@ const initialState: HomeState = {
   propertiesListForRent: [],
 }
 
-// ...
 
 export const getAllPropertiesForSale = createAsyncThunk(
   'properties/getAllpropertiesForSale',
@@ -41,13 +40,11 @@ export const getAllPropertiesForRent = createAsyncThunk(
   },
 )
 
-// ...
-
 export const homeSlice = createSlice({
   name: 'home',
   initialState,
   reducers: {
-    // add other actions here which are not createAsyncThunk
+    // add other actions here which are not createAsyncThunk.
   },
   extraReducers: (builder) => {
     builder.addCase(getAllPropertiesForSale.pending, (state) => {

@@ -4,7 +4,7 @@ export interface Properties {
   code: string
   price: number
   currencyCode: string
-  status: boolean
+  status: string
   landArea: string
   areaOfUse: string
   numberOfBedRoom: number

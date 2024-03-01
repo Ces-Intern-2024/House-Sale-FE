@@ -19,7 +19,6 @@ export default function MultiCarousel({ property }: MultiCarouselProps) {
       const data = await searchProperty(
         {
           featureId: property?.feature.featureId,
-          // categoryId: property?.category.categoryId,
           orderBy: 'createdAt',
           sortBy: 'desc',
         },

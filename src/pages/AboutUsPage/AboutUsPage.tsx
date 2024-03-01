@@ -1,9 +1,9 @@
-// import { Image } from '@mantine/core'
+
 import React from 'react'
 import topImage from '../../assets/images/real-estate-property-contract1.jpg'
 import mordenHouse from '../../assets/images/modern-house.jpg'
 import value from '../../assets/images/mission.jpg'
-// import service from '../../assets/images/service.jpg'
+
 
 function AboutUsPage() {
   return (

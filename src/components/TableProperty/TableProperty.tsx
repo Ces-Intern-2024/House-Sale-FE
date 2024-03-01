@@ -8,6 +8,10 @@ import {
   Image,
   ScrollArea,
   Modal,
+  Switch,
+  Tooltip,
+  LoadingOverlay,
+  Box,
 } from '@mantine/core'
 import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -21,11 +25,21 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { PiArrowsDownUp } from 'react-icons/pi'
+import { searchPropertyForSeller } from '../../service/SearchService'
 import {
-  searchPropertyForSeller,
-  SearchProps,
-} from '../../service/SearchService'
-import { CODE_RESPONSE_400, CODE_RESPONSE_401, CODE_RESPONSE_404 } from '../../constants/codeResponse'
+  CODE_RESPONSE_400,
+  CODE_RESPONSE_401,
+  CODE_RESPONSE_403,
+  CODE_RESPONSE_404,
+} from '../../constants/codeResponse'
+import { SearchProps } from '@/types/searchProps'
+import {
+  deletePropertiesForSellerService,
+  getAllPropertiesForSellerService,
+  updateStatusPropertiesForSellerService,
+} from '../../service/SellerService'
+import { AVAILABLE, UN_AVAILABLE } from '../../constants/statusProperty'
+
 
 const TableProperty = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -35,7 +49,7 @@ const TableProperty = () => {
   const [isUpdated, setIsUpdated] = useState(false)
   const [properties, setProperties] = useState<Properties[]>([])
   const [sort, setSort] = useState(true)
-  const [statusProperty, setStatusProperty] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     open()
@@ -56,24 +70,40 @@ const TableProperty = () => {
         confirmButtonText: 'Yes, delete it!',
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const res = await axiosInstance.delete(
-            `/seller/properties/${property.propertyId}`,
-          )
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'Your property has been deleted.',
-            icon: 'success',
-          })
-          setProperties(
-            properties.filter(
-              (item) => item.propertyId !== property.propertyId,
-            ),
-          )
-          return res
+          try {
+            const res = await deletePropertiesForSellerService(
+              property.propertyId,
+            )
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your property has been deleted.',
+              icon: 'success',
+            })
+            setProperties(
+              properties.filter(
+                (item) => item.propertyId !== property.propertyId,
+              ),
+            )
+            return res
+          } catch (error: any) {
+            if (error.response.status === CODE_RESPONSE_400) {
+              Swal.fire({
+                icon: 'error',
+                text: 'Failed to delete property!',
+              })
+            } else if (error.response.status === CODE_RESPONSE_404) {
+              Swal.fire({
+                icon: 'error',
+                text: 'Property not found',
+              })
+            } else {
+              console.error(error)
+            }
+          }
         }
       })
     } catch (error) {
-      // console.error('Error deleting new property:', error)
+      console.error(error)
     }
   }
   useEffect(() => {
@@ -82,13 +112,15 @@ const TableProperty = () => {
 
   const getAllPropertiesForSeller = async () => {
     try {
-      const res = await axiosInstance.get(`/seller/properties`)
-      setProperties(res.data.metaData.data)
+      const res = await getAllPropertiesForSellerService()
+      setProperties(res?.data.metaData.data)
     } catch (error: any) {
       if (error.response.status === CODE_RESPONSE_400) {
-        console.error('This feature is not available yet. Please try again')
+        console.error('Failed to get list properties. Please try again')
       } else if (error.response.status === CODE_RESPONSE_401) {
         console.error('Please Authenticate')
+      } else if (error.response.status === CODE_RESPONSE_403) {
+        console.error('Your account is not active!')
       } else {
         console.error(error)
       }
@@ -97,42 +129,35 @@ const TableProperty = () => {
 
   useEffect(() => {
     getAllPropertiesForSeller()
-    setIsUpdated(false)
   }, [isUpdated])
-  //Apply API getAllCategory
+
   const dispatch = useAppDispatch()
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
   useEffect(() => {
-    const promise = dispatch(getAllCategories())
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllCategories())
   }, [dispatch])
-  //Apply API getAllFeatures
+
   const features: Feature[] = useAppSelector(
     (state) => state.feature.featuresList,
   )
   useEffect(() => {
-    const promise = dispatch(getAllFeatures())
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllFeatures())
   }, [dispatch])
 
   const getPropertiesSortByPrice = async () => {
     try {
       setSort(!sort)
       if (sort) {
-        const res = await axiosInstance.get(
-          `/seller/properties`,{params: {sortBy: 'asc', orderBy: 'price'}}
-        )
+        const res = await axiosInstance.get(`/seller/properties`, {
+          params: { sortBy: 'asc', orderBy: 'price' },
+        })
         setProperties(res.data.metaData.data)
       } else {
-        const res = await axiosInstance.get(
-          `/seller/properties`,{params: {sortBy: 'desc', orderBy: 'price'}}
-        )
+        const res = await axiosInstance.get(`/seller/properties`, {
+          params: { sortBy: 'desc', orderBy: 'price' },
+        })
         setProperties(res.data.metaData.data)
       }
     } catch (error: any) {
@@ -164,93 +189,114 @@ const TableProperty = () => {
     setProperties(res.data)
   }
 
-  const handleUpdateStatus = async (status:boolean, propertyId: number) => {
-    setStatusProperty(!status)
-    try{Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, disable it!',
-    }).then(async (result) =>{
-      if (result.isConfirmed) {
-        const res = await axiosInstance.patch(`/seller/properties/${propertyId}`, {status: statusProperty})
-        Swal.fire({
-          title: 'Updated!',
-          text: 'Your property is updated.',
-          icon: 'success',
-        })
-        setIsUpdated(prev => !prev)
-        return res
+  const handleUpdateStatus = async (event: boolean, propertyId: number) => {
+    if (event) {
+      try {
+        setIsLoading(true)
+        await updateStatusPropertiesForSellerService(propertyId, AVAILABLE)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setIsLoading(false)
+        setIsUpdated(!isUpdated)
       }
-    })
-      
-    }catch(error:any) {
-      if (error.response.status === CODE_RESPONSE_400) {
-        Swal.fire({
-          title: 'Failed to update property',
-          icon: 'error',
-        })
-      } else if (error.response.status === CODE_RESPONSE_404) {
-        Swal.fire({
-          title:
-            'This property is not available now. Please try another property!',
-          icon: 'error',
-        })
-      } else {
-        console.error('Error updating property:', error)
+    } else {
+      try {
+        setIsLoading(true)
+        await updateStatusPropertiesForSellerService(propertyId, UN_AVAILABLE)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setIsLoading(false)
+        setIsUpdated(!isUpdated)
       }
     }
   }
   const rows =
-    properties.length > 0 &&
-    properties.map((element) => (
-      <Table.Tr className={style.detailContentTable} key={element.propertyId}>
-        <Table.Td>{element.propertyId}</Table.Td>
-        <Table.Td onClick={() => handlePropertyView(element)}>
-          <div className={style.propertyNameCover}>
-            <Image
-              className={style.propertyImage}
-              src={element.images[0].imageUrl}
-            />
-            <span className={style.propertyName}>{element.name}</span>
-          </div>
-        </Table.Td>
-        <Table.Td>{element.code}</Table.Td>
-        <Table.Td>{element.feature.name}</Table.Td>
-        <Table.Td>{element.category.name}</Table.Td>
-        <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
+    properties.length > 0 ? (
+      properties.map((element) => (
+        <Table.Tr className={style.detailContentTable} key={element.propertyId}>
+          <Table.Td>{element.propertyId}</Table.Td>
+          <Table.Td onClick={() => handlePropertyView(element)}>
+            <div className={style.propertyNameCover}>
+              <Image
+                className={style.propertyImage}
+                src={
+                  element.images.length > 0
+                    ? element.images[0].imageUrl
+                    : 'No image'
+                }
+              />
+              <span className={style.propertyName}>{element.name}</span>
+            </div>
+          </Table.Td>
+          <Table.Td>{element.code}</Table.Td>
+          <Table.Td>{element.feature.name}</Table.Td>
+          <Table.Td>{element.category.name}</Table.Td>
+          <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
+          <Table.Td>
+            {element.status === 'Disabled' ? (
+              <Button className={style.disable}>Disabled</Button>
+            ) : element.status === 'Available' ? (
+              <Tooltip label="Available property" refProp="rootRef">
+                <Switch
+                  onLabel="ON"
+                  offLabel="OFF"
+                  size="lg"
+                  classNames={{
+                    track: style.switchTrack,
+                    thumb: style.switchThumb,
+                    trackLabel: style.switchTrackLabel,
+                  }}
+                  checked={element.status === 'Available' ? true : false}
+                  onChange={(event) =>
+                    handleUpdateStatus(
+                      event.currentTarget.checked,
+                      element.propertyId,
+                    )
+                  }
+                />
+              </Tooltip>
+            ) : (
+              <Tooltip label="Unavailable property" refProp="rootRef">
+                <Switch
+                  onLabel="ON"
+                  offLabel="OFF"
+                  size="lg"
+                  classNames={{
+                    track: style.switchTrack,
+                    thumb: style.switchThumb,
+                    trackLabel: style.switchTrackLabel,
+                  }}
+                  checked={element.status === 'Available' ? true : false}
+                  onChange={(event) =>
+                    handleUpdateStatus(
+                      event.currentTarget.checked,
+                      element.propertyId,
+                    )
+                  }
+                />
+              </Tooltip>
+            )}
+          </Table.Td>
 
-        {element.status ? (
           <Table.Td>
-            <Button
-              onClick={() => handleUpdateStatus(element.status, element.propertyId)}
-              className={style.enable}
-            >
-              Enable
-            </Button>
+            <div className={style.propertyActions}>
+              <FaEdit
+                className={`${style.actionIcon} ${style.editIcon}`}
+                onClick={() => handlePropertyView(element)}
+              />
+              <MdDelete
+                className={`${style.actionIcon} ${style.deleteIcon}`}
+                onClick={() => handleDelete(element)}
+              />
+            </div>
           </Table.Td>
-        ) : (
-          <Table.Td>
-            <Button className={style.disable}>Disable</Button>
-          </Table.Td>
-        )}
-        <Table.Td>
-          <div className={style.propertyActions}>
-            <FaEdit
-              className={`${style.actionIcon} ${style.editIcon}`}
-              onClick={() => handlePropertyView(element)}
-            />
-            <MdDelete
-              className={`${style.actionIcon} ${style.deleteIcon}`}
-              onClick={() => handleDelete(element)}
-            />
-          </div>
-        </Table.Td>
-      </Table.Tr>
-    ))
+        </Table.Tr>
+      ))
+    ) : (
+      <div>No properties</div>
+    )
 
   return (
     <>
@@ -268,13 +314,13 @@ const TableProperty = () => {
               <div className={style.tableSearch}>
                 <TextInput
                   classNames={{ input: style.input }}
-                  placeholder="Search property......"
+                  placeholder="Enter your keyword..."
                   onChange={(event) => setName(event.target.value)}
                 />
               </div>
               <Select
                 classNames={{ input: style.elementSelect }}
-                placeholder="Choose Featured"
+                placeholder="Select Featured"
                 data={features.flatMap((feature) => [
                   {
                     value: feature.featureId.toString(),
@@ -293,7 +339,7 @@ const TableProperty = () => {
 
               <Select
                 classNames={{ input: style.elementSelect }}
-                placeholder="Choose Category"
+                placeholder="Select Category"
                 data={categories.flatMap((category) => [
                   {
                     value: category.categoryId.toString(),
@@ -331,36 +377,45 @@ const TableProperty = () => {
 
           <div className={style.tableContent}>
             <ScrollArea h={600}>
-              <Table
-                bg="white"
-                highlightOnHover
-                withTableBorder
-                verticalSpacing="sm"
-              >
-                <Table.Thead>
-                  <Table.Tr className={style.titleTable}>
-                    <Table.Th>ID</Table.Th>
-                    <Table.Th classNames={{ th: style.thName }}>
-                      Property Name
-                    </Table.Th>
-                    <Table.Th>Code</Table.Th>
-                    <Table.Th>Featured</Table.Th>
-                    <Table.Th>Category</Table.Th>
-                    <Table.Th classNames={{ th: style.thPrice }}>
-                      <span>Price</span>
+              <Box pos="relative">
+                <LoadingOverlay
+                  visible={isLoading}
+                  zIndex={1000}
+                  overlayProps={{ radius: 'sm', blur: 2 }}
+                  loaderProps={{ color: 'pink', type: 'bars' }}
+                />
+                <Table
+                  bg="white"
+                  highlightOnHover
+                  withTableBorder
+                  verticalSpacing="sm"
+                  stickyHeader
+                >
+                  <Table.Thead>
+                    <Table.Tr className={style.titleTable}>
+                      <Table.Th>ID</Table.Th>
+                      <Table.Th classNames={{ th: style.thName }}>
+                        Property Name
+                      </Table.Th>
+                      <Table.Th>Code</Table.Th>
+                      <Table.Th>Featured</Table.Th>
+                      <Table.Th>Category</Table.Th>
+                      <Table.Th classNames={{ th: style.thPrice }}>
+                        <span>Price</span>
 
-                      <PiArrowsDownUp
-                        onClick={() => getPropertiesSortByPrice()}
-                        className="cursor-pointer"
-                        size={20}
-                      />
-                    </Table.Th>
-                    <Table.Th>Status</Table.Th>
-                    <Table.Th>Actions</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>{rows}</Table.Tbody>
-              </Table>
+                        <PiArrowsDownUp
+                          onClick={() => getPropertiesSortByPrice()}
+                          className="cursor-pointer"
+                          size={20}
+                        />
+                      </Table.Th>
+                      <Table.Th>Status</Table.Th>
+                      <Table.Th>Actions</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>{rows}</Table.Tbody>
+                </Table>
+              </Box>
             </ScrollArea>
           </div>
         </div>

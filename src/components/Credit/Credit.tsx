@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 import style from './Credit.module.scss'
 import { BsCoin } from 'react-icons/bs'
 import { IoIosNotifications } from 'react-icons/io'
-import Button from '../CustomButton/ButtonCustom'
 import { getTransactionService } from '../../service/SellerService'
 import { formatDate, sortTransactionsByDate } from '../../utils/commonFunctions'
 import { getProfile } from '../../service/ProfileService'
 import { User } from '@/types/user'
 import { HistoryTransaction } from '@/types/historyTransaction'
 import { IoCalendarNumberOutline } from 'react-icons/io5'
+import { Button } from '@mantine/core'
 
 const Credit = () => {
   const [userProfile, setUserProfile] = useState<User>()
@@ -94,11 +94,9 @@ const Credit = () => {
             </div>
           </div>
           <div className={style.creditBtn}>
-            <Button
-              classNames={{ root: style.rootButton }}
-              fullWidth
-              text="Buy Credit"
-            ></Button>
+            <Button classNames={{ root: style.rootButton }} >
+              Buy Credit
+            </Button>
           </div>
         </div>
       </div>

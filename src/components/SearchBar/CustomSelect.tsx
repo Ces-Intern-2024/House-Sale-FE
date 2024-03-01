@@ -94,7 +94,7 @@ export default function CustomSelect({
   ))
 
   const handleItemClick = (key: any, value: any) => {
-    // this works as deselect :)
+    // this works as deselect.
     if (selectedKey === key) {
       setInputValue('')
       setSelectedKey('')

@@ -28,7 +28,14 @@ import { yupResolver } from 'mantine-form-yup-resolver'
 import * as yup from 'yup'
 import { axiosInstance } from '../../service/AxiosInstance'
 import Swal from 'sweetalert2'
-import { CODE_RESPONSE_400, CODE_RESPONSE_401, CODE_RESPONSE_404 } from '../../constants/codeResponse'
+import {
+  CODE_RESPONSE_400,
+  CODE_RESPONSE_401,
+  CODE_RESPONSE_404,
+} from '../../constants/codeResponse'
+import { getProfile } from '../../service/ProfileService'
+import { User } from '../../types/user'
+
 
 interface Props {
   property: Properties | null
@@ -37,7 +44,6 @@ interface Props {
 }
 
 const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
-
   const [files, setFiles] = useState<File[]>([])
 
   const [loading, setLoading] = useState(false)
@@ -58,55 +64,49 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
     String(property?.category.categoryId),
   )
   const dispatch = useAppDispatch()
-  //apply API getAllProvinces
+
   const provinces: Province[] = useAppSelector(
     (state) => state.location.provincesList,
   )
   useEffect(() => {
-    const promise = dispatch(getAllProvinces())
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllProvinces())
   }, [dispatch])
-  //apply API getAllDistricts
+
   const districts: District[] = useAppSelector(
     (state) => state.location.districtsList,
   )
   useEffect(() => {
-    const promise = dispatch(getAllDistricts(provinceCode))
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllDistricts(provinceCode))
   }, [dispatch, provinceCode])
-  //Apply API getAllWards
+
   const wards: Ward[] = useAppSelector((state) => state.location.wardsList)
   useEffect(() => {
-    const promise = dispatch(getAllWards(districtCode))
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllWards(districtCode))
   }, [dispatch, districtCode])
-  //Apply API getAllCategory
+
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
   useEffect(() => {
-    const promise = dispatch(getAllCategories())
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllCategories())
   }, [dispatch])
-  //Apply API getAllFeatures
+  
   const features: Feature[] = useAppSelector(
     (state) => state.feature.featuresList,
   )
   useEffect(() => {
-    const promise = dispatch(getAllFeatures())
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllFeatures())
   }, [dispatch])
 
+  // Get userProfile to get current credit.
+  const [userProfile, setUserProfile] = useState<User | undefined>()
+  const getUserProfile = async () => {
+    const res = await getProfile()
+    setUserProfile(res)
+  }
+  useEffect(() => {
+    getUserProfile()
+  }, [])
   const modalSchema = useMemo(() => {
     return yup.object().shape({
       name: yup.string().required('Name is required'),
@@ -119,7 +119,6 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       street: yup.string().required('Street is required'),
       address: yup.string().nullable(),
       price: yup.number().positive().required('Price is required'),
-      // currencyCode: yup.string().required('Currency code is required'),
       landArea: yup.string().nullable(),
       areaOfUse: yup.string().nullable(),
       numberOfBedRoom: yup
@@ -176,7 +175,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
       },
     )
     const data = response.data
-    const imageUrl = data.secure_url //get image url
+    const imageUrl = data.secure_url // get image url.
     return imageUrl
   }
 
@@ -193,24 +192,32 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
     }
     try {
       loading
-      // Gọi hàm handleUpload để tải lên hình ảnh
-      const arr = []
-      for (let i = 0; i < files.length; i++) {
-        // eslint-disable-next-line no-await-in-loop
-        const res = await handleUploadImage(files[i])
-        arr.push(res)
+      if (userProfile?.balance && userProfile.balance>= 20) {
+        // Call function handleUpload to push images to the cloudinary.
+        const arr = []
+        for (let i = 0; i < files.length; i++) {
+          // eslint-disable-next-line no-await-in-loop
+          const res = await handleUploadImage(files[i])
+          arr.push(res)
+        }
+        // After all of images is pushed. Send it to server.
+        const newProperty = { ...convertProperty, images: arr }
+        const res = await axiosInstance.post(`/seller/properties`, newProperty)
+        setLoading(false)
+        onClose()
+        Swal.fire({
+          title: 'Added successfully',
+          icon: 'success',
+        })
+        isUpdated(true)
+        return res
+      }else{
+        setLoading(false)
+        Swal.fire({
+          title: 'You do not have enough credit',
+          icon: 'error',
+        })        
       }
-      // Sau khi tất cả hình ảnh đã được tải lên, gửi dữ liệu lên máy chủ
-      const newProperty = { ...convertProperty, images: arr }
-      const res = await axiosInstance.post(`/seller/properties`, newProperty)
-      setLoading(false)
-      onClose()
-      Swal.fire({
-        title: 'Added successfully',
-        icon: 'success',
-      })
-      isUpdated(true)
-      return res
     } catch (error: any) {
       setLoading(false)
       if (error.response.status === CODE_RESPONSE_400) {
@@ -606,6 +613,10 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
               </div>
             )}
           </div>
+        </div>
+        <div className="text-base text-primary font-semibold mt-4 ">
+          NOTE: You cannot change some information of your new property, so
+          please make sure you use the right information!
         </div>
         <div className={style.coverBtn}>
           {property === null ? (

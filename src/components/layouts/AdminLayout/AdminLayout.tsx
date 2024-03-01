@@ -12,7 +12,6 @@ import logo from '../../../assets/images/logo_transparent.png'
 import styles from './AdminLayout.module.scss'
 import {
   IconDashboard,
-  // IconUserStar,
   IconGraph,
   IconLogout,
 } from '@tabler/icons-react'
@@ -65,7 +64,7 @@ export default function AdminLayout() {
         dispatch(signOutSuccess())
         dispatch(resetUser())
       })
-      .catch((error) => console.log('purge persisted state error', error))
+      .catch((error) => console.error('purge persisted state error', error))
 
     navigate('/home')
   }
