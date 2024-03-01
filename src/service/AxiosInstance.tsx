@@ -53,7 +53,6 @@ axiosInstance.interceptors.request.use(async (req) => {
 
       return response.data.metaData
     } catch (error) {
-      // console.error('Error refreshing access token:', error)
       return null
     }
   }

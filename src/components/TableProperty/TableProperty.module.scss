@@ -47,23 +47,22 @@
 .tableSearch {
 }
 .input {
-  @apply focus:border-primary
-  xl:w-75
-  lg:w-40;
+  @apply focus:border-primary rounded-[8px] text-base;
 }
 
+
 .elementSelect {
-  @apply focus:border-primary
-  xl:w-full
-  lg:w-36;
+  @apply focus:border-primary rounded-[8px] text-base;
 }
+
+
 .iconSearch {
   @apply w-full leading-[36px] cursor-pointer py-[8px] h-full text-white rounded-[2px]
   hover:bg-darkBlue bg-orangeBtn;
 }
 
 .tableContent {
-  @apply h-150 mt-10;
+  @apply mt-10;
 }
 
 .propertyNameCover {
@@ -73,8 +72,6 @@
 .propertyName {
   @apply text-black text-[17px] font-archivo font-[500] min-w-[260px] max-w-[380px] text-start cursor-pointer
   truncate;
-  // xl:text-balance xl:w-full xl:text-ellipsis
-  // lg:text-balance lg:w-[300px] lg:text-start lg:pl-[8px] lg:text-ellipsis
 }
 .thName {
   @apply w-100 cursor-pointer;
@@ -134,5 +131,33 @@
 }
 
 .disable {
-  @apply text-base text-black bg-slate-300 cursor-default min-w-25;
+  @apply rounded-[16px] text-base text-red bg-slate-300 cursor-default min-w-25;
+}
+
+.pagination {
+  @apply my-5 flex items-center justify-center;
+}
+.paginationControl {
+  @apply text-black;
+}
+
+.switchTrack {
+  @apply py-4 w-20;
+}
+
+.switchTrackLabel {
+  @apply text-base;
+}
+
+.switchThumb {
+  @apply block;
+}
+
+// This style for Admin.
+
+.filteringCover {
+  @apply grid grid-cols-4 gap-8 w-full row-span-1;
+}
+
+.elementSelectAdmin {
 }

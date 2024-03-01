@@ -95,7 +95,6 @@ export function Login() {
             }
           }
         })
-      // .catch((err) => console.log(err))
     }
   }, [userGoogle])
 
@@ -150,14 +149,11 @@ export function Login() {
           error.response.status === CODE_RESPONSE_401 ||
           error.response.status === CODE_RESPONSE_403
         ) {
-          // Unauthorized or Forbidden: Tên đăng nhập hoặc mật khẩu không chính xác
           setError('Email or password is incorrect.')
         } else if (error.response.status === CODE_RESPONSE_400) {
-          // Other server errors
           setError('Email is not registered!')
         }
       } else {
-        // Network errors or other client-side errors
         setError('An error occurred while logging in. Please try again later')
       }
     }

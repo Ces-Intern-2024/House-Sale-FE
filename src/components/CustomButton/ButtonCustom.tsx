@@ -5,7 +5,6 @@ interface Props extends ButtonProps {
   text?: string
   children?: ReactNode
 }
-//children is created to add icon heart to build component add to wishlist by icon
 const Button = ({ children, variant, text, color, size, ...props }: Props) => {
   return (
     <ButtonMantine

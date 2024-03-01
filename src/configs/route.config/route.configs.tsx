@@ -1,6 +1,5 @@
 import { lazy } from 'react'
 import { Roles } from '../../types/role'
-// import {LAYOUT_AUTH, LAYOUT_COMMON, LAYOUT_SELLER} from '../../constants/layout.constant'
 
 export const publicRoutes = [
   {
