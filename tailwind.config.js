@@ -1,7 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
-  // corePlugins: { preflight: true },
   theme: {
     extend: {
       screens: {
@@ -42,6 +41,8 @@ module.exports = {
       width: {
         7.5: '30px',
         12.5: '50px',
+        25: '100px',
+        30: '120px',
         57.5: '230px',
         75: '300px',
         80: '320px',
@@ -66,6 +67,8 @@ module.exports = {
       height: {
         7.5: '30px',
         12.5: '50px',
+        25: '100px',
+        30: '120px',
         57.5: '230px',
         62.5: '250px',
         75: '300px',

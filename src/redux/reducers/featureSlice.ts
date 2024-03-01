@@ -20,7 +20,7 @@ export const getAllFeatures = createAsyncThunk(
     const res = await axios.get(`/features`, {
       signal: thunkAPI.signal,
     })
-    const data = res.data.metaData as Feature[] // Adjust the type here
+    const data = res.data.metaData as Feature[] // Adjust the type here.
     return data
   },
 )

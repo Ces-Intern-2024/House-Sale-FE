@@ -23,17 +23,11 @@ const HomePage = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    const promise = dispatch(getAllPropertiesForSale())
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllPropertiesForSale())
   }, [dispatch])
 
   useEffect(() => {
-    const promise = dispatch(getAllPropertiesForRent())
-    return () => {
-      promise.abort()
-    }
+    dispatch(getAllPropertiesForRent())
   }, [dispatch])
 
   useEffect(() => {

@@ -15,7 +15,7 @@ export const formatDate = (dateString: string) => {
 }
 
 export const formatMoneyToUSD = (numberString: number) => {
-  const formatter = new Intl.NumberFormat('en-US',{
+  const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   })
@@ -26,7 +26,7 @@ export const formatMoneyToUSD = (numberString: number) => {
 export function sortTransactionsByDate(
   transactions: HistoryTransaction[],
 ): HistoryTransaction[] {
-  // Sắp xếp các giao dịch theo ngày tăng dần
+  // Sort transactions by date ascending.
   return transactions.sort((a, b) => {
     const dateA = new Date(a.createdAt).getTime()
     const dateB = new Date(b.createdAt).getTime()

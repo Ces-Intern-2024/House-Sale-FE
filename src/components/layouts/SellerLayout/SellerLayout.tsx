@@ -51,7 +51,6 @@ export default function SellerLayout() {
     ))
 
   const [_activeLink, setActiveLink] = useState('/seller')
-  // console.log(activeLink)
 
   const handleSetActiveLink = (link: string) => {
     setActiveLink(link)

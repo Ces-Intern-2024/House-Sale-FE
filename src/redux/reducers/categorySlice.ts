@@ -20,7 +20,7 @@ export const getAllCategories = createAsyncThunk(
     const res = await axios.get(`/categories`, {
       signal: thunkAPI.signal,
     })
-    const data = res.data.metaData as Category[] // Adjust the type here
+    const data = res.data.metaData as Category[] // Adjust the type here.
     return data
   },
 )

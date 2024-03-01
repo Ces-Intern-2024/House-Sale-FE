@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Menu, Avatar } from '@mantine/core'
-// import { IconChevronDown } from '@tabler/icons-react'
 import styles from './MenuBar.module.scss'
 import { useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'

@@ -12,7 +12,7 @@ interface AuthState {
 
 interface ErrorResponse {
   message: string
-  // Add other properties if needed
+  // Add other properties if needed.
 }
 
 const initialState: AuthState = {
@@ -32,10 +32,10 @@ export const postLoginAction = createAsyncThunk(
       return responseData
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        // Handle Axios errors with response (HTTP errors)
+        // Handle Axios errors with response (HTTP errors).
         return rejectWithValue(error.response.data as ErrorResponse)
       } else {
-        // Handle other errors (network errors, etc.)
+        // Handle other errors (network errors, etc.).
         return rejectWithValue({
           message: 'An error occurred',
         } as ErrorResponse)

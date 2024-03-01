@@ -26,7 +26,7 @@ export const getAllProvinces = createAsyncThunk(
     const res = await axios.get(`/location/provinces`, {
       signal: thunkAPI.signal,
     })
-    const data = res.data.metaData as Province[] // Adjust the type here
+    const data = res.data.metaData as Province[] // Adjust the type here.
     return data
   },
 )
@@ -40,7 +40,7 @@ export const getAllDistricts = createAsyncThunk(
         signal: thunkAPI.signal,
       },
     )
-    const data = res.data.metaData as District[] // Adjust the type here
+    const data = res.data.metaData as District[] // Adjust the type here.
     return data
   },
 )
@@ -54,7 +54,7 @@ export const getAllWards = createAsyncThunk(
         signal: thunkAPI.signal,
       },
     )
-    const data = res.data.metaData as Ward[] // Adjust the type here
+    const data = res.data.metaData as Ward[] // Adjust the type here.
     return data
   },
 )
@@ -63,10 +63,9 @@ export const locationSlice = createSlice({
   name: 'location',
   initialState,
   reducers: {
-    // add other actions here which are not createAsyncThunk
+    // add other actions here which are not createAsyncThunk.
   },
   extraReducers: (builder) => {
-    //Province
     builder.addCase(getAllProvinces.pending, (state) => {
       state.loading = true
     })
@@ -79,7 +78,6 @@ export const locationSlice = createSlice({
       state.loading = false
       state.error = action.error.message
     })
-    //District
     builder.addCase(getAllDistricts.pending, (state) => {
       state.loading = true
     })
@@ -92,7 +90,6 @@ export const locationSlice = createSlice({
       state.loading = false
       state.error = action.error.message
     })
-    //Ward
     builder.addCase(getAllWards.pending, (state) => {
       state.loading = true
     })
