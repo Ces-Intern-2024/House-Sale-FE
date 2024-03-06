@@ -31,9 +31,7 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
       <div className={style.featuredContent}>
         {propertiesToShow.length > 0 ? (
           propertiesToShow.map((property) => {
-            return (
-              <PropertyCard key={property.propertyId} data={property} />
-            )
+            return <PropertyCard key={property.propertyId} data={property} />
           })
         ) : (
           <p>No featured properties available.</p>
@@ -42,14 +40,16 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
       {children}
 
       <div className={style.buttonContainer}>
-        <Button
-          className="text-center mt-[20px]"
-          classNames={{ root: style.rootButton }}
-          variant="filled"
-          onClick={handleViewMore}
-        >
-          View more
-        </Button>
+        {visibleProperty === propertiesToShow.length && (
+          <Button
+            className="text-center mt-[20px]"
+            classNames={{ root: style.rootButton }}
+            variant="filled"
+            onClick={handleViewMore}
+          >
+            View more
+          </Button>
+        )}
       </div>
     </div>
   )

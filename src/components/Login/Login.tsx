@@ -19,18 +19,17 @@ import { signInSuccess } from '../../redux/reducers/sessionSlice'
 import { useAppDispatch } from '../../redux/hooks'
 import appConfig from '../../configs/app.config'
 import { useGoogleLogin } from '@react-oauth/google'
-import {
-  CODE_RESPONSE_401,
-  CODE_RESPONSE_404,
-  CODE_RESPONSE_403,
-  CODE_RESPONSE_400,
-} from '../../constants/codeResponse'
 import { Roles } from '../../types/role'
 
 const LOGIN_URL = '/user/login'
 interface Props {
   email: string
   password: string
+}
+const rolePaths: Record<Roles, string> = {
+  [Roles.User]: appConfig.tourPath,
+  [Roles.Admin]: appConfig.adminEntryPath,
+  [Roles.Seller]: appConfig.authenticatedEntryPath,
 }
 export function Login() {
   const dispatch = useAppDispatch()
@@ -80,19 +79,7 @@ export function Login() {
               navigate(appConfig.authenticatedEntryPath)
             }
           } catch (error: any) {
-            if (error.response) {
-              if (error.response.status === CODE_RESPONSE_400) {
-                setError(
-                  'An error occurred while logging in. Please try again later!',
-                )
-              } else if (error.response.status === CODE_RESPONSE_404) {
-                setError('Not Found!')
-              }
-            } else {
-              setError(
-                'An error occurred while logging in. Please try again later!',
-              )
-            }
+            setError(error.response.data.error.message)
           }
         })
     }
@@ -125,37 +112,40 @@ export function Login() {
           withCredentials: true,
         },
       )
-
-      await dispatch(setUser(res.data.metaData.user))
-      await dispatch(
-        signInSuccess({
-          signedIn: true,
-          tokens: { ...res.data.metaData.tokens },
-        }),
-      )
-      const roleId = res.data.metaData.user.roleId
-      if (roleId === Roles.User) {
-        navigate(appConfig.tourPath)
-      }
-      if (roleId === Roles.Seller) {
-        navigate(appConfig.authenticatedEntryPath)
-      }
-      if (roleId === Roles.Admin) {
-        navigate(appConfig.adminEntryPath)
+      const roleId: Roles = res.data.metaData.user.roleId
+      const rolePath = rolePaths[roleId]
+      if (res.data.metaData.user.isActive) {
+        await dispatch(setUser(res.data.metaData.user))
+        if (rolePath) {
+          if (
+            roleId === Roles.Seller &&
+            res.data.metaData.user.isEmailVerified === true
+          ) {
+            await dispatch(
+              signInSuccess({
+                signedIn: true,
+                tokens: { ...res.data.metaData.tokens },
+              }),
+            )
+            navigate(rolePath)
+          } else if (
+            roleId === Roles.Seller &&
+            res.data.metaData.user.isEmailVerified === false
+          ) {
+            setError('Please verify email before login')
+          } else {
+            await dispatch(
+              signInSuccess({
+                signedIn: true,
+                tokens: { ...res.data.metaData.tokens },
+              }),
+            )
+            navigate(rolePath)
+          }
+        }
       }
     } catch (error: any) {
-      if (error.response) {
-        if (
-          error.response.status === CODE_RESPONSE_401 ||
-          error.response.status === CODE_RESPONSE_403
-        ) {
-          setError('Email or password is incorrect.')
-        } else if (error.response.status === CODE_RESPONSE_400) {
-          setError('Email is not registered!')
-        }
-      } else {
-        setError('An error occurred while logging in. Please try again later')
-      }
+      setError(error.response.data.error.message)
     }
   }
 

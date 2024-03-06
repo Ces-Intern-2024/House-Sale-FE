@@ -31,7 +31,13 @@ import { SearchProps } from '@/types/searchProps'
 import {
   getPropertiesForAdminService,
   getAllPropertiesForAdminSerivce,
+  updateStatusPropertyForAdminService,
 } from '../../service/AdminService'
+import {
+  AVAILABLE,
+  DISABLED,
+  UN_AVAILABLE,
+} from '../../constants/statusProperty'
 
 const TablePropertyAdmin = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -78,7 +84,7 @@ const TablePropertyAdmin = () => {
   useEffect(() => {
     dispatch(getAllCategories())
   }, [dispatch])
-  
+
   const features: Feature[] = useAppSelector(
     (state) => state.feature.featuresList,
   )
@@ -161,6 +167,17 @@ const TablePropertyAdmin = () => {
     dispatch(getAllProvinces())
   }, [dispatch])
 
+  const handleChangeStatusProperty = async (
+    status: string | null,
+    propertyId: number,
+  ) => {
+    try {
+      await updateStatusPropertyForAdminService(propertyId, status)
+    } catch (error: any) {
+      console.error(error.response.data.error.message)
+    }
+  }
+
   const rows =
     properties.length > 0 &&
     properties.map((element) => (
@@ -170,7 +187,11 @@ const TablePropertyAdmin = () => {
           <div className={style.propertyNameCover}>
             <Image
               className={style.propertyImage}
-              src={element.images[0].imageUrl}
+              src={
+                element.images.length > 0
+                  ? element.images[0].imageUrl
+                  : 'No image'
+              }
             />
             <span className={style.propertyName}>{element.name}</span>
           </div>
@@ -182,7 +203,27 @@ const TablePropertyAdmin = () => {
         <Table.Td>{element.seller.fullName}</Table.Td>
 
         <Table.Td>
-          <Button className={style.disable}>Disable</Button>
+          <Select
+            // classNames={{
+            //   input: style.inputSelectStatus,
+            //   section: style.sectionSelectStatus,
+            //   wrapper: style.wrapperSelectStatus,
+            // }}
+            classNames={{
+              input: `${element.status === AVAILABLE} ? ${style.inputSelectStatus} : ${style.unavailableSelectStatus}`,
+              wrapper: style.wrapperSelectStatus,
+            }}
+            placeholder="Select status"
+            data={[
+              { value: AVAILABLE, label: AVAILABLE },
+              { value: UN_AVAILABLE, label: UN_AVAILABLE },
+              { value: DISABLED, label: DISABLED },
+            ]}
+            defaultValue={element.status}
+            onChange={(value: string | null) =>
+              handleChangeStatusProperty(value, element.propertyId)
+            }
+          />
         </Table.Td>
         <Table.Td>
           <div className={style.propertyActions}>

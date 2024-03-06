@@ -45,7 +45,6 @@ const Properties = ({ data }: Props) => {
       setIsLoading(false)
     }
   }
-
   return (
     <div className={style.propertyContainer}>
       <div className={style.propertyContent}>
@@ -65,7 +64,11 @@ const Properties = ({ data }: Props) => {
         </div>
         <div className="w-full">
           <div className={style.propertyName}>
-            <Link to={`/details/${data.propertyId}`} key={data.propertyId}>
+            <Link
+              to={`/details/${data.propertyId}`}
+              key={data.propertyId}
+              className={style.propertyName}
+            >
               {data.name}
             </Link>
           </div>
@@ -74,7 +77,8 @@ const Properties = ({ data }: Props) => {
               <FaLocationDot className={style.propertyIcon} size={16} />
               {data.location.address}
             </span>
-            {/* {user !== null ? (
+            {/* This comment has been kept as a temporary if there are any errors.
+            {user !== null ? (
               wishList.filter(
                 (property: PropertiesType) =>
                   property.propertyId === data.propertyId,
@@ -131,9 +135,16 @@ const Properties = ({ data }: Props) => {
               </Button>
             )}
           </div>
-          <div className={style.propertyPrice}>
-            {formatMoneyToUSD(data.price)} {data.currencyCode}
-          </div>
+
+          {data.feature.name === 'Rent' ? (
+            <div className={style.propertyPrice}>
+              {formatMoneyToUSD(data.price)} {data.currencyCode}/month
+            </div>
+          ) : (
+            <div className={style.propertyPrice}>
+              {formatMoneyToUSD(data.price)} {data.currencyCode}
+            </div>
+          )}
           <div className={style.propertyDescription}>
             <span className={style.propertyDesIcon}>
               <MdOutlineZoomOutMap className="mr-[8px]" size={16} />

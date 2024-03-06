@@ -5,13 +5,12 @@ import Map from '../../components/Map/Map'
 import ContactUs from '../../components/ContactUs/ContactUs'
 import DetailsProperty from '../../components/DetailsProperty/DetailsProperty'
 import style from './DetailPage.module.scss'
-import {
-  Breadcrumbs,
-} from '@mantine/core'
+import { Breadcrumbs } from '@mantine/core'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { getPropertyById } from '../../service/PropertyService'
 import { Properties } from '@/types/properties'
 import Swal from 'sweetalert2'
+import { searchProperty } from '../../service/SearchService'
 
 export default function DetailPage() {
   const { id } = useParams()
@@ -61,6 +60,27 @@ export default function DetailPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [id])
 
+  const [propertiesRelevant, setPropertiesRelevant] = useState<Properties[]>([])
+
+  const handleGetProperties = async () => {
+    if (property) {
+      const data = await searchProperty(
+        {
+          featureId: property?.feature.featureId,
+          orderBy: 'createdAt',
+          sortBy: 'desc',
+        },
+        true,
+      )
+      const filteredProperties = data.data.filter(
+        (item: Properties) => item.propertyId !== property.propertyId,
+      )
+      setPropertiesRelevant(filteredProperties)
+    }
+  }
+  useEffect(() => {
+    handleGetProperties()
+  }, [property])
   return (
     <>
       <div className={style.outer}>
@@ -78,7 +98,7 @@ export default function DetailPage() {
             <ContactUs property={property!} />
           </div>
         </div>
-        <MultiCarousel property={property!} />
+        <MultiCarousel properties={propertiesRelevant} title="RELEVANT" />
       </div>
     </>
   )
