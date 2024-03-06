@@ -35,7 +35,7 @@
 }
 
 .tableSideBar {
-  @apply flex flex-row justify-between mt-8;
+  @apply mt-8 w-full  flex flex-row justify-between;
 }
 
 .tableSelect {
@@ -44,23 +44,22 @@
   lg:gap-3;
 }
 
-.tableSearch {
-}
-.input {
+.inputText {
   @apply focus:border-primary rounded-[8px] text-base;
 }
-
 
 .elementSelect {
   @apply focus:border-primary rounded-[8px] text-base;
 }
 
-
 .iconSearch {
-  @apply w-full leading-[36px] cursor-pointer py-[8px] h-full text-white rounded-[2px]
+  @apply w-full cursor-pointer py-[8px] h-full text-white rounded-[8px]
   hover:bg-darkBlue bg-orangeBtn;
 }
 
+.labelIconSearch {
+  @apply text-base ml-2;
+}
 .tableContent {
   @apply mt-10;
 }
@@ -130,8 +129,8 @@
   @apply text-base bg-darkBlue hover:bg-orangeBtn min-w-25;
 }
 
-.disable {
-  @apply rounded-[16px] text-base text-red bg-slate-300 cursor-default min-w-25;
+.disableb {
+  @apply rounded-[16px] text-[14px] text-slate-200 bg-slate-500 cursor-default w-20 px-0;
 }
 
 .pagination {
@@ -160,4 +159,27 @@
 }
 
 .elementSelectAdmin {
+}
+.tableSelectAdmin {
+  @apply xl:gap-6 w-full
+  lg:gap-3;
+}
+
+.wrapperSelectStatus {
+  @apply w-2/3;
+}
+
+.inputSelectStatus {
+  @apply bg-primary;
+}
+
+.unavailableSelectStatus {
+  @apply bg-white;
+}
+.rootRangeSlider {
+  @apply lg:w-80;
+}
+
+.lableRangeSlider {
+  @apply bg-primary;
 }

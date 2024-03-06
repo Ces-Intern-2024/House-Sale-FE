@@ -211,8 +211,8 @@ export default function SearchBar() {
       setResetPage(true)
 
       window.scrollTo({ top: 0, behavior: 'smooth' })
-    } catch (err) {
-      // console.log(err)
+    } catch (error: any) {
+      console.error(error.response.data.error.message)
     } finally {
       setIsLoading(false)
     }

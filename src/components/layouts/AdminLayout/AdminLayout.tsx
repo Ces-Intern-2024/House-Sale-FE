@@ -158,7 +158,7 @@ export default function AdminLayout() {
               </div>
             </NavLink>
             <NavLink
-              to=""
+              to="/admin-user"
               className={({ isActive }) =>
                 isActive ? styles.navItemActive : ''
               }

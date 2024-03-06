@@ -2,25 +2,23 @@ import React, { useEffect, useState } from 'react'
 import style from './Credit.module.scss'
 import { BsCoin } from 'react-icons/bs'
 import { IoIosNotifications } from 'react-icons/io'
-import { getTransactionService } from '../../service/SellerService'
+import { getTransactionRentService } from '../../service/SellerService'
 import { formatDate, sortTransactionsByDate } from '../../utils/commonFunctions'
 import { getProfile } from '../../service/ProfileService'
 import { User } from '@/types/user'
-import { HistoryTransaction } from '@/types/historyTransaction'
 import { IoCalendarNumberOutline } from 'react-icons/io5'
 import { Button } from '@mantine/core'
+import { HistoryTransaction } from '../../types/historyTransaction'
 
 const Credit = () => {
   const [userProfile, setUserProfile] = useState<User>()
-  const [histories, setHistories] = useState<HistoryTransaction[]>([])
+  const [historiesRentService, setHistoriesRentService] = useState<
+    HistoryTransaction[]
+  >([])
   const getTransaction = async () => {
     try {
-      const res = await getTransactionService()
-      const resultCombine = [
-        ...res.depositTransactions.transactions,
-        ...res.expenseTransactions.transactions,
-      ]
-      setHistories(sortTransactionsByDate(resultCombine))
+      const res = await getTransactionRentService()
+      setHistoriesRentService(sortTransactionsByDate(res?.data.metaData.data))
       return res
     } catch (error) {
       console.error(error)
@@ -39,6 +37,24 @@ const Credit = () => {
   return (
     <div className={style.creditContainer}>
       <div className={style.creditContent}>
+        <div className={style.creditCurrent}>
+          <div className={style.creditCurrentHead}>
+            <div className={style.titleText}>Current credit</div>
+            <div className={style.creditCurrentRow}>
+              {userProfile && (
+                <span className={style.creditAmount}>
+                  {Number(userProfile.balance)}
+                </span>
+              )}
+              <span className={style.creditIcon}>
+                <BsCoin />
+              </span>
+            </div>
+          </div>
+          <div className={style.creditBtn}>
+            <Button classNames={{ root: style.rootButton }}>Buy Credit</Button>
+          </div>
+        </div>
         <div className={style.creditNoti}>
           <div className="flex flex-row items-center justify-between relative">
             <div className={style.title}>
@@ -52,8 +68,8 @@ const Credit = () => {
             </span>
           </div>
           <div className={style.detailNoti}>
-            {histories.length > 0 ? (
-              histories.map((history, index) => (
+            {historiesRentService.length > 0 ? (
+              historiesRentService.map((history, index) => (
                 <div key={index} className={style.row}>
                   <div className={style.date}>
                     {formatDate(history.createdAt)}
@@ -77,26 +93,6 @@ const Credit = () => {
             ) : (
               <div>You have not made any transactions yet.</div>
             )}
-          </div>
-        </div>
-        <div className={style.creditCurrent}>
-          <div className={style.creditCurrentHead}>
-            <div className={style.titleText}>Current credit</div>
-            <div className={style.creditCurrentRow}>
-              {userProfile && (
-                <span className={style.creditAmount}>
-                  {userProfile.balance}
-                </span>
-              )}
-              <span className={style.creditIcon}>
-                <BsCoin />
-              </span>
-            </div>
-          </div>
-          <div className={style.creditBtn}>
-            <Button classNames={{ root: style.rootButton }} >
-              Buy Credit
-            </Button>
           </div>
         </div>
       </div>
