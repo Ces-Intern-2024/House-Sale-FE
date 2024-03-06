@@ -29,7 +29,7 @@
 }
 
 .propertyName {
-  @apply h-[24px] text-[16px] px-3 text-nowrap text-ellipsis overflow-hidden;
+  @apply h-[24px] text-base px-3 text-nowrap text-ellipsis overflow-hidden;
 }
 
 .propertyNameLink {
@@ -40,7 +40,7 @@
   @apply overflow-hidden relative w-full p-3;
 }
 .propertyImage {
-  @apply w-full h-62.5;
+  @apply w-full h-62.5 object-cover;
 }
 
 .propertyLocation {

@@ -21,3 +21,13 @@ export const getAllPropertiesForAdminSerivce = async () => {
   }
 }
 
+export const updateStatusPropertyForAdminService = async (
+  propertyId: number,
+  status: string | null,
+) => {
+  const res = await axiosInstance.patch(
+    `/admin/manage-property/${propertyId}/status`,
+    { status },
+  )
+  return res
+}
