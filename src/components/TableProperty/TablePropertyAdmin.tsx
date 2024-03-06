@@ -8,6 +8,8 @@ import {
   Image,
   Modal,
   Pagination,
+  RangeSlider,
+  Text,
 } from '@mantine/core'
 import { FaEdit, FaSearch } from 'react-icons/fa'
 import { useDisclosure } from '@mantine/hooks'
@@ -31,7 +33,14 @@ import { SearchProps } from '@/types/searchProps'
 import {
   getPropertiesForAdminService,
   getAllPropertiesForAdminSerivce,
+  updateStatusPropertyForAdminService,
 } from '../../service/AdminService'
+import {
+  AVAILABLE,
+  DISABLED,
+  UN_AVAILABLE,
+} from '../../constants/statusProperty'
+import { optionsFilter } from '../../utils/filterLocation'
 
 const TablePropertyAdmin = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -78,7 +87,7 @@ const TablePropertyAdmin = () => {
   useEffect(() => {
     dispatch(getAllCategories())
   }, [dispatch])
-  
+
   const features: Feature[] = useAppSelector(
     (state) => state.feature.featuresList,
   )
@@ -119,11 +128,11 @@ const TablePropertyAdmin = () => {
 
   const [featureId, setFeatureId] = useState('')
   const [categoryId, setCategoryId] = useState('')
-  const [name, setName] = useState('')
+  const [keyword, setKeyword] = useState('')
 
   const handleSearching = async () => {
     const data: SearchProps = {
-      keyword: name ? name : null,
+      keyword: keyword ? keyword : null,
       categoryId: categoryId ? Number(categoryId) : null,
       featureId: featureId ? Number(featureId) : null,
       page: activePage ? activePage : null,
@@ -161,6 +170,20 @@ const TablePropertyAdmin = () => {
     dispatch(getAllProvinces())
   }, [dispatch])
 
+  const handleChangeStatusProperty = async (
+    status: string | null,
+    propertyId: number,
+  ) => {
+    try {
+      await updateStatusPropertyForAdminService(propertyId, status)
+    } catch (error: any) {
+      console.error(error.response.data.error.message)
+    }
+  }
+
+  const [provinceCode, setProvinceCode] = useState('')
+
+
   const rows =
     properties.length > 0 &&
     properties.map((element) => (
@@ -170,7 +193,11 @@ const TablePropertyAdmin = () => {
           <div className={style.propertyNameCover}>
             <Image
               className={style.propertyImage}
-              src={element.images[0].imageUrl}
+              src={
+                element.images.length > 0
+                  ? element.images[0].imageUrl
+                  : 'No image'
+              }
             />
             <span className={style.propertyName}>{element.name}</span>
           </div>
@@ -182,7 +209,27 @@ const TablePropertyAdmin = () => {
         <Table.Td>{element.seller.fullName}</Table.Td>
 
         <Table.Td>
-          <Button className={style.disable}>Disable</Button>
+          <Select
+            // classNames={{
+            //   input: style.inputSelectStatus,
+            //   section: style.sectionSelectStatus,
+            //   wrapper: style.wrapperSelectStatus,
+            // }}
+            classNames={{
+              input: `${element.status === AVAILABLE} ? ${style.inputSelectStatus} : ${style.unavailableSelectStatus}`,
+              wrapper: style.wrapperSelectStatus,
+            }}
+            placeholder="Select status"
+            data={[
+              { value: AVAILABLE, label: AVAILABLE },
+              { value: UN_AVAILABLE, label: UN_AVAILABLE },
+              { value: DISABLED, label: DISABLED },
+            ]}
+            defaultValue={element.status}
+            onChange={(value: string | null) =>
+              handleChangeStatusProperty(value, element.propertyId)
+            }
+          />
         </Table.Td>
         <Table.Td>
           <div className={style.propertyActions}>
@@ -210,85 +257,122 @@ const TablePropertyAdmin = () => {
           </div>
 
           <div className={style.tableSideBar}>
-            <div className={style.filteringCover}>
-              <div className={style.tableSearch}>
+            <div className={style.tableSelectAdmin}>
+              <div className="grid grid-cols-4 gap-8">
                 <TextInput
-                  classNames={{
-                    input: `${style.input} ${style.elementSelectAdmin}`,
-                  }}
+                  classNames={{ input: style.inputText }}
                   placeholder="Enter your keyword..."
-                  onChange={(event) => setName(event.target.value)}
+                  onChange={(event) => setKeyword(event.target.value)}
+                />
+                <Select
+                  classNames={{ input: style.elementSelect }}
+                  placeholder="Select Featured"
+                  data={features.flatMap((feature) => [
+                    {
+                      value: feature.featureId.toString(),
+                      label: feature.name,
+                    },
+                  ])}
+                  onChange={(value: string | null) => {
+                    if (value !== null) {
+                      setFeatureId(value)
+                    } else {
+                      setFeatureId('')
+                    }
+                  }}
+                  allowDeselect
+                />
+
+                <Select
+                  classNames={{ input: style.elementSelect }}
+                  placeholder="Select Category"
+                  data={categories.flatMap((category) => [
+                    {
+                      value: category.categoryId.toString(),
+                      label: category.name,
+                    },
+                  ])}
+                  onChange={(value: string | null) => {
+                    if (value !== null) {
+                      setCategoryId(value)
+                    } else {
+                      setCategoryId('')
+                    }
+                  }}
+                  allowDeselect
+                />
+                <Select
+                  classNames={{ input: style.elementSelect }}
+                  placeholder="Select City/Province"
+                  withAsterisk
+                  searchable
+                  allowDeselect
+                  data={provinces.flatMap((prov: Province) => [
+                    {
+                      value: prov.provinceCode,
+                      label: prov.nameEn,
+                    },
+                  ])}
+                  filter={optionsFilter}
+                  comboboxProps={{
+                    position: 'bottom',
+                    offset: 0,
+                    transitionProps: { transition: 'pop', duration: 200 },
+                  }}
+                  onChange={(value: string | null) => {
+                    if (value !== null) {
+                      setProvinceCode(value)
+                    } else {
+                      setProvinceCode('')
+                    }
+                  }}
+                  defaultValue={provinceCode}
                 />
               </div>
-              <Select
-                classNames={{
-                  input: `${style.elementSelect} ${style.elementSelectAdmin}`,
-                }}
-                placeholder="Select Featured"
-                data={features.flatMap((feature) => [
-                  {
-                    value: feature.featureId.toString(),
-                    label: feature.name,
-                  },
-                ])}
-                onChange={(value: string | null) => {
-                  if (value !== null) {
-                    setFeatureId(value)
-                  } else {
-                    setFeatureId('')
-                  }
-                }}
-                allowDeselect
-              />
-
-              <Select
-                classNames={{
-                  input: `${style.elementSelect} ${style.elementSelectAdmin}`,
-                }}
-                placeholder="Select Category"
-                data={categories.flatMap((category) => [
-                  {
-                    value: category.categoryId.toString(),
-                    label: category.name,
-                  },
-                ])}
-                onChange={(value: string | null) => {
-                  if (value !== null) {
-                    setCategoryId(value)
-                  } else {
-                    setCategoryId('')
-                  }
-                }}
-                allowDeselect
-              />
-              <Select
-                classNames={{
-                  input: `${style.elementSelect} ${style.elementSelectAdmin}`,
-                }}
-                placeholder="Select City/Province"
-                withAsterisk
-                searchable
-                allowDeselect={false}
-                data={provinces.flatMap((prov: Province) => [
-                  {
-                    value: prov.provinceCode,
-                    label: prov.nameEn,
-                  },
-                ])}
-                comboboxProps={{
-                  position: 'bottom',
-                  offset: 0,
-                  transitionProps: { transition: 'pop', duration: 200 },
-                }}
-              />
-            </div>
-            <div className="grid grid-cols-3 row-span-1">
-              <div>
+              <div className="grid grid-cols-3 gap-12 mt-5">
+                <div className="flex gap-3 items-baseline mt-5">
+                  <Text className="text-base font-semibold text-primary">
+                    Price range:
+                  </Text>
+                  <RangeSlider
+                    classNames={{
+                      root: style.rootRangeSlider,
+                      label: style.lableRangeSlider,
+                    }}
+                    color="#396651"
+                    minRange={0.2}
+                    min={0}
+                    max={1000000000}
+                    step={100}
+                    defaultValue={[0, 1000000000]}
+                    labelAlwaysOn
+                  />
+                </div>
+                <div className="flex gap-3 items-baseline mt-5">
+                  <Text className="text-base font-semibold text-primary">
+                    Area range:
+                  </Text>
+                  <RangeSlider
+                    classNames={{
+                      root: style.rootRangeSlider,
+                      label: style.lableRangeSlider,
+                    }}
+                    color="#396651"
+                    minRange={0.2}
+                    min={0}
+                    max={1000000000}
+                    step={100}
+                    defaultValue={[0, 1000000000]}
+                    labelAlwaysOn
+                  />
+                </div>
                 <Button
                   className={style.iconSearch}
+                  classNames={{ label: style.labelIconSearch }}
                   onClick={() => handleSearching()}
                 >
-                  <FaSearch size={16} />
+                  <FaSearch size={20} />
+                  <span className={style.labelIconSearch}>Search</span>
                 </Button>
               </div>
             </div>

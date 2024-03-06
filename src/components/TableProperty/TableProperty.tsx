@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react'
 import style from './TableProperty.module.scss'
 import {
   Button,
-  Select,
   TextInput,
   Table,
   Image,
-  ScrollArea,
   Modal,
   Switch,
   Tooltip,
   LoadingOverlay,
   Box,
+  Pagination,
+  Select,
 } from '@mantine/core'
 import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -22,14 +22,10 @@ import { axiosInstance } from '../../service/AxiosInstance'
 import Swal from 'sweetalert2'
 import { formatMoneyToUSD } from '../../utils/commonFunctions'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getAllCategories } from '../../redux/reducers/categorySlice'
-import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { PiArrowsDownUp } from 'react-icons/pi'
-import { searchPropertyForSeller } from '../../service/SearchService'
 import {
   CODE_RESPONSE_400,
   CODE_RESPONSE_401,
-  CODE_RESPONSE_403,
   CODE_RESPONSE_404,
 } from '../../constants/codeResponse'
 import { SearchProps } from '@/types/searchProps'
@@ -37,9 +33,11 @@ import {
   deletePropertiesForSellerService,
   getAllPropertiesForSellerService,
   updateStatusPropertiesForSellerService,
+  searchPropertyForSeller,
 } from '../../service/SellerService'
 import { AVAILABLE, UN_AVAILABLE } from '../../constants/statusProperty'
-
+import { getAllFeatures } from '../../redux/reducers/featureSlice'
+import { getAllCategories } from '../../redux/reducers/categorySlice'
 
 const TableProperty = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -50,6 +48,18 @@ const TableProperty = () => {
   const [properties, setProperties] = useState<Properties[]>([])
   const [sort, setSort] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  // These states is used for paginate.
+  const [activePage, setActivePage] = useState(1)
+  const [totalPages, setTotalPages] = useState(2)
+  const [_totalItems, setTotalItems] = useState(0)
+
+  const [featureId, setFeatureId] = useState('')
+  const [categoryId, setCategoryId] = useState('')
+  const [keyword, setKeyword] = useState('')
+
+  const dispatch = useAppDispatch()
+
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     open()
@@ -114,16 +124,10 @@ const TableProperty = () => {
     try {
       const res = await getAllPropertiesForSellerService()
       setProperties(res?.data.metaData.data)
+      setTotalPages(res?.data.metaData.totalPages)
+      setTotalItems(res?.data.metaData.totalItems)
     } catch (error: any) {
-      if (error.response.status === CODE_RESPONSE_400) {
-        console.error('Failed to get list properties. Please try again')
-      } else if (error.response.status === CODE_RESPONSE_401) {
-        console.error('Please Authenticate')
-      } else if (error.response.status === CODE_RESPONSE_403) {
-        console.error('Your account is not active!')
-      } else {
-        console.error(error)
-      }
+      setError(error.response.data.error.message)
     }
   }
 
@@ -131,7 +135,6 @@ const TableProperty = () => {
     getAllPropertiesForSeller()
   }, [isUpdated])
 
-  const dispatch = useAppDispatch()
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
@@ -171,23 +174,24 @@ const TableProperty = () => {
     }
   }
 
-  const [featureId, setFeatureId] = useState('')
-  const [categoryId, setCategoryId] = useState('')
-  const [name, setName] = useState('')
-
-  const handleFiltering = async (
-    name: string,
-    featureId: string,
-    categoryId: string,
-  ) => {
+  const handleFiltering = async () => {
     const data: SearchProps = {
-      keyword: name ? name : null,
+      keyword: keyword ? keyword : null,
       categoryId: categoryId ? Number(categoryId) : null,
       featureId: featureId ? Number(featureId) : null,
+      page: activePage ? activePage : null,
     }
-    const res = await searchPropertyForSeller(data)
-    setProperties(res.data)
+
+    try {
+      const res = await searchPropertyForSeller(data)
+      setProperties(res.data)
+    } catch (error: any) {
+      setError(error.response.data.error.message)
+    }
   }
+  useEffect(() => {
+    handleFiltering()
+  }, [activePage])
 
   const handleUpdateStatus = async (event: boolean, propertyId: number) => {
     if (event) {
@@ -212,6 +216,9 @@ const TableProperty = () => {
       }
     }
   }
+
+
+
   const rows =
     properties.length > 0 ? (
       properties.map((element) => (
@@ -236,7 +243,7 @@ const TableProperty = () => {
           <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
           <Table.Td>
             {element.status === 'Disabled' ? (
-              <Button className={style.disable}>Disabled</Button>
+              <Button className={style.disableb}>Disabled</Button>
             ) : element.status === 'Available' ? (
               <Tooltip label="Available property" refProp="rootRef">
                 <Switch
@@ -313,9 +320,9 @@ const TableProperty = () => {
             <div className={style.tableSelect}>
               <div className={style.tableSearch}>
                 <TextInput
-                  classNames={{ input: style.input }}
+                  classNames={{ input: style.inputText }}
                   placeholder="Enter your keyword..."
-                  onChange={(event) => setName(event.target.value)}
+                  onChange={(event) => setKeyword(event.target.value)}
                 />
               </div>
               <Select
@@ -359,7 +366,7 @@ const TableProperty = () => {
               <div>
                 <Button
                   className={style.iconSearch}
-                  onClick={() => handleFiltering(name, featureId, categoryId)}
+                  onClick={() => handleFiltering()}
                 >
                   <FaSearch size={16} />
                 </Button>
@@ -376,47 +383,55 @@ const TableProperty = () => {
           </div>
 
           <div className={style.tableContent}>
-            <ScrollArea h={600}>
-              <Box pos="relative">
-                <LoadingOverlay
-                  visible={isLoading}
-                  zIndex={1000}
-                  overlayProps={{ radius: 'sm', blur: 2 }}
-                  loaderProps={{ color: 'pink', type: 'bars' }}
-                />
-                <Table
-                  bg="white"
-                  highlightOnHover
-                  withTableBorder
-                  verticalSpacing="sm"
-                  stickyHeader
-                >
-                  <Table.Thead>
-                    <Table.Tr className={style.titleTable}>
-                      <Table.Th>ID</Table.Th>
-                      <Table.Th classNames={{ th: style.thName }}>
-                        Property Name
-                      </Table.Th>
-                      <Table.Th>Code</Table.Th>
-                      <Table.Th>Featured</Table.Th>
-                      <Table.Th>Category</Table.Th>
-                      <Table.Th classNames={{ th: style.thPrice }}>
-                        <span>Price</span>
+            <Box pos="relative">
+              <LoadingOverlay
+                visible={isLoading}
+                zIndex={1000}
+                overlayProps={{ radius: 'sm', blur: 2 }}
+                loaderProps={{ color: 'pink', type: 'bars' }}
+              />
 
-                        <PiArrowsDownUp
-                          onClick={() => getPropertiesSortByPrice()}
-                          className="cursor-pointer"
-                          size={20}
-                        />
-                      </Table.Th>
-                      <Table.Th>Status</Table.Th>
-                      <Table.Th>Actions</Table.Th>
-                    </Table.Tr>
-                  </Table.Thead>
-                  <Table.Tbody>{rows}</Table.Tbody>
-                </Table>
-              </Box>
-            </ScrollArea>
+              <Table
+                bg="white"
+                highlightOnHover
+                withTableBorder
+                verticalSpacing="sm"
+              >
+                <Table.Thead>
+                  <Table.Tr className={style.titleTable}>
+                    <Table.Th>ID</Table.Th>
+                    <Table.Th classNames={{ th: style.thName }}>
+                      Property Name
+                    </Table.Th>
+                    <Table.Th>Code</Table.Th>
+                    <Table.Th>Featured</Table.Th>
+                    <Table.Th>Category</Table.Th>
+                    <Table.Th classNames={{ th: style.thPrice }}>
+                      <span>Price</span>
+
+                      <PiArrowsDownUp
+                        onClick={() => getPropertiesSortByPrice()}
+                        className="cursor-pointer"
+                        size={20}
+                      />
+                    </Table.Th>
+                    <Table.Th>Status</Table.Th>
+                    <Table.Th>Actions</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>{error ? error : rows}</Table.Tbody>
+              </Table>
+
+              <div className={style.pagination}>
+                <Pagination
+                  total={totalPages}
+                  value={activePage}
+                  onChange={setActivePage}
+                  mt="sm"
+                  classNames={{ control: style.paginationControl }}
+                />
+              </div>
+            </Box>
           </div>
         </div>
       </div>

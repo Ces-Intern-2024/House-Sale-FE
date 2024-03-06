@@ -45,6 +45,6 @@ module.exports = {
     'no-class-assign': 'error',
     'no-dupe-else-if': 'error',
     'no-duplicate-imports': 'error',
-    'max-depth': ['error', 3],
+    'max-depth': ['error', 4],
   },
 }

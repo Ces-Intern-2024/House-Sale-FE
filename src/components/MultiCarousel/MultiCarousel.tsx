@@ -1,36 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import PropertyCard from '../Properties/PropertyCard'
 import styles from './MultiCarousel.module.scss'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import { Properties } from '../../types'
-import { searchProperty } from '../../service/SearchService'
 import { Link } from 'react-router-dom'
 
 interface MultiCarouselProps {
-  property: Properties
+  properties: Properties[]
+  title?: string
 }
-export default function MultiCarousel({ property }: MultiCarouselProps) {
-  const [properties, setProperties] = useState<Properties[]>([])
-
-  const handleGetProperties = async () => {
-    if (property) {
-      const data = await searchProperty(
-        {
-          featureId: property?.feature.featureId,
-          orderBy: 'createdAt',
-          sortBy: 'desc',
-        },
-        true,
-      )
-      const filteredProperties = data.data.filter(
-        (item: Properties) => item.propertyId !== property.propertyId,
-      )
-      setProperties(filteredProperties)
-    }
-  }
-
+export default function MultiCarousel({
+  properties,
+  title,
+}: MultiCarouselProps) {
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 6000, min: 2300 },
@@ -53,13 +37,11 @@ export default function MultiCarousel({ property }: MultiCarouselProps) {
       items: 1,
     },
   }
-  useEffect(() => {
-    handleGetProperties()
-  }, [property])
+
   return (
     <>
       <div className={styles.outer}>
-        <h1 className={styles.title}>RELEVANT</h1>
+        <h1 className={styles.title}>{title}</h1>
 
         <span className={styles.underline}></span>
 

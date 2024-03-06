@@ -18,8 +18,6 @@ import {
   getAllDistricts,
   getAllWards,
 } from '../../redux/reducers/locationReducer'
-import { getAllCategories } from '../../redux/reducers/categorySlice'
-import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { optionsFilter } from '../../utils/filterLocation'
 import { District } from '@/types/district'
 import { Ward } from '@/types/ward'
@@ -87,16 +85,11 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
-  useEffect(() => {
-    dispatch(getAllCategories())
-  }, [dispatch])
   
   const features: Feature[] = useAppSelector(
     (state) => state.feature.featuresList,
   )
-  useEffect(() => {
-    dispatch(getAllFeatures())
-  }, [dispatch])
+
 
   // Get userProfile to get current credit.
   const [userProfile, setUserProfile] = useState<User | undefined>()
@@ -366,7 +359,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
             placeholder="Choose city/province"
             withAsterisk
             searchable
-            allowDeselect={false}
+            allowDeselect
             data={provinces.flatMap((prov: Province) => [
               {
                 value: prov.provinceCode,
@@ -399,7 +392,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
             placeholder="Choose district "
             withAsterisk
             searchable
-            allowDeselect={false}
+            allowDeselect
             data={districts.flatMap((district: District) => [
               {
                 value: district.districtCode,
@@ -430,7 +423,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
             placeholder="Choose ward "
             withAsterisk
             searchable
-            allowDeselect={false}
+            allowDeselect
             data={wards.flatMap((ward: Ward) => [
               {
                 value: ward.wardCode,
