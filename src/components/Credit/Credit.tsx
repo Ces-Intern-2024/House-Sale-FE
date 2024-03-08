@@ -10,7 +10,10 @@ import { IoCalendarNumberOutline } from 'react-icons/io5'
 import { Button } from '@mantine/core'
 import { HistoryTransaction } from '../../types/historyTransaction'
 
-const Credit = () => {
+interface CreditProps {
+  shouldUpdate: boolean
+}
+const Credit = ({ shouldUpdate }: CreditProps) => {
   const [userProfile, setUserProfile] = useState<User>()
   const [historiesRentService, setHistoriesRentService] = useState<
     HistoryTransaction[]
@@ -32,7 +35,7 @@ const Credit = () => {
   useEffect(() => {
     getTransaction()
     getUserProfile()
-  }, [])
+  }, [shouldUpdate])
 
   return (
     <div className={style.creditContainer}>

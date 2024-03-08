@@ -195,7 +195,7 @@ export default function SearchBar() {
       numberOfToiletTo: bathNum ? Number(bathNum[1]) : null,
       priceFrom: priceRange ? priceRange[0] : null,
       priceTo: priceRange ? priceRange[1] : null,
-      orderBy: sortBy.startsWith('P') ? 'price' : null,
+      orderBy: sortBy.startsWith('P') ? 'price' : 'createdAt',
       sortBy: sortBy.startsWith('P') ? sortBy.slice(1, sortBy.length) : sortBy,
       keyword: tempSearchValue ? tempSearchValue : null,
       page: resetPage ? 1 : activePage,
@@ -452,8 +452,8 @@ export default function SearchBar() {
               placeholder="Sort By"
               value={sortBy}
               data={[
-                { label: 'A-Z Ascending', value: 'ASC' },
-                { label: 'A-Z Descending', value: 'DESC' },
+                { label: 'Date Ascending', value: 'ASC' },
+                { label: 'Date Descending', value: 'DESC' },
                 { label: 'Price Ascending', value: 'PASC' },
                 { label: 'Price Descending', value: 'PDESC' },
               ]}
@@ -489,8 +489,8 @@ export default function SearchBar() {
                 placeholder="Sort By"
                 value={sortBy}
                 data={[
-                  { label: 'A-Z Ascending', value: 'ASC' },
-                  { label: 'A-Z Descending', value: 'DESC' },
+                  { label: 'Date Ascending', value: 'ASC' },
+                  { label: 'Date Descending', value: 'DESC' },
                   { label: 'Price Ascending', value: 'PASC' },
                   { label: 'Price Descending', value: 'PDESC' },
                 ]}

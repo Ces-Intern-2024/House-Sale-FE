@@ -287,7 +287,7 @@ export default function SellerProfile() {
               <div className={styles.saveAndCancel}>
                 <Button
                   loading={loading ? true : false}
-                  bg="green"
+                  bg="#1b2850"
                   onClick={handleUploadAvatar}
                 >
                   <IconDeviceFloppy className="mr-1" />
@@ -295,12 +295,12 @@ export default function SellerProfile() {
                 </Button>
 
                 <Button
-                  bg="red"
+                  bg="#adb5bd"
                   onClick={() => setFile(null)}
                   disabled={loading ? true : false}
                 >
                   <IconX className="mr-1" />
-                  Delete
+                  Cancel
                 </Button>
               </div>
             )}

@@ -12,6 +12,7 @@ export async function searchProperty(
     addQueryPrefix: true,
     encode: false,
   })
+  
 
   const res = await axios.get(
     `/properties${queryString}${queryString.length === 0 

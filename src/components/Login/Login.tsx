@@ -41,7 +41,6 @@ export function Login() {
     onSuccess: (response) => {
       setUserGoogle(response.access_token)
     },
-    // onError: () => console.log('Login Failed:'),
   })
 
   useEffect(() => {
