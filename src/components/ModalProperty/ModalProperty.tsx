@@ -34,14 +34,19 @@ import {
 import { getProfile } from '../../service/ProfileService'
 import { User } from '../../types/user'
 
-
 interface Props {
   property: Properties | null
   onClose: () => void
-  isUpdated: (value: boolean) => void
+  isUpdated?: (value: boolean) => void
+  setShouldUpdate?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
+const ModalProperty = ({
+  property,
+  onClose,
+  isUpdated,
+  setShouldUpdate,
+}: Props) => {
   const [files, setFiles] = useState<File[]>([])
 
   const [loading, setLoading] = useState(false)
@@ -85,11 +90,10 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
-  
+
   const features: Feature[] = useAppSelector(
     (state) => state.feature.featuresList,
   )
-
 
   // Get userProfile to get current credit.
   const [userProfile, setUserProfile] = useState<User | undefined>()
@@ -185,7 +189,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
     }
     try {
       loading
-      if (userProfile?.balance && userProfile.balance>= 20) {
+      if (userProfile?.balance && userProfile.balance >= 20) {
         // Call function handleUpload to push images to the cloudinary.
         const arr = []
         for (let i = 0; i < files.length; i++) {
@@ -202,14 +206,14 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
           title: 'Added successfully',
           icon: 'success',
         })
-        isUpdated(true)
+        setShouldUpdate!((prev) => !prev)
         return res
-      }else{
+      } else {
         setLoading(false)
         Swal.fire({
           title: 'You do not have enough credit',
           icon: 'error',
-        })        
+        })
       }
     } catch (error: any) {
       setLoading(false)
@@ -253,7 +257,7 @@ const ModalProperty = ({ property, onClose, isUpdated }: Props) => {
         title: 'Updated successfully',
         icon: 'success',
       })
-      isUpdated(true)
+      isUpdated!(true)
       return res
     } catch (error: any) {
       if (error.response.status === CODE_RESPONSE_400) {

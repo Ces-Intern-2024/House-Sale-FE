@@ -33,3 +33,22 @@ export function sortTransactionsByDate(
     return dateB - dateA
   })
 }
+
+export function formatDateToYYYYMMDD(date: Date | null) {
+    if(date){
+  const year = date.getFullYear();
+
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+}
+
+export function formatDateToYYYYMMDDHHMMSS(date: string) {
+  const formattedDate = new Date(date).toLocaleString('vi-VN', {
+                    timeZone: 'UTC',
+                  })
+  return formattedDate          
+}
