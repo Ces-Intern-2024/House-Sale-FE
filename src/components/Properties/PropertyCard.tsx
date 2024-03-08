@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
 import Swal from 'sweetalert2'
 import { formatMoneyToUSD } from '../../utils/commonFunctions'
-import { CODE_RESPONSE_401 } from '../../constants/codeResponse'
 import { Link } from 'react-router-dom'
 import { Button } from '@mantine/core'
 interface Props {
@@ -33,14 +32,15 @@ const Properties = ({ data }: Props) => {
       await axiosInstance.post(`/favorites-list`, { propertyId })
       await dispatch(getAllWishList())
     } catch (error: any) {
-      if (error.response.status === CODE_RESPONSE_401) {
+      console.log(JSON.stringify(error))
+     
         Swal.fire({
           icon: 'warning',
           title: 'You need to login first!',
           showConfirmButton: false,
           timer: 1400,
         })
-      }
+    
     } finally {
       setIsLoading(false)
     }

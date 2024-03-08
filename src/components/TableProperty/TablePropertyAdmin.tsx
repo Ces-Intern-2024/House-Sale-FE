@@ -10,6 +10,7 @@ import {
   Pagination,
   RangeSlider,
   Text,
+  LoadingOverlay,
 } from '@mantine/core'
 import { FaEdit, FaSearch } from 'react-icons/fa'
 import { useDisclosure } from '@mantine/hooks'
@@ -20,12 +21,6 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { PiArrowsDownUp } from 'react-icons/pi'
-import {
-  CODE_RESPONSE_400,
-  CODE_RESPONSE_401,
-  CODE_RESPONSE_403,
-  CODE_RESPONSE_404,
-} from '../../constants/codeResponse'
 import { MdDelete } from 'react-icons/md'
 import { Province } from '@/types/province'
 import { getAllProvinces } from '../../redux/reducers/locationReducer'
@@ -50,7 +45,30 @@ const TablePropertyAdmin = () => {
   const [isUpdated, setIsUpdated] = useState(false)
   const [properties, setProperties] = useState<Properties[]>([])
   const [sort, setSort] = useState(true)
+  const [featureId, setFeatureId] = useState('')
+  const [categoryId, setCategoryId] = useState('')
+  const [keyword, setKeyword] = useState('')
+  const [provinceCode, setProvinceCode] = useState('')
+  const [activePage, setActivePage] = useState(1)
+  const [totalPages, setTotalPages] = useState(2)
+  const [totalItems, setTotalItems] = useState(0)
+  const [resetPage, setResetPage] = useState(true)
 
+  const [maxPrice, setMaxPrice] = useState<number>(0)
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleGetMaxPrice = async () => {
+    const res = await getPropertiesForAdminService({
+      orderBy: 'price',
+      sortBy: 'desc',
+    })
+    setMaxPrice(Number(res.data.metaData.data[0].price))
+    setPriceRange([0, Number(res.data.metaData.data[0].price)])
+  }
+  useEffect(() => {
+    handleGetMaxPrice()
+  }, [])
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     open()
@@ -63,17 +81,7 @@ const TablePropertyAdmin = () => {
       setTotalPages(res.metaData.totalPages)
       setTotalItems(res.metaData.totalItems)
     } catch (error: any) {
-      if (error.response.status === CODE_RESPONSE_400) {
-        console.error('Failed to get all properties.')
-      } else if (error.response.status === CODE_RESPONSE_401) {
-        console.error('Please Authenticate!')
-      } else if (error.response.status === CODE_RESPONSE_403) {
-        console.error('Your account is not active!')
-      } else if (error.response.status === CODE_RESPONSE_404) {
-        console.error('User not found!')
-      } else {
-        console.error(error)
-      }
+      console.error(error.response.data.error.message)
     }
   }
 
@@ -114,21 +122,9 @@ const TablePropertyAdmin = () => {
         setProperties(res.data.metaData.data)
       }
     } catch (error: any) {
-      if (error.response.status === CODE_RESPONSE_400) {
-        console.error('This feature is not available yet. Please try again')
-      } else if (error.response.status === CODE_RESPONSE_401) {
-        console.error('Please Authenticate')
-      } else if (error.response.status === 403) {
-        console.error('Your account is not active!')
-      } else {
-        console.error(error)
-      }
+      console.error(error.response.data.error.message)
     }
   }
-
-  const [featureId, setFeatureId] = useState('')
-  const [categoryId, setCategoryId] = useState('')
-  const [keyword, setKeyword] = useState('')
 
   const handleSearching = async () => {
     const data: SearchProps = {
@@ -136,32 +132,27 @@ const TablePropertyAdmin = () => {
       categoryId: categoryId ? Number(categoryId) : null,
       featureId: featureId ? Number(featureId) : null,
       page: activePage ? activePage : null,
+      priceFrom: priceRange ? priceRange[0] : null,
+      priceTo: priceRange ? priceRange[1] : null,
     }
     try {
+      setIsLoading(true)
       const res = await getPropertiesForAdminService(data)
       setProperties(res.data.metaData.data)
+      setTotalPages(res.data.metaData.totalPages)
+      setTotalItems(res.data.metaData.totalItems)
+      setActivePage(resetPage ? 1 : activePage)
+      setResetPage(true)
     } catch (error: any) {
-      if (error.response.status === 400) {
-        console.error('Failed to search property!')
-      } else if (error.response.status === 401) {
-        console.error('Please Authenticate!')
-      } else if (error.response.status === 403) {
-        console.error('Your account is not active!')
-      } else if (error.response.status === 404) {
-        console.error('User not found!')
-      } else {
-        console.error(error)
-      }
+      console.error(error.response.data.error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  const [activePage, setActivePage] = useState(1)
-  const [totalPages, setTotalPages] = useState(2)
-  const [totalItems, setTotalItems] = useState(0)
-
   useEffect(() => {
     handleSearching()
-  }, [activePage])
+  }, [activePage, priceRange])
 
   const provinces: Province[] = useAppSelector(
     (state) => state.location.provincesList,
@@ -175,15 +166,26 @@ const TablePropertyAdmin = () => {
     propertyId: number,
   ) => {
     try {
+      setIsLoading(true)
       await updateStatusPropertyForAdminService(propertyId, status)
     } catch (error: any) {
       console.error(error.response.data.error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
+  const handleChangeActivePage = async (page: any) => {
+    setResetPage(false)
+    setActivePage(page)
+  }
 
-  const [provinceCode, setProvinceCode] = useState('')
-
-
+  const handleResetFilter = () => {
+    setProvinceCode('')
+    setKeyword('')
+    setFeatureId('')
+    setCategoryId('')
+    setPriceRange([0, maxPrice])
+  }
   const rows =
     properties.length > 0 &&
     properties.map((element) => (
@@ -210,11 +212,6 @@ const TablePropertyAdmin = () => {
 
         <Table.Td>
           <Select
-            // classNames={{
-            //   input: style.inputSelectStatus,
-            //   section: style.sectionSelectStatus,
-            //   wrapper: style.wrapperSelectStatus,
-            // }}
             classNames={{
               input: `${element.status === AVAILABLE} ? ${style.inputSelectStatus} : ${style.unavailableSelectStatus}`,
               wrapper: style.wrapperSelectStatus,
@@ -250,9 +247,7 @@ const TablePropertyAdmin = () => {
           <div className={style.tableHeader}>
             <div className={style.pageTitle}>
               <span className={style.title}>Property List</span>
-              <span className={style.subTitle}>
-                Manage your properties {totalItems}
-              </span>
+              <span className={style.subTitle}>Manage your properties</span>
             </div>
           </div>
 
@@ -329,50 +324,39 @@ const TablePropertyAdmin = () => {
                   defaultValue={provinceCode}
                 />
               </div>
-              <div className="grid grid-cols-3 gap-12 mt-5">
-                <div className="flex gap-3 items-baseline mt-5">
-                  <Text className="text-base font-semibold text-primary">
-                    Price range:
-                  </Text>
-                  <RangeSlider
-                    classNames={{
-                      root: style.rootRangeSlider,
-                      label: style.lableRangeSlider,
-                    }}
-                    color="#396651"
-                    minRange={0.2}
-                    min={0}
-                    max={1000000000}
-                    step={100}
-                    defaultValue={[0, 1000000000]}
-                    labelAlwaysOn
-                  />
-                </div>
-                <div className="flex gap-3 items-baseline mt-5">
-                  <Text className="text-base font-semibold text-primary">
-                    Area range:
-                  </Text>
-                  <RangeSlider
-                    classNames={{
-                      root: style.rootRangeSlider,
-                      label: style.lableRangeSlider,
-                    }}
-                    color="#396651"
-                    minRange={0.2}
-                    min={0}
-                    max={1000000000}
-                    step={100}
-                    defaultValue={[0, 1000000000]}
-                    labelAlwaysOn
-                  />
+              <div className="flex flex-row justify-between mt-5 items-baseline">
+                <div className="flex items-baseline gap-12">
+                  <div className="flex gap-3 items-baseline mt-5">
+                    <Text className="text-base font-semibold text-primary">
+                      Price range:
+                    </Text>
+                    <RangeSlider
+                      classNames={{
+                        root: style.rootRangeSlider,
+                        label: style.lableRangeSlider,
+                      }}
+                      color="#396651"
+                      minRange={100}
+                      min={0}
+                      max={maxPrice}
+                      step={500}
+                      defaultValue={priceRange}
+                      onChangeEnd={setPriceRange}
+                      labelAlwaysOn
+                    />
+                  </div>
+                  <Button
+                    className={style.iconSearchAdmin}
+                    onClick={() => handleSearching()}
+                  >
+                    <FaSearch size={16} />
+                  </Button>
                 </div>
                 <Button
-                  className={style.iconSearch}
-                  classNames={{ label: style.labelIconSearch }}
-                  onClick={() => handleSearching()}
+                  className="text-primary text-lg font-bold px-0 rounded-none hover:text-[#5625d0]"
+                  onClick={handleResetFilter}
                 >
-                  <FaSearch size={20} />
-                  <span className={style.labelIconSearch}>Search</span>
+                  Clear Filters
                 </Button>
               </div>
             </div>
@@ -380,6 +364,7 @@ const TablePropertyAdmin = () => {
 
           <div className={style.tableContent}>
             <Table
+              className="relative"
               bg="white"
               highlightOnHover
               withTableBorder
@@ -409,6 +394,13 @@ const TablePropertyAdmin = () => {
                   <Table.Th>Actions</Table.Th>
                 </Table.Tr>
               </Table.Thead>
+
+              <LoadingOverlay
+                visible={isLoading}
+                zIndex={10}
+                overlayProps={{ radius: 'sm', blur: 2 }}
+                loaderProps={{ color: 'pink', type: 'bars' }}
+              />
               <Table.Tbody>{rows}</Table.Tbody>
             </Table>
           </div>
@@ -417,10 +409,13 @@ const TablePropertyAdmin = () => {
             <Pagination
               total={totalPages}
               value={activePage}
-              onChange={setActivePage}
+              onChange={handleChangeActivePage}
               mt="sm"
               classNames={{ control: style.paginationControl }}
             />
+            <div className="text-lg mr-2 text-primary font-bold">
+              Result: {totalItems}
+            </div>
           </div>
         </div>
       </div>

@@ -58,9 +58,9 @@ const TableProperty = ({
   const [error, setError] = useState('')
   // These states is used for paginate.
   const [activePage, setActivePage] = useState(1)
-  const [totalPages, setTotalPages] = useState(2)
-  const [_totalItems, setTotalItems] = useState(0)
-
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalItems, setTotalItems] = useState(0)
+  const [resetPage, setResetPage] = useState(true)
   const [featureId, setFeatureId] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [keyword, setKeyword] = useState('')
@@ -186,12 +186,16 @@ const TableProperty = ({
       keyword: keyword ? keyword : null,
       categoryId: categoryId ? Number(categoryId) : null,
       featureId: featureId ? Number(featureId) : null,
-      page: activePage ? activePage : null,
+      page: resetPage ? 1 : activePage,
     }
 
     try {
       const res = await searchPropertyForSeller(data)
-      setProperties(res.data)
+      setProperties(res.data.metaData.data)
+      setTotalPages(res.data.metaData.totalPages)
+      setTotalItems(res.data.metaData.totalItems)
+      setActivePage(resetPage ? 1 : activePage)
+      setResetPage(true)
     } catch (error: any) {
       setError(error.response.data.error.message)
     }
@@ -200,6 +204,10 @@ const TableProperty = ({
     handleFiltering()
   }, [activePage])
 
+  const handleChangeActivePage = async (page: any) => {
+    setResetPage(false)
+    setActivePage(page)
+  }
   const handleUpdateStatus = async (event: boolean, propertyId: number) => {
     if (event) {
       try {
@@ -431,10 +439,13 @@ const TableProperty = ({
                 <Pagination
                   total={totalPages}
                   value={activePage}
-                  onChange={setActivePage}
+                  onChange={handleChangeActivePage}
                   mt="sm"
                   classNames={{ control: style.paginationControl }}
                 />
+                <div className="text-lg mr-2 text-primary font-bold">
+                  Result: {totalItems}
+                </div>
               </div>
             </Box>
           </div>
