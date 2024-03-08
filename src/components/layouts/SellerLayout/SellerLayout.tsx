@@ -15,6 +15,7 @@ import {
   IconUserStar,
   IconGraph,
   IconLogout,
+  IconCreditCardPay,
 } from '@tabler/icons-react'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
@@ -42,6 +43,9 @@ export default function SellerLayout() {
     pathname === '/seller' ? { title: 'Dashboard', href: '/seller' } : null,
     pathname === '/profile' ? { title: 'Profile', href: '/profile' } : null,
     pathname === '/report' ? { title: 'Report', href: '/report' } : null,
+    pathname === '/transaction'
+      ? { title: 'Transaction', href: '/transaction' }
+      : null,
   ]
     .filter(Boolean)
     .map((path, index) => (
@@ -68,7 +72,6 @@ export default function SellerLayout() {
         dispatch(signOutSuccess())
         dispatch(resetUser())
       })
-      // .catch((error) => console.log('purge persisted state error', error))
 
     navigate('/home')
   }
@@ -174,6 +177,26 @@ export default function SellerLayout() {
                     <IconGraph className={styles.navIcon} size={ICON_SIZE} />
                     {(!isSmallNav || isSmallScreen) && (
                       <h1 className={styles.navText}>Report</h1>
+                    )}
+                  </div>
+                </NavLink>
+                <NavLink
+                  to="/transaction"
+                  className={({ isActive }) =>
+                    isActive ? styles.navItemActive : ''
+                  }
+                  onClick={() => {
+                    handleSetActiveLink('/transaction')
+                    if (opened) toggle()
+                  }}
+                >
+                  <div className={styles.navItem}>
+                    <IconCreditCardPay
+                      className={styles.navIcon}
+                      size={ICON_SIZE}
+                    />
+                    {(!isSmallNav || isSmallScreen) && (
+                      <h1 className={styles.navText}>Transaction</h1>
                     )}
                   </div>
                 </NavLink>

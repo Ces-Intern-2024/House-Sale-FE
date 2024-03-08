@@ -1,73 +1,110 @@
 import axios from 'axios'
-import moment from 'moment'
-import { jwtDecode } from 'jwt-decode'
 import storage from 'redux-persist/lib/storage'
 import { store } from '../redux/store'
+import { Token } from '../types/token'
 import { signInSuccess } from '../redux/reducers/sessionSlice'
+import { CODE_RESPONSE_401 } from '../constants/codeResponse'
 
-interface DecodedToken {
-  sub: number
-  iat: number
-  exp: number
-  type: string
+let isRefreshing = false
+let failedQueue: any = []
+
+const processQueue = (error: any, token = null) => {
+  failedQueue.forEach((promise: any) => {
+    if (error) {
+      promise.reject(error)
+    } else {
+      promise.resolve(token)
+    }
+  })
+  failedQueue = []
 }
 
 const baseURL = process.env.REACT_APP_BASE_URL
 
 export const axiosInstance = axios.create({ baseURL })
 
-axiosInstance.interceptors.request.use(async (req) => {
-  if (
-    req.url?.endsWith('/user/refreshTokens') ||
-    req.url?.startsWith('https://api.cloudinary.com')
-  ) {
-    delete req.headers.Authorization
-    return req
-  }
-
+axiosInstance.interceptors.request.use(async (config) => {
   const rawPersistData = await storage.getItem('persist:primary')
-  let authToken
+  let authToken: Token
   if (rawPersistData !== null) {
     const parsedPersistData = JSON.parse(rawPersistData)
     const sessionState = JSON.parse(parsedPersistData.session)
     authToken = sessionState.tokens
-
     if (!authToken) {
       const state: any = store.getState()
       authToken = state.session.tokens
     }
   }
-
-  const refreshAccessToken = async (refreshToken: string) => {
-    try {
-      const response = await axios.post(`/user/refreshTokens`, {
-        refreshToken,
-      })
-
-      store.dispatch(
-        signInSuccess({
-          signedIn: true,
-          tokens: { ...response.data.metaData },
-        }),
-      )
-
-      return response.data.metaData
-    } catch (error) {
-      return null
-    }
+  if (authToken!.accessToken) {
+    config.headers['Authorization'] = 'Bearer ' + authToken!.accessToken
   }
-
-  if (authToken?.accessToken) {
-    req.headers.Authorization = `Bearer ${authToken.accessToken}`
-
-    const decodedToken: DecodedToken = jwtDecode(authToken.accessToken)
-    if (moment().isAfter(moment.unix(decodedToken.exp))) {
-      const newTokens = await refreshAccessToken(authToken.refreshToken)
-      if (newTokens) {
-        req.headers.Authorization = `Bearer ${newTokens.accessToken}`
-      }
-    }
-  }
-
-  return req
+  return config
 })
+
+axiosInstance.interceptors.response.use(
+  function (response) {
+    return response
+  },
+  async function (error) {
+    const originalRequest = error.config
+
+    if (
+      error.response.status === CODE_RESPONSE_401 &&
+      !originalRequest._retry
+    ) {
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject })
+        })
+          .then((token) => {
+            originalRequest.headers['Authorization'] = 'Bearer ' + token
+            return axios(originalRequest)
+          })
+          .catch((err) => {
+            return Promise.reject(err)
+          })
+      }
+      // if the isRefreshing is false then set to true, even with _retry
+      originalRequest._retry = true
+      isRefreshing = true
+
+      const rawPersistData = await storage.getItem('persist:primary')
+      let authToken: Token
+      if (rawPersistData !== null) {
+        const parsedPersistData = JSON.parse(rawPersistData)
+        const sessionState = JSON.parse(parsedPersistData.session)
+        authToken = sessionState.tokens
+
+        if (!authToken) {
+          const state: any = store.getState()
+          authToken = state.session.tokens
+        }
+      }
+
+      return new Promise(function (resolve, reject) {
+        axios
+          .post('/user/refreshTokens', { refreshToken: authToken.refreshToken })
+          .then(({ data }) => {
+            store.dispatch(
+              signInSuccess({
+                signedIn: true,
+                tokens: data.metaData,
+              }),
+            )
+            originalRequest.headers['Authorization'] =
+              'Bearer ' + data.metaData.accessToken
+            processQueue(null, data.metaData.accessToken)
+            resolve(axios(originalRequest))
+          })
+          .catch((err) => {
+            processQueue(err, null)
+            reject(err)
+          })
+          .finally(() => {
+            isRefreshing = false
+          })
+      })
+    }
+    return Promise.reject(error)
+  },
+)

@@ -39,7 +39,14 @@ import { AVAILABLE, UN_AVAILABLE } from '../../constants/statusProperty'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
 
-const TableProperty = () => {
+interface TablePropertyProps {
+  setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>
+  shouldUpdate: boolean
+}
+const TableProperty = ({
+  setShouldUpdate,
+  shouldUpdate,
+}: TablePropertyProps) => {
   const [opened, { open, close }] = useDisclosure(false)
   const [selectedProperty, setSelectedProperty] = useState<Properties | null>(
     null,
@@ -133,7 +140,7 @@ const TableProperty = () => {
 
   useEffect(() => {
     getAllPropertiesForSeller()
-  }, [isUpdated])
+  }, [isUpdated, shouldUpdate])
 
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
@@ -216,8 +223,6 @@ const TableProperty = () => {
       }
     }
   }
-
-
 
   const rows =
     properties.length > 0 ? (
@@ -453,7 +458,7 @@ const TableProperty = () => {
         <ModalProperty
           property={selectedProperty}
           onClose={close}
-          isUpdated={setIsUpdated}
+          setShouldUpdate={setShouldUpdate}
         />
       </Modal>
     </>

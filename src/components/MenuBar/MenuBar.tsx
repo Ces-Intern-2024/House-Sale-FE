@@ -48,7 +48,6 @@ export default function MenuBar({
         dispatch(signOutSuccess())
         dispatch(resetUser())
       })
-    // .catch((error) => console.log('purge persisted state error', error))
 
     navigate('/home')
     window.location.reload()
