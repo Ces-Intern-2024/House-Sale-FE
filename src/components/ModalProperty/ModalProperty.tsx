@@ -454,6 +454,7 @@ const ModalProperty = ({
             {...form.getInputProps('street')}
             className={style.colModal}
             label="Street"
+            required
             placeholder="Enter street"
             readOnly={property === null ? false : true}
             classNames={{
@@ -475,6 +476,7 @@ const ModalProperty = ({
           <NumberInput
             {...form.getInputProps('numberOfFloor')}
             className={style.colModal}
+            required
             label="Number of floor"
             placeholder="Enter number of floor"
             min={0}
@@ -487,6 +489,7 @@ const ModalProperty = ({
           <NumberInput
             {...form.getInputProps('numberOfBedRoom')}
             className={style.colModal}
+            required
             label="Number of bedroom"
             placeholder="Enter number of bedroom"
             min={0}
@@ -499,6 +502,7 @@ const ModalProperty = ({
           <NumberInput
             {...form.getInputProps('numberOfToilet')}
             className={style.colModal}
+            required
             label="Number of toilet"
             placeholder="Enter number of toilet"
             min={0}
@@ -538,6 +542,7 @@ const ModalProperty = ({
               placeholder="Enter price "
               min={0}
               hideControls
+              required
             />
             <TextInput
               className="w-1/2"

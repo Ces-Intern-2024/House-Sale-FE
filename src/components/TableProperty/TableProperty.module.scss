@@ -57,11 +57,9 @@
   hover:bg-darkBlue bg-orangeBtn;
 }
 
-.labelIconSearch {
-  @apply text-base ml-2;
-}
+
 .tableContent {
-  @apply mt-10;
+  @apply mt-8;
 }
 
 .propertyNameCover {
@@ -134,7 +132,7 @@
 }
 
 .pagination {
-  @apply my-5 flex items-center justify-center;
+  @apply my-2 flex items-baseline justify-between;
 }
 .paginationControl {
   @apply text-black;
@@ -177,9 +175,14 @@
   @apply bg-white;
 }
 .rootRangeSlider {
-  @apply lg:w-80;
+  @apply lg:w-90;
 }
 
 .lableRangeSlider {
   @apply bg-primary;
+}
+
+.iconSearchAdmin {
+  @apply text-white rounded-[8px]
+  hover:bg-darkBlue bg-orangeBtn;
 }

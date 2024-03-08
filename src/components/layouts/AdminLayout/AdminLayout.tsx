@@ -10,11 +10,7 @@ import {
 import { useDisclosure } from '@mantine/hooks'
 import logo from '../../../assets/images/logo_transparent.png'
 import styles from './AdminLayout.module.scss'
-import {
-  IconDashboard,
-  IconGraph,
-  IconLogout,
-} from '@tabler/icons-react'
+import { IconDashboard, IconGraph, IconLogout } from '@tabler/icons-react'
 import { FaLayerGroup } from 'react-icons/fa6'
 import { IoPerson } from 'react-icons/io5'
 import { FaMoneyCheck } from 'react-icons/fa'
@@ -124,23 +120,6 @@ export default function AdminLayout() {
               </div>
             </NavLink>
             <NavLink
-              to=""
-              className={({ isActive }) =>
-                isActive ? styles.navItemActive : ''
-              }
-              onClick={() => {
-                handleSetActiveLink('/')
-                if (opened) toggle()
-              }}
-            >
-              <div className={styles.navItem}>
-                <FaMoneyCheck className={styles.navIcon} size={ICON_SIZE} />
-                {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>Transaction</h1>
-                )}
-              </div>
-            </NavLink>
-            <NavLink
               to="/admin-property"
               className={({ isActive }) =>
                 isActive ? styles.navItemActive : ''
@@ -170,7 +149,24 @@ export default function AdminLayout() {
               <div className={styles.navItem}>
                 <IoPerson className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>People</h1>
+                  <h1 className={styles.navText}>User</h1>
+                )}
+              </div>
+            </NavLink>
+            <NavLink
+              to=""
+              className={({ isActive }) =>
+                isActive ? styles.navItemActive : ''
+              }
+              onClick={() => {
+                handleSetActiveLink('/')
+                if (opened) toggle()
+              }}
+            >
+              <div className={styles.navItem}>
+                <FaMoneyCheck className={styles.navIcon} size={ICON_SIZE} />
+                {(!isSmallNav || isSmallScreen) && (
+                  <h1 className={styles.navText}>Transaction</h1>
                 )}
               </div>
             </NavLink>

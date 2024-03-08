@@ -1,8 +1,11 @@
 import React from 'react'
+import TableUser from '../../components/TableUser/TableUser'
 
 function AdminMangeUserPage() {
   return (
-    <div>AdminManageUserPage</div>
+    <div className='mt-8'>
+      <TableUser/>
+    </div>
   )
 }
 

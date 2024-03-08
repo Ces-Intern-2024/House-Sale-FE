@@ -11,9 +11,7 @@ export const getTransactionRentService = async () => {
 
 export const getAllPropertiesForSellerService = async () => {
   const res = await axiosInstance.get('/seller/properties')
-  if (res.data) {
-    return res
-  }
+  return res
 }
 
 export const deletePropertiesForSellerService = async (propertyId: number) => {
@@ -38,5 +36,5 @@ export async function searchPropertyForSeller(searchValues: SearchProps) {
     encode: false,
   })
   const res = await axiosInstance.get(`/seller/properties${queryString}`)
-  return res.data.metaData
+  return res
 }

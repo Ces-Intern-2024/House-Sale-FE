@@ -1,14 +1,18 @@
 export interface User {
-  address: string
-  avatar: string | null
-  districtCode: string | null
-  fullName: string | number | readonly string[] | undefined
-  phone: string | number | readonly string[] | undefined
-  provinceCode: string | null
-  roleId: number | null
-  street: string | null
   userId: number | undefined
-  wardCode: string | null
+  roleId: number | null
+  fullName: string | number | readonly string[] | undefined
   email: string
+  phone: string | number | readonly string[] | undefined
+  avatar: string | null
+  wardCode: string | null
+  districtCode: string | null
+  provinceCode: string | null
+  street: string | null
+  address: string
   balance: number
+  isActive: boolean
+  isEmailVerified: boolean
+  updatedAt: string
+  createdAt: string
 }
