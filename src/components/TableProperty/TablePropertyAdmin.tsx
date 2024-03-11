@@ -208,7 +208,7 @@ const TablePropertyAdmin = () => {
         <Table.Td>{element.feature.name}</Table.Td>
         <Table.Td>{element.category.name}</Table.Td>
         <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
-        <Table.Td>{element.seller.fullName}</Table.Td>
+        <Table.Td className="font-semibold">{element.seller.fullName}</Table.Td>
 
         <Table.Td>
           <Select

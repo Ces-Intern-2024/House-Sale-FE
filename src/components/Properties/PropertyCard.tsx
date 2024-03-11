@@ -32,15 +32,12 @@ const Properties = ({ data }: Props) => {
       await axiosInstance.post(`/favorites-list`, { propertyId })
       await dispatch(getAllWishList())
     } catch (error: any) {
-      console.log(JSON.stringify(error))
-     
-        Swal.fire({
-          icon: 'warning',
-          title: 'You need to login first!',
-          showConfirmButton: false,
-          timer: 1400,
-        })
-    
+      Swal.fire({
+        icon: 'warning',
+        title: 'You need to login first!',
+        showConfirmButton: false,
+        timer: 1400,
+      })
     } finally {
       setIsLoading(false)
     }

@@ -26,7 +26,6 @@ import { PiArrowsDownUp } from 'react-icons/pi'
 import {
   CODE_RESPONSE_400,
   CODE_RESPONSE_401,
-  CODE_RESPONSE_404,
 } from '../../constants/codeResponse'
 import { SearchProps } from '@/types/searchProps'
 import {
@@ -76,52 +75,39 @@ const TableProperty = ({
     open()
   }
   const handleDelete = async (property: Properties) => {
-    try {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            const res = await deletePropertiesForSellerService(
-              property.propertyId,
-            )
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'Your property has been deleted.',
-              icon: 'success',
-            })
-            setProperties(
-              properties.filter(
-                (item) => item.propertyId !== property.propertyId,
-              ),
-            )
-            return res
-          } catch (error: any) {
-            if (error.response.status === CODE_RESPONSE_400) {
-              Swal.fire({
-                icon: 'error',
-                text: 'Failed to delete property!',
-              })
-            } else if (error.response.status === CODE_RESPONSE_404) {
-              Swal.fire({
-                icon: 'error',
-                text: 'Property not found',
-              })
-            } else {
-              console.error(error)
-            }
-          }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete property!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const res = await deletePropertiesForSellerService(
+            property.propertyId,
+          )
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your property has been deleted.',
+            icon: 'success',
+          })
+          setProperties(
+            properties.filter(
+              (item) => item.propertyId !== property.propertyId,
+            ),
+          )
+          return res
+        } catch (error: any) {
+          Swal.fire({
+            icon: 'error',
+            text: error.response.data.error.message,
+          })
         }
-      })
-    } catch (error) {
-      console.error(error)
-    }
+      }
+    })
   }
   useEffect(() => {
     setProperties(properties)
@@ -210,6 +196,9 @@ const TableProperty = ({
   }
   const handleUpdateStatus = async (event: boolean, propertyId: number) => {
     if (event) {
+      Swal.fire({
+        text: `Are you sure to change this property's status`
+      })
       try {
         setIsLoading(true)
         await updateStatusPropertiesForSellerService(propertyId, AVAILABLE)
@@ -458,7 +447,7 @@ const TableProperty = ({
           setSelectedProperty(null)
         }}
         size={1280}
-        title="Property Add"
+        title="Manage Property"
         classNames={{
           header: style.headerModal,
           title: style.titleModal,
