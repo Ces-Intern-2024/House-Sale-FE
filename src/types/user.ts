@@ -1,5 +1,5 @@
 export interface User {
-  userId: number | undefined
+  userId: number
   roleId: number | null
   fullName: string | number | readonly string[] | undefined
   email: string

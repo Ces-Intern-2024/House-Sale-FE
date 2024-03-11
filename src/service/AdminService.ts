@@ -52,8 +52,22 @@ export const getUsersForAdminService = async (searchValues: SearchUsers) => {
   }
 }
 
+export const updateStatusUserForAdminService = async (userId: number) => {
+  const res = axiosInstance.patch(`/admin/manage-user/${userId}/active`)
+  return res
+}
 
-export const updateStatusUserForAdminService = async (userId : number) => {
-  const res = axiosInstance.patch(`/admin/manage-user/${userId}/actived`)
+export const updateUserProfileForAdminService = async (
+  updateUser: any,
+  userId: number,
+) => {
+  const res = axiosInstance.patch(`/admin/manage-user/${userId}`, {
+    ...updateUser,
+  })
+  return res
+}
+
+export const deleteUserForAdminService = async (userId: number) => {
+  const res = axiosInstance.delete(`/admin/manage-user/${userId}`)
   return res
 }

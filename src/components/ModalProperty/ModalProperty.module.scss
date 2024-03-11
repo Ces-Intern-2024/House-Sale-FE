@@ -35,3 +35,11 @@
 .readOnly {
   @apply bg-blur;
 }
+
+.radioGroupRoot {
+  @apply flex flex-row gap-12;
+}
+
+.groupRoot {
+  @apply flex flex-row justify-between;
+}

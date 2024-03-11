@@ -54,7 +54,7 @@ export default function TransactionComponent() {
       setClientSecret(paymentIntents.client_secret as string)
       setIntentId(paymentIntents.id)
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 

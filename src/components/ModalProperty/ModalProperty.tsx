@@ -7,6 +7,7 @@ import {
   NumberInput,
   Textarea,
   TextInput,
+  Radio,
 } from '@mantine/core'
 import style from './ModalProperty.module.scss'
 import { Category, Feature, Properties } from '@/types'
@@ -211,8 +212,9 @@ const ModalProperty = ({
       } else {
         setLoading(false)
         Swal.fire({
-          title: 'You do not have enough credit',
-          icon: 'error',
+          title:
+            'Your balance is not enough to create new property. Please refill your balance!',
+          icon: 'warning',
         })
       }
     } catch (error: any) {
@@ -556,7 +558,29 @@ const ModalProperty = ({
             />
           </div>
         </div>
-        <div className={`${style.rowModal} ${style.mt}`}></div>
+        <div className={`${style.rowModal} ${style.mt}`}>
+          <Radio.Group
+            withAsterisk
+            label="Duration and price:"
+            className="text-base"
+            classNames={{ root: style.radioGroupRoot }}
+          >
+            <Group classNames={{ root: style.groupRoot }}>
+              <Radio
+                value="15 days for 15 credit"
+                label="15 days for 15 credit"
+              />
+              <Radio
+                value="30 days for 30 credit"
+                label="30 days for 30 credit"
+              />
+              <Radio
+                value="60 days for 60 credit"
+                label="60 days for 60 credit"
+              />
+            </Group>
+          </Radio.Group>
+        </div>
 
         <Textarea
           {...form.getInputProps('description')}
@@ -629,7 +653,7 @@ const ModalProperty = ({
             >
               Add New
             </Button>
-          ) : (
+          ) : property.status === 'Available' ? (
             <Button
               type="submit"
               classNames={{ root: style.rootButton }}
@@ -637,6 +661,8 @@ const ModalProperty = ({
             >
               Update
             </Button>
+          ) : (
+            ''
           )}
         </div>
       </div>
