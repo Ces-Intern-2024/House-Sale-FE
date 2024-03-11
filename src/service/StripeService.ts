@@ -6,6 +6,7 @@ const stripe = new Stripe(STRIPE_SECRET_KEY!, {
 })
 
 export async function createPaymentIntent(creditAmount: number, conversionRate: number) {
+
        const paymentIntents = await stripe.paymentIntents.create({
         currency: 'USD',
         automatic_payment_methods: { enabled: true },

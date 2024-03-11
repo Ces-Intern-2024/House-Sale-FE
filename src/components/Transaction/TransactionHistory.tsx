@@ -7,10 +7,12 @@ import { IoCalendarNumberOutline } from 'react-icons/io5'
 import { BsCoin } from 'react-icons/bs'
 import { HistoryTransaction } from '../../types/historyTransaction'
 import {
+  convertISOToVNDateTimeString,
   formatDateToYYYYMMDD,
-  formatDateToYYYYMMDDHHMMSS,
+  sortTransactionsByDate,
 } from '../../utils/commonFunctions'
 import { getTransactionHistory } from '../../service/TransactionService'
+import { getTransactionRentService } from '../../service/SellerService'
 
 interface TransactionHistoryProps {
   shouldUpdate: boolean
@@ -29,7 +31,12 @@ export default function TransactionHistory({
     try {
       setVisible(true)
       const data = await getTransactionHistory(dateFrom, dateTo ?? null)
-      setHistories(data)
+      const rentServiceHistory = await getTransactionRentService(
+        dateFrom,
+        dateTo ?? null,
+      )
+      const combinedHistory = [...data, ...rentServiceHistory]
+      setHistories(sortTransactionsByDate(combinedHistory))
     } catch (error) {
       setHistories([])
     } finally {
@@ -129,11 +136,13 @@ export default function TransactionHistory({
             histories.map((history, index) => (
               <div key={index} className={style.row}>
                 <div className={style.date}>
-                  {formatDateToYYYYMMDDHHMMSS(history.createdAt)}
+                  {convertISOToVNDateTimeString(history.createdAt)}
                 </div>
                 <div className={style.content}>{history.description}</div>
                 <div className={style.quantity}>
-                  <span className={style.symbol}>+</span>
+                  <span className={style.symbol}>
+                    {history.description.includes('property') ? '-' : '+'}
+                  </span>
                   <span className={style.money}>{Number(history.amount)}</span>
                   <span className={style.icon}>
                     <BsCoin />

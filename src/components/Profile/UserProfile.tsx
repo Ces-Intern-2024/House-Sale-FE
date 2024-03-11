@@ -286,21 +286,22 @@ export default function SellerProfile() {
             {file && (
               <div className={styles.saveAndCancel}>
                 <Button
-                  loading={loading ? true : false}
-                  bg="#1b2850"
-                  onClick={handleUploadAvatar}
-                >
-                  <IconDeviceFloppy className="mr-1" />
-                  Save Avatar
-                </Button>
-
-                <Button
+                  className=" col-span-6"
                   bg="#adb5bd"
                   onClick={() => setFile(null)}
                   disabled={loading ? true : false}
                 >
                   <IconX className="mr-1" />
                   Cancel
+                </Button>
+                <Button
+                  className=" col-span-6 px-2"
+                  loading={loading ? true : false}
+                  bg="#1b2850"
+                  onClick={handleUploadAvatar}
+                >
+                  <IconDeviceFloppy size={30} className="mr-1" />
+                  Save Avatar
                 </Button>
               </div>
             )}

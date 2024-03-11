@@ -1,16 +1,17 @@
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Button } from '@mantine/core'
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js'
-import React, { Dispatch, SetStateAction, useState } from 'react'
 import Swal from 'sweetalert2'
 import { proceedToPayment } from '../../service/TransactionService'
 import { cancelPaymentIntent } from '../../service/StripeService'
+import { useNavigate } from 'react-router-dom'
 
 interface CheckoutFormProps {
   intentId: string
   total: number
   conversionRate: string
   setResetPayment: Dispatch<SetStateAction<boolean>>
-  setShouldUpdate: Dispatch<SetStateAction<boolean>>
+  setShouldUpdate?: Dispatch<SetStateAction<boolean>>
   setValue: Dispatch<SetStateAction<string>>
 }
 export default function CheckoutForm({
@@ -18,11 +19,11 @@ export default function CheckoutForm({
   total,
   conversionRate,
   setResetPayment,
-  setShouldUpdate,
   setValue,
 }: CheckoutFormProps) {
   const stripe = useStripe()
   const elements = useElements()
+  const navigate = useNavigate()
 
   const [message, setMessage] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -60,22 +61,24 @@ export default function CheckoutForm({
         icon: 'success',
         title: 'Payment successful!',
         showConfirmButton: false,
-        timer: 1500,
+        timer: 3000,
       })
+      setIsProcessing(false)
       setResetPayment((prev) => !prev)
-      setShouldUpdate((prev) => !prev)
       setValue('Exchange Policy')
+      navigate('/seller')
     }
   }
   const handleCancelIntent = async () => {
     await cancelPaymentIntent(intentId)
     setResetPayment((prev) => !prev)
     setValue('Exchange Policy')
+    navigate('/seller')
   }
 
   return (
     <>
-      <h1 className=" font-semibold  text-primary text-xl mb-5">
+      <h1 className=" font-semibold text-primary text-xl mb-5">
         Please fill in this form to complete your purchase of{' '}
         <strong>{total / Number(conversionRate)} credits</strong> for
         <strong> ${total}</strong>.
