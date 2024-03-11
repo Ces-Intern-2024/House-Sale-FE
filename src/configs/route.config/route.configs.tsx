@@ -63,7 +63,7 @@ export const protectedRoutes = [
     key: 'transaction',
     path: '/transaction',
     component: lazy(
-      () => import('../../pages/TransactionPage/TransactionPage'),
+      () => import('../../components/Transaction/TransactionComponent'),
     ),
     authority: [Roles.Seller],
   },

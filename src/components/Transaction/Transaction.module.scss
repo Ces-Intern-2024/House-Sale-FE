@@ -84,3 +84,11 @@
         color: black;
     }
 }
+
+.outer{
+    @apply grid grid-cols-12 gap-x-3 gap-y-1
+}
+
+.segment{
+    @apply col-span-12 flex flex-col justify-center rounded-[16px] p-5 bg-white shadow-xl
+}

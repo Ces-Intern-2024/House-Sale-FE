@@ -68,8 +68,6 @@
   @apply z-10 absolute right-[10px] top-3 cursor-pointer opacity-50;
 }
 
-.saveOrCancel {
-  @apply mx-2 flex;
-  // @apply mx-2 grid grid-rows-2 gap-2;
-  //   grid-template-columns: repeat(2, 1fr);
+.saveAndCancel {
+  @apply mx-5 grid grid-cols-12 gap-x-2;
 }
