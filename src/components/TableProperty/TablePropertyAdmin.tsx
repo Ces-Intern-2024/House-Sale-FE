@@ -12,7 +12,12 @@ import {
   Text,
   LoadingOverlay,
 } from '@mantine/core'
-import { FaEdit, FaSearch } from 'react-icons/fa'
+import {
+  FaEdit,
+  FaLongArrowAltUp,
+  FaSearch,
+  FaLongArrowAltDown,
+} from 'react-icons/fa'
 import { useDisclosure } from '@mantine/hooks'
 import ModalProperty from '../ModalProperty/ModalProperty'
 import { Category, Feature, Properties } from '@/types'
@@ -20,7 +25,6 @@ import { formatMoneyToUSD } from '../../utils/commonFunctions'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
-import { PiArrowsDownUp } from 'react-icons/pi'
 import { MdDelete } from 'react-icons/md'
 import { Province } from '@/types/province'
 import { getAllProvinces } from '../../redux/reducers/locationReducer'
@@ -36,6 +40,8 @@ import {
   UN_AVAILABLE,
 } from '../../constants/statusProperty'
 import { optionsFilter } from '../../utils/filterLocation'
+import { PiArrowsDownUp } from 'react-icons/pi'
+import Swal from 'sweetalert2'
 
 const TablePropertyAdmin = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -44,7 +50,6 @@ const TablePropertyAdmin = () => {
   )
   const [isUpdated, setIsUpdated] = useState(false)
   const [properties, setProperties] = useState<Properties[]>([])
-  const [sort, setSort] = useState(true)
   const [featureId, setFeatureId] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [keyword, setKeyword] = useState('')
@@ -53,7 +58,8 @@ const TablePropertyAdmin = () => {
   const [totalPages, setTotalPages] = useState(2)
   const [totalItems, setTotalItems] = useState(0)
   const [resetPage, setResetPage] = useState(true)
-
+  const [sortBy, setSortBy] = useState('')
+  const [orderBy, setOrderBy] = useState('')
   const [maxPrice, setMaxPrice] = useState<number>(0)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice])
   const [isLoading, setIsLoading] = useState(false)
@@ -81,7 +87,10 @@ const TablePropertyAdmin = () => {
       setTotalPages(res.metaData.totalPages)
       setTotalItems(res.metaData.totalItems)
     } catch (error: any) {
-      console.error(error.response.data.error.message)
+      Swal.fire({
+        title: error.response.data.error.message,
+        icon: 'error',
+      })
     }
   }
 
@@ -103,29 +112,6 @@ const TablePropertyAdmin = () => {
     dispatch(getAllFeatures())
   }, [dispatch])
 
-  const getPropertiesSortByPrice = async () => {
-    try {
-      setSort(!sort)
-      if (sort) {
-        const res = await getPropertiesForAdminService({
-          sortBy: 'asc',
-          orderBy: 'price',
-        })
-
-        setProperties(res.data.metaData.data)
-      } else {
-        const res = await getPropertiesForAdminService({
-          sortBy: 'desc',
-          orderBy: 'price',
-        })
-
-        setProperties(res.data.metaData.data)
-      }
-    } catch (error: any) {
-      console.error(error.response.data.error.message)
-    }
-  }
-
   const handleSearching = async () => {
     const data: SearchProps = {
       keyword: keyword ? keyword : null,
@@ -134,6 +120,8 @@ const TablePropertyAdmin = () => {
       page: activePage ? activePage : null,
       priceFrom: priceRange ? priceRange[0] : null,
       priceTo: priceRange ? priceRange[1] : null,
+      sortBy: sortBy ? (sortBy.includes('asc') ? 'desc' : 'asc') : null,
+      orderBy: orderBy ? (orderBy.startsWith('p') ? 'price' : null) : null,
     }
     try {
       setIsLoading(true)
@@ -144,12 +132,18 @@ const TablePropertyAdmin = () => {
       setActivePage(resetPage ? 1 : activePage)
       setResetPage(true)
     } catch (error: any) {
-      console.error(error.response.data.error.message)
+      Swal.fire({
+        title: error.response.data.error.message,
+        icon: 'error',
+      })
     } finally {
       setIsLoading(false)
     }
   }
 
+  useEffect(() => {
+    handleSearching()
+  }, [orderBy, sortBy])
   useEffect(() => {
     handleSearching()
   }, [activePage, priceRange])
@@ -169,7 +163,10 @@ const TablePropertyAdmin = () => {
       setIsLoading(true)
       await updateStatusPropertyForAdminService(propertyId, status)
     } catch (error: any) {
-      console.error(error.response.data.error.message)
+      Swal.fire({
+        title: error.response.data.error.message,
+        icon: 'error',
+      })
     } finally {
       setIsLoading(false)
     }
@@ -184,8 +181,11 @@ const TablePropertyAdmin = () => {
     setKeyword('')
     setFeatureId('')
     setCategoryId('')
+    setSortBy('')
+    setOrderBy('')
     setPriceRange([0, maxPrice])
   }
+
   const rows =
     properties.length > 0 &&
     properties.map((element) => (
@@ -354,7 +354,9 @@ const TablePropertyAdmin = () => {
                 </div>
                 <Button
                   className="text-primary text-lg font-bold px-0 rounded-none hover:text-[#5625d0]"
-                  onClick={handleResetFilter}
+                  onClick={() => {
+                    handleResetFilter()
+                  }}
                 >
                   Clear Filters
                 </Button>
@@ -382,12 +384,23 @@ const TablePropertyAdmin = () => {
                   <Table.Th>Category</Table.Th>
                   <Table.Th classNames={{ th: style.thPrice }}>
                     <span>Price</span>
-
-                    <PiArrowsDownUp
-                      onClick={() => getPropertiesSortByPrice()}
-                      className="cursor-pointer"
-                      size={20}
-                    />
+                    <span
+                      className="flex justify-between cursor-pointer"
+                      onClick={() => {
+                        setOrderBy('price')
+                        setSortBy(sortBy.includes('asc') ? 'desc' : 'asc')
+                      }}
+                    >
+                      {sortBy ? (
+                        sortBy === 'desc' ? (
+                          <FaLongArrowAltUp />
+                        ) : (
+                          <FaLongArrowAltDown />
+                        )
+                      ) : (
+                        <PiArrowsDownUp className="cursor-pointer" size={20} />
+                      )}
+                    </span>
                   </Table.Th>
                   <Table.Th>Seller</Table.Th>
                   <Table.Th>Status</Table.Th>
