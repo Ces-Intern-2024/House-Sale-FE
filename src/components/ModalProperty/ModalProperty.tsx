@@ -27,11 +27,6 @@ import { yupResolver } from 'mantine-form-yup-resolver'
 import * as yup from 'yup'
 import { axiosInstance } from '../../service/AxiosInstance'
 import Swal from 'sweetalert2'
-import {
-  CODE_RESPONSE_400,
-  CODE_RESPONSE_401,
-  CODE_RESPONSE_404,
-} from '../../constants/codeResponse'
 import { getProfile } from '../../service/ProfileService'
 import { User } from '../../types/user'
 
@@ -191,24 +186,34 @@ const ModalProperty = ({
     try {
       loading
       if (userProfile?.balance && userProfile.balance >= 20) {
-        // Call function handleUpload to push images to the cloudinary.
-        const arr = []
-        for (let i = 0; i < files.length; i++) {
-          // eslint-disable-next-line no-await-in-loop
-          const res = await handleUploadImage(files[i])
-          arr.push(res)
+        if (files.length >= 5) {
+          // Call function handleUpload to push images to the cloudinary.
+          const arr = []
+          for (let i = 0; i < files.length; i++) {
+            // eslint-disable-next-line no-await-in-loop
+            const res = await handleUploadImage(files[i])
+            arr.push(res)
+          }
+          // After all of images is pushed. Send it to server.
+          const newProperty = { ...convertProperty, images: arr }
+          const res = await axiosInstance.post(
+            `/seller/properties`,
+            newProperty,
+          )
+          setLoading(false)
+          onClose()
+          Swal.fire({
+            title: 'Added successfully',
+            icon: 'success',
+          })
+          setShouldUpdate!((prev) => !prev)
+          return res
+        } else {
+          Swal.fire({
+            title: 'Please upload at least 5 images',
+            icon: 'error',
+          })
         }
-        // After all of images is pushed. Send it to server.
-        const newProperty = { ...convertProperty, images: arr }
-        const res = await axiosInstance.post(`/seller/properties`, newProperty)
-        setLoading(false)
-        onClose()
-        Swal.fire({
-          title: 'Added successfully',
-          icon: 'success',
-        })
-        setShouldUpdate!((prev) => !prev)
-        return res
       } else {
         setLoading(false)
         Swal.fire({
@@ -219,20 +224,10 @@ const ModalProperty = ({
       }
     } catch (error: any) {
       setLoading(false)
-      if (error.response.status === CODE_RESPONSE_400) {
-        Swal.fire({
-          title:
-            'Your balance is not enough to create new property. Please refill your balance!',
-          icon: 'error',
-        })
-      } else if (error.response.status === CODE_RESPONSE_401) {
-        Swal.fire({
-          title: 'Please Authenticate!',
-          icon: 'error',
-        })
-      } else {
-        console.error('Error adding new property:', error)
-      }
+      Swal.fire({
+        title: error.response.data.error.message,
+        icon: 'error',
+      })
     }
   }
 
@@ -262,20 +257,10 @@ const ModalProperty = ({
       isUpdated!(true)
       return res
     } catch (error: any) {
-      if (error.response.status === CODE_RESPONSE_400) {
-        Swal.fire({
-          title: 'Failed to update property',
-          icon: 'error',
-        })
-      } else if (error.response.status === CODE_RESPONSE_404) {
-        Swal.fire({
-          title:
-            'This property is not available now. Please try another property!',
-          icon: 'error',
-        })
-      } else {
-        console.error('Error updating property:', error)
-      }
+      Swal.fire({
+        title: error.response.data.error.message,
+        icon: 'error',
+      })
     }
   }
 
@@ -535,6 +520,9 @@ const ModalProperty = ({
             className={style.colModal}
             label="Direction"
             placeholder="Enter direction"
+            onKeyUp={(event) => {
+              form.setFieldValue('direction', event.currentTarget.value)
+            }}
           />
           <div className={style.halfColModal}>
             <NumberInput
@@ -558,7 +546,7 @@ const ModalProperty = ({
             />
           </div>
         </div>
-        <div className={`${style.rowModal} ${style.mt}`}>
+        <div className={style.mt}>
           <Radio.Group
             withAsterisk
             label="Duration and price:"
@@ -589,7 +577,9 @@ const ModalProperty = ({
           placeholder="Enter decription"
           autosize
           minRows={5}
-          value={property?.description}
+          onKeyUp={(event) => {
+            form.setFieldValue('description', event.currentTarget.value)
+          }}
         />
 
         <div className="mt-[20px]">
