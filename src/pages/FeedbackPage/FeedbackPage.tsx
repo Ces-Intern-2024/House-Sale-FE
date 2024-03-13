@@ -16,6 +16,7 @@ import * as yup from 'yup'
 import { useForm } from '@mantine/form'
 import Swal from 'sweetalert2'
 import { validateEmail } from '../../utils/validate'
+import { confirmBtn } from '../../constants/colorConstant'
 
 export default function Feedback() {
   const [loading, setLoading] = useState(false)
@@ -104,7 +105,7 @@ export default function Feedback() {
         text: 'We will get back to you as soon as possible.',
         icon: 'success',
         confirmButtonText: 'OK',
-        confirmButtonColor: '#3085d6',
+        confirmButtonColor: confirmBtn,
         timer: 2500,
       })
 

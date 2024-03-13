@@ -37,7 +37,11 @@
 }
 
 .radioGroupRoot {
-  @apply flex flex-row gap-12;
+  @apply flex flex-row gap-1;
+}
+
+.radioGroupLabel{
+  @apply w-1/4 
 }
 
 .groupRoot {
