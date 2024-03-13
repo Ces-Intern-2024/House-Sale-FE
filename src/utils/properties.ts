@@ -1,6 +1,5 @@
-import { Properties } from '@/types'
 
-export const properties: Properties[] = [
+export const properties= [
   {
     propertyId: 1,
     name: 'Luxury Villa',

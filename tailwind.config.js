@@ -30,6 +30,8 @@ module.exports = {
         red: '#FF0000',
         orangeHeart: '#FF6347',
         feedbackBackground: '#f3f3fe',
+        'green-available': '#37d159',
+        'purle-unavailable': '#3b4cb8',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],

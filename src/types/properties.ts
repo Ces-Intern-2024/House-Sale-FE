@@ -19,6 +19,10 @@ export interface Properties {
   location: Location
   images: Image[]
   seller: Seller
+  remainingTime: number
+  expiresAt: string
+  savedRemainingRentalTime: number
+
 }
 
 export interface Feature {

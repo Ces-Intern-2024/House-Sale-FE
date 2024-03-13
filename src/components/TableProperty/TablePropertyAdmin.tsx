@@ -11,6 +11,9 @@ import {
   RangeSlider,
   Text,
   LoadingOverlay,
+  Tooltip,
+  Switch,
+  Checkbox,
 } from '@mantine/core'
 import {
   FaEdit,
@@ -33,6 +36,7 @@ import {
   getPropertiesForAdminService,
   getAllPropertiesForAdminSerivce,
   updateStatusPropertyForAdminService,
+  deletePropertyForAdminService,
 } from '../../service/AdminService'
 import {
   AVAILABLE,
@@ -42,6 +46,7 @@ import {
 import { optionsFilter } from '../../utils/filterLocation'
 import { PiArrowsDownUp } from 'react-icons/pi'
 import Swal from 'sweetalert2'
+import { cancelBtn, confirmBtn } from '../../constants/colorConstant'
 
 const TablePropertyAdmin = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -63,6 +68,7 @@ const TablePropertyAdmin = () => {
   const [maxPrice, setMaxPrice] = useState<number>(0)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice])
   const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useAppDispatch()
 
   const handleGetMaxPrice = async () => {
     const res = await getPropertiesForAdminService({
@@ -97,7 +103,6 @@ const TablePropertyAdmin = () => {
   useEffect(() => {
     getAllProperties()
   }, [isUpdated])
-  const dispatch = useAppDispatch()
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
@@ -144,6 +149,7 @@ const TablePropertyAdmin = () => {
   useEffect(() => {
     handleSearching()
   }, [orderBy, sortBy])
+
   useEffect(() => {
     handleSearching()
   }, [activePage, priceRange])
@@ -155,7 +161,7 @@ const TablePropertyAdmin = () => {
     dispatch(getAllProvinces())
   }, [dispatch])
 
-  const handleChangeStatusProperty = async (
+  const _handleChangeStatusProperty = async (
     status: string | null,
     propertyId: number,
   ) => {
@@ -174,6 +180,7 @@ const TablePropertyAdmin = () => {
   const handleChangeActivePage = async (page: any) => {
     setResetPage(false)
     setActivePage(page)
+    setSelectedRows([])
   }
 
   const handleResetFilter = () => {
@@ -183,15 +190,113 @@ const TablePropertyAdmin = () => {
     setCategoryId('')
     setSortBy('')
     setOrderBy('')
+    setActivePage(1)
     setPriceRange([0, maxPrice])
+    setSelectedRows([])
   }
 
+  const handleDelete = async (property: Properties) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Yes, delete property!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePropertyForAdminService(String(property.propertyId))
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your property has been deleted.',
+            icon: 'success',
+          })
+          setIsUpdated(!isUpdated)
+        } catch (error: any) {
+          Swal.fire({
+            icon: 'error',
+            text: error.response.data.error.message,
+          })
+        }
+      }
+    })
+  }
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const allSelected = selectedRows.length === properties.length
+  const handleSelectBox = (event: boolean, propertyId: number) => {
+    if (event) {
+      setSelectedRows([...selectedRows, propertyId])
+    } else {
+      setSelectedRows(selectedRows.filter((id) => id !== propertyId))
+    }
+  }
+
+  const handleDeleteAllSelectedRows = () => {
+    const parseSelectedRowsToString = String(selectedRows)
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Yes, delete all selected!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePropertyForAdminService(parseSelectedRowsToString)
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your property has been deleted.',
+            icon: 'success',
+          })
+          setIsUpdated(!isUpdated)
+        } catch (error: any) {
+          Swal.fire({
+            title: error.response.data.error.message,
+            icon: 'error',
+          })
+        }
+      }
+    })
+  }
+
+  const handleSelectAllSelectedRows = () => {
+    if (allSelected) {
+      setSelectedRows([])
+    } else {
+      const allPropertyIds = properties.map((property) => property.propertyId)
+      setSelectedRows(allPropertyIds)
+    }
+  }
   const rows =
     properties.length > 0 &&
     properties.map((element) => (
-      <Table.Tr className={style.detailContentTable} key={element.propertyId}>
+      <Table.Tr
+        className={style.detailContentTable}
+        key={element.propertyId}
+        bg={
+          selectedRows.includes(element.propertyId)
+            ? 'var(--mantine-color-blue-light)'
+            : undefined
+        }
+      >
+        <Table.Td>
+          <Checkbox
+            aria-label="Select row"
+            checked={selectedRows.includes(element.propertyId)}
+            onChange={(event) =>
+              handleSelectBox(event.currentTarget.checked, element.propertyId)
+            }
+          />
+        </Table.Td>
         <Table.Td>{element.propertyId}</Table.Td>
-        <Table.Td onClick={() => handlePropertyView(element)}>
+        <Table.Td
+          classNames={{ td: style.tdNameCover }}
+          onClick={() => handlePropertyView(element)}
+        >
           <div className={style.propertyNameCover}>
             <Image
               className={style.propertyImage}
@@ -211,6 +316,7 @@ const TablePropertyAdmin = () => {
         <Table.Td className="font-semibold">{element.seller.fullName}</Table.Td>
 
         <Table.Td>
+          {/* This comment has been kept as a temporary if there are any errors.
           <Select
             classNames={{
               input: `${element.status === AVAILABLE} ? ${style.inputSelectStatus} : ${style.unavailableSelectStatus}`,
@@ -226,15 +332,52 @@ const TablePropertyAdmin = () => {
             onChange={(value: string | null) =>
               handleChangeStatusProperty(value, element.propertyId)
             }
-          />
+          /> */}
+          {element.status === AVAILABLE ? (
+            <div className={style.available}>Available</div>
+          ) : element.status === UN_AVAILABLE ? (
+            <div className={style.unavailable}>Unavailable</div>
+          ) : (
+            <div className={style.disabledAdmin}>Disabled</div>
+          )}
         </Table.Td>
         <Table.Td>
           <div className={style.propertyActions}>
-            <FaEdit
-              className={`${style.actionIcon} ${style.editIcon}`}
-              onClick={() => handlePropertyView(element)}
-            />
-            <MdDelete className={`${style.actionIcon} ${style.deleteIcon}`} />
+            {/* This comment has been kept as a temporary if there are any errors.
+            <Tooltip label="Disable property">
+              <div>
+                <GiSightDisabled
+                  className={`${style.actionIcon} ${style.disabledIcon}`}
+                  size={24}
+                />
+              </div>
+            </Tooltip> */}
+
+            {element.status === DISABLED ? (
+              <Tooltip label="Disable property" refProp="rootRef">
+                <Switch checked={false} />
+              </Tooltip>
+            ) : (
+              <Tooltip label="Disable property" refProp="rootRef">
+                <Switch checked={true} />
+              </Tooltip>
+            )}
+            <Tooltip label="Edit property">
+              <div>
+                <FaEdit
+                  className={`${style.actionIcon} ${style.editIcon}`}
+                  onClick={() => handlePropertyView(element)}
+                />
+              </div>
+            </Tooltip>
+            <Tooltip label="Delete property">
+              <div>
+                <MdDelete
+                  className={`${style.actionIcon} ${style.deleteIcon}`}
+                  onClick={() => handleDelete(element)}
+                />
+              </div>
+            </Tooltip>
           </div>
         </Table.Td>
       </Table.Tr>
@@ -364,6 +507,13 @@ const TablePropertyAdmin = () => {
             </div>
           </div>
 
+          <Button
+            className="mt-4"
+            classNames={{ root: style.rootButtonDeleteAll }}
+            onClick={() => handleDeleteAllSelectedRows()}
+          >
+            Delete All
+          </Button>
           <div className={style.tableContent}>
             <Table
               className="relative"
@@ -375,6 +525,12 @@ const TablePropertyAdmin = () => {
             >
               <Table.Thead>
                 <Table.Tr className={style.titleTable}>
+                  <Table.Th>
+                    <Checkbox
+                      checked={allSelected}
+                      onChange={() => handleSelectAllSelectedRows()}
+                    />
+                  </Table.Th>
                   <Table.Th>ID</Table.Th>
                   <Table.Th classNames={{ th: style.thName }}>
                     Property Name

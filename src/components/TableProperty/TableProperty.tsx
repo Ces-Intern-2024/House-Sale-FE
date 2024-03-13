@@ -12,6 +12,7 @@ import {
   Box,
   Pagination,
   Select,
+  Checkbox,
 } from '@mantine/core'
 import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -37,6 +38,7 @@ import {
 import { AVAILABLE, UN_AVAILABLE } from '../../constants/statusProperty'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
+import { cancelBtn, confirmBtn } from '../../constants/colorConstant'
 
 interface TablePropertyProps {
   setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>
@@ -80,15 +82,13 @@ const TableProperty = ({
       text: "You won't be able to revert this!",
       icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
       confirmButtonText: 'Yes, delete property!',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const res = await deletePropertiesForSellerService(
-            property.propertyId,
-          )
+          await deletePropertiesForSellerService(String(property.propertyId))
           Swal.fire({
             title: 'Deleted!',
             text: 'Your property has been deleted.',
@@ -99,7 +99,6 @@ const TableProperty = ({
               (item) => item.propertyId !== property.propertyId,
             ),
           )
-          return res
         } catch (error: any) {
           Swal.fire({
             icon: 'error',
@@ -197,34 +196,122 @@ const TableProperty = ({
   const handleUpdateStatus = async (event: boolean, propertyId: number) => {
     if (event) {
       Swal.fire({
-        text: `Are you sure to change this property's status`
+        text: `Are you sure to change this property's status`,
+        icon: 'question',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            setIsLoading(true)
+            await updateStatusPropertiesForSellerService(propertyId, AVAILABLE)
+            Swal.fire({
+              icon: 'success',
+              title: 'Status changed!',
+              text: 'This property is now available.',
+            })
+          } catch (error) {
+            console.error(error)
+          } finally {
+            setIsLoading(false)
+            setIsUpdated(!isUpdated)
+          }
+        }
       })
-      try {
-        setIsLoading(true)
-        await updateStatusPropertiesForSellerService(propertyId, AVAILABLE)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setIsLoading(false)
-        setIsUpdated(!isUpdated)
-      }
     } else {
-      try {
-        setIsLoading(true)
-        await updateStatusPropertiesForSellerService(propertyId, UN_AVAILABLE)
-      } catch (error) {
-        console.error(error)
-      } finally {
-        setIsLoading(false)
-        setIsUpdated(!isUpdated)
-      }
+      Swal.fire({
+        text: `Are you sure to change this property's status`,
+        icon: 'question',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            setIsLoading(true)
+            await updateStatusPropertiesForSellerService(
+              propertyId,
+              UN_AVAILABLE,
+            )
+            Swal.fire({
+              icon: 'success',
+              title: 'Status changed!',
+              text: 'This property is now unavailable.',
+            })
+          } catch (error) {
+            console.error(error)
+          } finally {
+            setIsLoading(false)
+            setIsUpdated(!isUpdated)
+          }
+        }
+      })
     }
   }
 
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const allSelected = selectedRows.length === properties.length
+  const handleSelectBox = (event: boolean, propertyId: number) => {
+    if (event) {
+      setSelectedRows([...selectedRows, propertyId])
+    } else {
+      setSelectedRows(selectedRows.filter((id) => id !== propertyId))
+    }
+  }
+  const handleSelectAllSelectedRows = () => {
+    if (allSelected) {
+      setSelectedRows([])
+    } else {
+      const allPropertyIds = properties.map((property) => property.propertyId)
+      setSelectedRows(allPropertyIds)
+    }
+  }
+
+  const handleDeleteAllSelectedRows = () => {
+    const parseSelectedRowsToString = String(selectedRows)
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Yes, delete all selected!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePropertiesForSellerService(parseSelectedRowsToString)
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your property has been deleted.',
+            icon: 'success',
+          })
+          setIsUpdated(!isUpdated)
+        } catch (error: any) {
+          Swal.fire({
+            title: error.response.data.error.message,
+            icon: 'error',
+          })
+        }
+      }
+    })
+  }
   const rows =
     properties.length > 0 ? (
       properties.map((element) => (
-        <Table.Tr className={style.detailContentTable} key={element.propertyId}>
+        <Table.Tr
+          className={style.detailContentTable}
+          key={element.propertyId}
+          bg={
+            selectedRows.includes(element.propertyId)
+              ? 'var(--mantine-color-blue-light)'
+              : undefined
+          }
+        >
+          <Table.Td>
+            <Checkbox
+              aria-label="Select row"
+              checked={selectedRows.includes(element.propertyId)}
+              onChange={(event) =>
+                handleSelectBox(event.currentTarget.checked, element.propertyId)
+              }
+            />
+          </Table.Td>
           <Table.Td>{element.propertyId}</Table.Td>
           <Table.Td onClick={() => handlePropertyView(element)}>
             <div className={style.propertyNameCover}>
@@ -243,54 +330,48 @@ const TableProperty = ({
           <Table.Td>{element.feature.name}</Table.Td>
           <Table.Td>{element.category.name}</Table.Td>
           <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
+          <Table.Td>{element.remainingTime}</Table.Td>
           <Table.Td>
-            {element.status === 'Disabled' ? (
-              <Button className={style.disableb}>Disabled</Button>
-            ) : element.status === 'Available' ? (
-              <Tooltip label="Available property" refProp="rootRef">
-                <Switch
-                  onLabel="ON"
-                  offLabel="OFF"
-                  size="lg"
-                  classNames={{
-                    track: style.switchTrack,
-                    thumb: style.switchThumb,
-                    trackLabel: style.switchTrackLabel,
-                  }}
-                  checked={element.status === 'Available' ? true : false}
-                  onChange={(event) =>
-                    handleUpdateStatus(
-                      event.currentTarget.checked,
-                      element.propertyId,
-                    )
-                  }
-                />
-              </Tooltip>
+            {element.status === AVAILABLE ? (
+              <div className={style.available}>Available</div>
+            ) : element.status === UN_AVAILABLE ? (
+              <div className={style.unavailable}>Unavailable</div>
             ) : (
-              <Tooltip label="Unavailable property" refProp="rootRef">
-                <Switch
-                  onLabel="ON"
-                  offLabel="OFF"
-                  size="lg"
-                  classNames={{
-                    track: style.switchTrack,
-                    thumb: style.switchThumb,
-                    trackLabel: style.switchTrackLabel,
-                  }}
-                  checked={element.status === 'Available' ? true : false}
-                  onChange={(event) =>
-                    handleUpdateStatus(
-                      event.currentTarget.checked,
-                      element.propertyId,
-                    )
-                  }
-                />
-              </Tooltip>
+              <div className={style.disabledAdmin}>Disabled</div>
             )}
           </Table.Td>
 
           <Table.Td>
             <div className={style.propertyActions}>
+              {element.status === 'Disable' ? (
+                <Tooltip label="Disabled" refProp="rootRef">
+                  <Switch checked={false} />
+                </Tooltip>
+              ) : element.status === 'Available' ? (
+                <Tooltip label="Available property" refProp="rootRef">
+                  <Switch
+                    checked={element.status === 'Available' ? true : false}
+                    onChange={(event) =>
+                      handleUpdateStatus(
+                        event.currentTarget.checked,
+                        element.propertyId,
+                      )
+                    }
+                  />
+                </Tooltip>
+              ) : (
+                <Tooltip label="Unavailable property" refProp="rootRef">
+                  <Switch
+                    checked={element.status === 'Available' ? true : false}
+                    onChange={(event) =>
+                      handleUpdateStatus(
+                        event.currentTarget.checked,
+                        element.propertyId,
+                      )
+                    }
+                  />
+                </Tooltip>
+              )}
               <FaEdit
                 className={`${style.actionIcon} ${style.editIcon}`}
                 onClick={() => handlePropertyView(element)}
@@ -383,7 +464,13 @@ const TableProperty = ({
               </Button>
             </div>
           </div>
-
+          <Button
+            className="mt-4"
+            classNames={{ root: style.rootButtonDeleteAll }}
+            onClick={() => handleDeleteAllSelectedRows()}
+          >
+            Delete All
+          </Button>
           <div className={style.tableContent}>
             <Box pos="relative">
               <LoadingOverlay
@@ -401,6 +488,12 @@ const TableProperty = ({
               >
                 <Table.Thead>
                   <Table.Tr className={style.titleTable}>
+                    <Table.Th>
+                      <Checkbox
+                        checked={allSelected}
+                        onChange={() => handleSelectAllSelectedRows()}
+                      />
+                    </Table.Th>
                     <Table.Th>ID</Table.Th>
                     <Table.Th classNames={{ th: style.thName }}>
                       Property Name
@@ -417,6 +510,7 @@ const TableProperty = ({
                         size={20}
                       />
                     </Table.Th>
+                    <Table.Th>Remaining Time</Table.Th>
                     <Table.Th>Status</Table.Th>
                     <Table.Th>Actions</Table.Th>
                   </Table.Tr>

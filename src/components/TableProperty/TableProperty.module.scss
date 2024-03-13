@@ -57,13 +57,12 @@
   hover:bg-darkBlue bg-orangeBtn;
 }
 
-
 .tableContent {
   @apply mt-8;
 }
 
 .propertyNameCover {
-  @apply flex flex-row gap-2 items-center;
+  @apply flex flex-row gap-2 items-center w-100;
 }
 
 .propertyName {
@@ -71,7 +70,7 @@
   truncate;
 }
 .thName {
-  @apply w-100 cursor-pointer;
+  @apply max-w-80 cursor-pointer;
 }
 
 .propertyImage {
@@ -85,7 +84,7 @@
   @apply max-w-[200px] min-w-25 flex flex-row items-center gap-2;
 }
 .propertyActions {
-  @apply flex flex-row items-center justify-start gap-4 h-full;
+  @apply flex flex-row items-center justify-between h-full;
 }
 
 .actionIcon {
@@ -127,8 +126,8 @@
   @apply text-base bg-darkBlue hover:bg-orangeBtn min-w-25;
 }
 
-.disableb {
-  @apply rounded-[16px] text-[14px] text-slate-200 bg-slate-500 cursor-default w-20 px-0;
+.disabled {
+  @apply rounded-[20px] text-base text-slate-200 bg-slate-500 w-20 px-0 py-1 text-center;
 }
 
 .pagination {
@@ -185,4 +184,27 @@
 .iconSearchAdmin {
   @apply text-white rounded-[8px]
   hover:bg-darkBlue bg-orangeBtn;
+}
+
+.available {
+  @apply rounded-[20px] text-base text-white bg-green-available w-auto py-1 text-center;
+}
+
+.unavailable {
+  @apply rounded-[20px] text-base text-white bg-purle-unavailable w-auto py-1 text-center;
+}
+.disabledAdmin {
+  @apply rounded-[20px] text-base text-slate-200 bg-slate-500 w-auto py-1 text-center;
+}
+
+.tdNameCover {
+  @apply w-100;
+}
+
+.disabledIcon {
+  @apply text-darkBlue;
+}
+
+.rootButtonDeleteAll {
+  @apply bg-orangeBtn hover:bg-darkBlue;
 }
