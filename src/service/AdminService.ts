@@ -71,3 +71,12 @@ export const deleteUserForAdminService = async (userId: number) => {
   const res = axiosInstance.delete(`/admin/manage-user/${userId}`)
   return res
 }
+
+export const deletePropertyForAdminService = async (
+  listPropertyId:string,
+) => {
+  const res = await axiosInstance.delete(
+    `/admin/manage-property?propertyId=${listPropertyId}`,
+  )
+  return res
+}

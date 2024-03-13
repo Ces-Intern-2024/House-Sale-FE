@@ -29,6 +29,9 @@ import { axiosInstance } from '../../service/AxiosInstance'
 import Swal from 'sweetalert2'
 import { getProfile } from '../../service/ProfileService'
 import { User } from '../../types/user'
+import { PackageService } from '@/types/packageService'
+import { getAllRentalPackageService } from '../../service/PackageService'
+import { AddNewPropertyForSellerService } from '../../service/SellerService'
 
 interface Props {
   property: Properties | null
@@ -100,6 +103,7 @@ const ModalProperty = ({
   useEffect(() => {
     getUserProfile()
   }, [])
+
   const modalSchema = useMemo(() => {
     return yup.object().shape({
       name: yup.string().required('Name is required'),
@@ -183,6 +187,9 @@ const ModalProperty = ({
       price: Number(value.price),
       currencyCode: 'USD',
     }
+    const option = {
+      serviceId: packageServiceSelected,
+    }
     try {
       loading
       if (userProfile?.balance && userProfile.balance >= 20) {
@@ -196,10 +203,7 @@ const ModalProperty = ({
           }
           // After all of images is pushed. Send it to server.
           const newProperty = { ...convertProperty, images: arr }
-          const res = await axiosInstance.post(
-            `/seller/properties`,
-            newProperty,
-          )
+          const res = await AddNewPropertyForSellerService(newProperty, option)
           setLoading(false)
           onClose()
           Swal.fire({
@@ -271,6 +275,18 @@ const ModalProperty = ({
       handleUpdate(value)
     }
   }
+
+  const [packageServiceSelected, setPackageServiceSelected] = useState('')
+  const [packageService, setPackageService] = useState<PackageService[]>([])
+  const getAllPackageService = async () => {
+    const res = await getAllRentalPackageService()
+    setPackageService(res.data.metaData)
+  }
+
+  useEffect(() => {
+    getAllPackageService()
+  }, [])
+
   return (
     <form
       onSubmit={form.onSubmit((values) => {
@@ -548,24 +564,25 @@ const ModalProperty = ({
         </div>
         <div className={style.mt}>
           <Radio.Group
+            value={packageServiceSelected}
+            onChange={(value) => setPackageServiceSelected(value)}
             withAsterisk
-            label="Duration and price:"
+            label="How long do you want to public this property?"
             className="text-base"
-            classNames={{ root: style.radioGroupRoot }}
+            classNames={{
+              root: style.radioGroupRoot,
+              label: style.radioGroupLabel,
+            }}
           >
             <Group classNames={{ root: style.groupRoot }}>
-              <Radio
-                value="15 days for 15 credit"
-                label="15 days for 15 credit"
-              />
-              <Radio
-                value="30 days for 30 credit"
-                label="30 days for 30 credit"
-              />
-              <Radio
-                value="60 days for 60 credit"
-                label="60 days for 60 credit"
-              />
+              {packageService.length > 0 &&
+                packageService.map((item) => (
+                  <Radio
+                    key={item.serviceId}
+                    value={String(item.serviceId)}
+                    label={`${item.duration} days`}
+                  />
+                ))}
             </Group>
           </Radio.Group>
         </div>

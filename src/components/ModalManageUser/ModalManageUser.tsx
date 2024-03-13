@@ -25,6 +25,7 @@ import * as yup from 'yup'
 import { useForm, yupResolver } from '@mantine/form'
 import Swal from 'sweetalert2'
 import { updateUserProfileForAdminService } from '../../service/AdminService'
+import { Roles } from '../../types/role'
 
 interface Props {
   user: User | null
@@ -280,12 +281,16 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
                     form.setFieldValue('address', event.currentTarget.value)
                   }}
                 />
-                <Button
-                  type="submit"
-                  classNames={{ root: style.rootButtonUpdate }}
-                >
-                  Update
-                </Button>
+                {user?.roleId === Roles.Seller ? (
+                  <Button
+                    type="submit"
+                    classNames={{ root: style.rootButtonUpdate }}
+                  >
+                    Update
+                  </Button>
+                ) : (
+                  ''
+                )}
               </Stack>
             </Box>
           </form>

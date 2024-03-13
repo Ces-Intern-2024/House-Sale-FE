@@ -29,6 +29,7 @@ import { SearchUsers } from '@/types/searchUsers'
 import Swal from 'sweetalert2'
 import { useDisclosure } from '@mantine/hooks'
 import ModalManageUser from '../ModalManageUser/ModalManageUser'
+import { cancelBtn, confirmBtn } from '../../constants/colorConstant'
 
 function TableUser() {
   const [email, setEmail] = useState('')
@@ -102,8 +103,8 @@ function TableUser() {
         text: `Are you sure, you want to activate user who has id: ${userId} ?`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
         confirmButtonText: 'Yes, update user!',
       }).then(async (result) => {
         if (result.isConfirmed) {
@@ -131,8 +132,8 @@ function TableUser() {
         title: `Are you sure, you want to de-activate user who has id: ${userId} ?`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
         confirmButtonText: 'Yes, update user!',
       }).then(async (result) => {
         if (result.isConfirmed) {
@@ -177,8 +178,8 @@ function TableUser() {
       icon: 'question',
       text: "You won't be able to revert this!",
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
       confirmButtonText: 'Yes, delete user!',
     }).then(async (result) => {
       if (result.isConfirmed) {
@@ -209,14 +210,16 @@ function TableUser() {
       userList.map((user) => (
         <Table.Tr key={user.userId} className="text-base h-16">
           <Table.Td>{user.userId}</Table.Td>
-          <Table.Td>
+          <Table.Td onClick={() => openModalUser(user)}>
             {user.avatar ? (
               <Image className={style.avatar} src={user.avatar} />
             ) : (
               <RxAvatar className="ml-1" size={30} />
             )}
           </Table.Td>
-          <Table.Td>{user.fullName ? user.fullName : 'User'}</Table.Td>
+          <Table.Td onClick={() => openModalUser(user)}>
+            {user.fullName ? user.fullName : 'User'}
+          </Table.Td>
           <Table.Td>{user.email}</Table.Td>
           {user.phone ? (
             <Table.Td>{user.phone}</Table.Td>
@@ -226,6 +229,11 @@ function TableUser() {
                 Not registered
               </span>
             </Table.Td>
+          )}
+          {user.roleId === Roles.Seller ? (
+            <Table.Td>{Number(user.balance)}</Table.Td>
+          ) : (
+            <Table.Td>No balance</Table.Td>
           )}
           <Table.Td className="font-semibold">
             {user.roleId === Roles.User
@@ -358,6 +366,7 @@ function TableUser() {
                     <Table.Th>Full name</Table.Th>
                     <Table.Th>Email</Table.Th>
                     <Table.Th>Phone</Table.Th>
+                    <Table.Th>Balance</Table.Th>
                     <Table.Th>Role</Table.Th>
                     <Table.Th>Created On</Table.Th>
                     <Table.Th>Status</Table.Th>
