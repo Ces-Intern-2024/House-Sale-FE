@@ -68,3 +68,14 @@ export function convertISOToVNDateTimeString(isoDate:any) {
   const seconds = String(vietnamTime.getSeconds()).padStart(2, '0');
   return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
+
+export function getSevenDaysBeforeToday() {
+  const today = new Date();
+  const lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const _year = lastWeek.getFullYear();
+  const _month = (lastWeek.getMonth() + 1).toString().padStart(2, '0');
+  const _day = lastWeek.getDate().toString().padStart(2, '0');
+  // `${year}-${month}-${day}`
+  return lastWeek;
+}
+

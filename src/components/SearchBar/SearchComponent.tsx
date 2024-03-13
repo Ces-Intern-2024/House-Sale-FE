@@ -175,8 +175,10 @@ export default function SearchBar() {
 
   const handleGetMaxPrice = async () => {
     const data = await searchProperty({ orderBy: 'price', sortBy: 'desc' })
-    setMaxPrice(Number(data.data[0].price))
-    setPriceRange([0, Number(data.data[0].price)])
+    if (data.data.length > 0) {
+      setMaxPrice(Number(data.data[0].price))
+      setPriceRange([0, Number(data.data[0].price)])
+    }
   }
 
   const handleSubmitSearch = async () => {
@@ -582,7 +584,7 @@ export default function SearchBar() {
           ) : (
             <div className={styles.paginationArea}>
               <LoadingOverlay
-                loaderProps={{ size: 'xl' }}
+                loaderProps={{ size: 'xl', color: 'pink', type: 'bars' }}
                 classNames={{
                   loader: 'absolute top-20 ',
                   overlay: ' opacity-90',
