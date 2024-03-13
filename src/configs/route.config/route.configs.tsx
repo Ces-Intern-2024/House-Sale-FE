@@ -91,6 +91,14 @@ export const protectedRoutes = [
     ),
     authority: [Roles.Admin],
   },
+  {
+    key: 'admin-transaction',
+    path: '/admin-transaction',
+    component: lazy(
+      () => import('../../pages/AdminTransactionPage/AdminTransactionPage'),
+    ),
+    authority: [Roles.Admin],
+  },
 ]
 
 export const authRoutes = [

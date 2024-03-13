@@ -80,3 +80,15 @@ export const deletePropertyForAdminService = async (
   )
   return res
 }
+
+export async function getAllTransactions(fromDateRange?:string | null, toDateRange?:string | null, page?:number) { 
+  const queryString = qs.stringify({fromDateRange, toDateRange, page}, {
+    skipNulls: true,
+    addQueryPrefix: true,
+    encode: false,
+  }) 
+  
+const res = await axiosInstance.get(`/admin/manage-transaction/deposit${queryString}`)
+    
+  return res.data.metaData
+}

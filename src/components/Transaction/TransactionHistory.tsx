@@ -129,6 +129,7 @@ export default function TransactionHistory({
         <LoadingOverlay
           visible={visible}
           zIndex={1000}
+          loaderProps={{ color: 'pink', type: 'bars' }}
           overlayProps={{ radius: 'sm', blur: 0.7 }}
         />
         <div className=" max-h-[110px] overflow-y-scroll pr-4 flex flex-col gap-y-1">
