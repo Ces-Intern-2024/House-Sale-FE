@@ -16,7 +16,7 @@ import {
 import { FaSearch } from 'react-icons/fa'
 import { DatePickerInput } from '@mantine/dates'
 import { IconCalendar } from '@tabler/icons-react'
-import { primary } from '../../constants/color'
+import { primary } from '../../constants/colorConstant'
 
 export default function TableTransaction() {
   const [activePage, setActivePage] = useState<number>(1)
