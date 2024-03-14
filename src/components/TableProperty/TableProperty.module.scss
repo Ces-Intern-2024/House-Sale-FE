@@ -149,6 +149,17 @@
   @apply block;
 }
 
+.titleModalPackage {
+  @apply text-2xl text-primary font-bold font-archivo;
+}
+
+.groupRoot {
+  @apply flex flex-col items-start mt-4;
+}
+
+.renewBtn {
+  @apply flex items-center px-12 bg-orangeBtn hover:bg-darkBlue text-base text-white mt-4;
+}
 // This style for Admin.
 
 .filteringCover {
