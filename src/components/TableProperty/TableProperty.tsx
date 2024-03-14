@@ -108,6 +108,7 @@ const TableProperty = ({
       }
     })
   }
+
   useEffect(() => {
     setProperties(properties)
   }, [properties])
@@ -330,7 +331,7 @@ const TableProperty = ({
           <Table.Td>{element.feature.name}</Table.Td>
           <Table.Td>{element.category.name}</Table.Td>
           <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
-          <Table.Td>{element.remainingTime}</Table.Td>
+          <Table.Td id="remainingTime">{element.remainingTime}</Table.Td>
           <Table.Td>
             {element.status === AVAILABLE ? (
               <div className={style.available}>Available</div>

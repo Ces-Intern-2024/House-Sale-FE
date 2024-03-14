@@ -92,3 +92,23 @@ const res = await axiosInstance.get(`/admin/manage-transaction/deposit${queryStr
     
   return res.data.metaData
 }
+
+export async function getAllConversionRates(){
+  const res = await axiosInstance.get('/admin/manage-conversion-rate')
+  return res.data.metaData
+}
+
+export async function addNewCurrencyRate(currencyFrom:string, currencyTo:string, exchangeRate:number){
+  const res = await axiosInstance.post('/admin/manage-conversion-rate',{currencyFrom,currencyTo,exchangeRate})
+  return res
+}
+
+export async function editConversionRate(conversionRateId:number, newExchangeRate:number){
+  const res = await axiosInstance.patch(`/admin/manage-conversion-rate/${conversionRateId}`,{newExchangeRate})
+  return res
+}
+
+export async function deleteConversionRate(conversionRateId:number){
+  const res = await axiosInstance.delete(`/admin/manage-conversion-rate/${conversionRateId}`)
+  return res
+}

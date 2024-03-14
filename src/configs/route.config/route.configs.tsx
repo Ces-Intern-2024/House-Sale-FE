@@ -99,6 +99,14 @@ export const protectedRoutes = [
     ),
     authority: [Roles.Admin],
   },
+  {
+    key: 'admin-transaction',
+    path: '/admin-conversion-rate',
+    component: lazy(
+      () => import('../../components/ConversionRate/ConversionRateComponent'),
+    ),
+    authority: [Roles.Admin],
+  },
 ]
 
 export const authRoutes = [

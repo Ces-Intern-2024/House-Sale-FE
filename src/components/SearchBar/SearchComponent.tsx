@@ -16,7 +16,7 @@ import {
   useFetchDistrictsQuery,
   useFetchWardsQuery,
 } from '../../redux/reducers/locationSlice'
-import { useAppSelector } from '../../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 
 import {
   IconMapPin,
@@ -37,11 +37,14 @@ import PropertyCard from '../Properties/PropertyCard'
 import { useLocation } from 'react-router-dom'
 import { useDisclosure } from '@mantine/hooks'
 import { Properties } from '../../types/properties'
+import { setIsSmallScreen } from '../../redux/reducers/resizeSlice'
 
-export default function SearchBar() {
+export default function SearchComponent() {
   const query = useLocation()
   const [opened, { open, close }] = useDisclosure(false)
   const [isLoading, setIsLoading] = useState(false)
+  const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
+  const dispatch = useAppDispatch()
 
   const [activePage, setPage] = useState(1)
   const [resetPage, setResetPage] = useState(true)
@@ -280,6 +283,18 @@ export default function SearchBar() {
     sortBy,
     priceRange,
   ])
+  useEffect(() => {
+    const handleResize = () => {
+      dispatch(setIsSmallScreen(window.innerWidth < 1024))
+    }
+
+    handleResize()
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [dispatch])
   const SharedComponents = () => (
     <>
       <Divider mb="lg" />
@@ -404,6 +419,7 @@ export default function SearchBar() {
   const SharedButton = () => (
     <>
       <Button
+        disabled={isSmallScreen ? false : true}
         leftSection={<IconAdjustmentsHorizontal />}
         variant="outline"
         className=" lg:w-[150px] mobile:w-full h-[50px] rounded-none border-primary text-primary"
@@ -519,6 +535,7 @@ export default function SearchBar() {
           >
             <div className=" flex items-center justify-center mb-5">
               <Button
+                disabled
                 leftSection={<IconAdjustmentsHorizontal />}
                 variant="outline"
                 className=" w-[150px] h-[50px] rounded-none border-primary text-primary"

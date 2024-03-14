@@ -9,6 +9,7 @@ import { BsCoin } from 'react-icons/bs'
 import { getConversionRateList } from '../../service/TransactionService'
 import { useNavigate } from 'react-router-dom'
 import { MAX_CREDIT, MIN_CREDIT } from '../../constants/credit.constant'
+import { ConversionRate } from '../../types/conversionRate'
 
 export default function SellerPage() {
   const navigate = useNavigate()
@@ -21,7 +22,10 @@ export default function SellerPage() {
 
   const handleGetConversionRate = async () => {
     const data = await getConversionRateList()
-    setConversionRate(data[data.length - 1].exchangeRate)
+    const usdRate = data.filter(
+      (item: ConversionRate) => item.currencyFrom === 'USD',
+    )
+    setConversionRate(usdRate[0].exchangeRate)
   }
 
   const handleBuyCredit = async () => {
