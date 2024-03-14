@@ -13,6 +13,8 @@ import {
   Pagination,
   Select,
   Checkbox,
+  Group,
+  Radio,
 } from '@mantine/core'
 import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -39,6 +41,10 @@ import { AVAILABLE, UN_AVAILABLE } from '../../constants/statusProperty'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
 import { cancelBtn, confirmBtn } from '../../constants/colorConstant'
+import { getAllRentalPackageService } from '../../service/PackageService'
+import { PackageService } from '../../types/packageService'
+import { getProfile } from '../../service/ProfileService'
+import { User } from '@/types/user'
 
 interface TablePropertyProps {
   setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>
@@ -49,6 +55,10 @@ const TableProperty = ({
   shouldUpdate,
 }: TablePropertyProps) => {
   const [opened, { open, close }] = useDisclosure(false)
+  const [
+    openedPackageservice,
+    { open: openPackageService, close: closePackageService },
+  ] = useDisclosure(false)
   const [selectedProperty, setSelectedProperty] = useState<Properties | null>(
     null,
   )
@@ -193,26 +203,34 @@ const TableProperty = ({
     setResetPage(false)
     setActivePage(page)
   }
-  const handleUpdateStatus = async (event: boolean, propertyId: number) => {
+  const handleUpdateStatus = async (event: boolean, property: Properties) => {
     if (event) {
       Swal.fire({
         text: `Are you sure to change this property's status`,
         icon: 'question',
       }).then(async (result) => {
         if (result.isConfirmed) {
-          try {
-            setIsLoading(true)
-            await updateStatusPropertiesForSellerService(propertyId, AVAILABLE)
-            Swal.fire({
-              icon: 'success',
-              title: 'Status changed!',
-              text: 'This property is now available.',
-            })
-          } catch (error) {
-            console.error(error)
-          } finally {
-            setIsLoading(false)
-            setIsUpdated(!isUpdated)
+          if (property.remainingTime > 0) {
+            try {
+              setIsLoading(true)
+              await updateStatusPropertiesForSellerService(
+                property.propertyId,
+                AVAILABLE,
+              )
+              Swal.fire({
+                icon: 'success',
+                title: 'Status changed!',
+                text: 'This property is now available.',
+              })
+            } catch (error) {
+              console.error(error)
+            } finally {
+              setIsLoading(false)
+              setIsUpdated(!isUpdated)
+            }
+          } else {
+            setSelectedProperty(property)
+            openPackageService()
           }
         }
       })
@@ -225,7 +243,7 @@ const TableProperty = ({
           try {
             setIsLoading(true)
             await updateStatusPropertiesForSellerService(
-              propertyId,
+              property.propertyId,
               UN_AVAILABLE,
             )
             Swal.fire({
@@ -291,6 +309,67 @@ const TableProperty = ({
       }
     })
   }
+
+  const [packageServiceSelected, setPackageServiceSelected] = useState('')
+  const [pricePackageServiceSelected, setPricePackageServiceSelected] =
+    useState<number>()
+  const [packageServiceList, setPackageServiceList] = useState<
+    PackageService[]
+  >([])
+  const getAllPackageService = async () => {
+    const res = await getAllRentalPackageService()
+    setPackageServiceList(res.data.metaData)
+  }
+  useEffect(() => {
+    getAllPackageService()
+  }, [])
+
+  // Get userProfile to get current credit.
+  const [userProfile, setUserProfile] = useState<User | undefined>()
+  const getUserProfile = async () => {
+    const res = await getProfile()
+    setUserProfile(res)
+  }
+  useEffect(() => {
+    getUserProfile()
+  }, [])
+  const handleRenewProperty = async (property: Properties | null) => {
+    if (property) {
+      if (
+        userProfile?.balance &&
+        Number(userProfile.balance) >= Number(pricePackageServiceSelected!)
+      ) {
+        try {
+          await updateStatusPropertiesForSellerService(
+            property.propertyId,
+            AVAILABLE,
+            Number(packageServiceSelected),
+          )
+          closePackageService()
+          Swal.fire({
+            icon: 'success',
+            title: 'Renew successfully!',
+            text: 'This property is now available.',
+          })
+        } catch (error) {
+          console.error(error)
+        } finally {
+          setIsUpdated(!isUpdated)
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Insufficient balance',
+          text: 'You have insufficient balance',
+        })
+      }
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Something went wrong',
+      })
+    }
+  }
   const rows =
     properties.length > 0 ? (
       properties.map((element) => (
@@ -352,10 +431,7 @@ const TableProperty = ({
                   <Switch
                     checked={element.status === 'Available' ? true : false}
                     onChange={(event) =>
-                      handleUpdateStatus(
-                        event.currentTarget.checked,
-                        element.propertyId,
-                      )
+                      handleUpdateStatus(event.currentTarget.checked, element)
                     }
                   />
                 </Tooltip>
@@ -364,10 +440,7 @@ const TableProperty = ({
                   <Switch
                     checked={element.status === 'Available' ? true : false}
                     onChange={(event) =>
-                      handleUpdateStatus(
-                        event.currentTarget.checked,
-                        element.propertyId,
-                      )
+                      handleUpdateStatus(event.currentTarget.checked, element)
                     }
                   />
                 </Tooltip>
@@ -554,6 +627,64 @@ const TableProperty = ({
           onClose={close}
           setShouldUpdate={setShouldUpdate}
         />
+      </Modal>
+      <Modal
+        opened={openedPackageservice}
+        onClose={closePackageService}
+        title="Package Service"
+        centered
+        classNames={{ title: style.titleModalPackage }}
+      >
+        <div>
+          <div className="text-base text-black font-bold">
+            Your property&apos;s effective day is expired. Please, choose a
+            package to renew.
+          </div>
+          <div className="mt-4">
+            <Radio.Group
+              value={packageServiceSelected}
+              onChange={(value) => {
+                setPackageServiceSelected(value)
+              }}
+              withAsterisk
+              label="How long do you want to renew this property?"
+              className="text-base"
+              classNames={{
+                root: style.radioGroupRoot,
+                label: style.radioGroupLabel,
+              }}
+            >
+              <Group classNames={{ root: style.groupRoot }}>
+                {packageServiceList.length > 0 &&
+                  packageServiceList.map((item) => (
+                    <Radio
+                      onChange={() =>
+                        setPricePackageServiceSelected(item.price)
+                      }
+                      key={item.serviceId}
+                      value={String(item.serviceId)}
+                      label={`${item.serviceName} - ${item.price} credits`}
+                    />
+                  ))}
+              </Group>
+            </Radio.Group>
+          </div>
+          <div className="flex justify-center">
+            <Button
+              classNames={{ root: style.renewBtn }}
+              size="sm"
+              onClick={() => {
+                if (selectedProperty) {
+                  handleRenewProperty(selectedProperty)
+                } else {
+                  handleRenewProperty(null)
+                }
+              }}
+            >
+              Renew
+            </Button>
+          </div>
+        </div>
       </Modal>
     </>
   )

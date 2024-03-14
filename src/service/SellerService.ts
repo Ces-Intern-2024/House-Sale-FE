@@ -36,10 +36,11 @@ export const deletePropertiesForSellerService = async (listPropertyId:string) =>
 export const updateStatusPropertiesForSellerService = async (
   propertyId: number,
   status: string,
+  serviceId?: number
 ) => {
   const res = await axiosInstance.patch(
     `/seller/properties/${propertyId}/status`,
-    { status },
+    { status, serviceId },
   )
   return res
 }
