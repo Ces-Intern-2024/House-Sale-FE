@@ -68,6 +68,8 @@ const TablePropertyAdmin = () => {
   const [maxPrice, setMaxPrice] = useState<number>(0)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice])
   const [isLoading, setIsLoading] = useState(false)
+  const [action, setAction] = useState<string | null>(null)
+
   const dispatch = useAppDispatch()
 
   const handleGetMaxPrice = async () => {
@@ -235,32 +237,41 @@ const TablePropertyAdmin = () => {
 
   const handleDeleteAllSelectedRows = () => {
     const parseSelectedRowsToString = String(selectedRows)
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: confirmBtn,
-      cancelButtonColor: cancelBtn,
-      confirmButtonText: 'Yes, delete all selected!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deletePropertyForAdminService(parseSelectedRowsToString)
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'Your property has been deleted.',
-            icon: 'success',
-          })
-          setIsUpdated(!isUpdated)
-        } catch (error: any) {
-          Swal.fire({
-            title: error.response.data.error.message,
-            icon: 'error',
-          })
+    if(!action){
+      Swal.fire({
+        title: 'You must select actions',
+        icon: 'info',
+      })
+      return
+    }
+    if (action === 'delete') {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
+        confirmButtonText: 'Yes, delete all selected!',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await deletePropertyForAdminService(parseSelectedRowsToString)
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your property has been deleted.',
+              icon: 'success',
+            })
+            setIsUpdated(!isUpdated)
+          } catch (error: any) {
+            Swal.fire({
+              title: error.response.data.error.message,
+              icon: 'error',
+            })
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   const handleSelectAllSelectedRows = () => {
@@ -507,13 +518,42 @@ const TablePropertyAdmin = () => {
             </div>
           </div>
 
-          <Button
+          {/* This comment has been kept as a temporary if there are any errors.
+           <Button
             className="mt-4"
             classNames={{ root: style.rootButtonDeleteAll }}
             onClick={() => handleDeleteAllSelectedRows()}
           >
             Delete All
-          </Button>
+          </Button> */}
+          <div className="flex items-end gap-4 mt-4 justify-end">
+            <Select
+              classNames={{
+                root: style.rootSelectActions,
+                label: style.labelSelectActions,
+                input: style.inputSelectActions,
+                dropdown: style.dropdownSelectActions,
+                options: style.optionsSelectActions,
+                option: style.optionSelectActions,
+              }}
+              label="Actions:"
+              placeholder="Choose Actions"
+              data={[
+                { value: 'delete', label: 'Delete All' },
+                { value: 'disable', label: 'Disable All' },
+              ]}
+              onChange={(value: string | null) => {
+                setAction(value)
+              }}
+              allowDeselect
+            />
+            <Button
+              classNames={{ root: style.rootApplyBtn }}
+              onClick={() => handleDeleteAllSelectedRows()}
+            >
+              Apply
+            </Button>
+          </div>
           <div className={style.tableContent}>
             <Table
               className="relative"

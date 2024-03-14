@@ -75,6 +75,7 @@ const TableProperty = ({
   const [featureId, setFeatureId] = useState('')
   const [categoryId, setCategoryId] = useState('')
   const [keyword, setKeyword] = useState('')
+  const [action, setAction] = useState<string | null>(null)
 
   const dispatch = useAppDispatch()
 
@@ -283,32 +284,41 @@ const TableProperty = ({
 
   const handleDeleteAllSelectedRows = () => {
     const parseSelectedRowsToString = String(selectedRows)
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: confirmBtn,
-      cancelButtonColor: cancelBtn,
-      confirmButtonText: 'Yes, delete all selected!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deletePropertiesForSellerService(parseSelectedRowsToString)
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'Your property has been deleted.',
-            icon: 'success',
-          })
-          setIsUpdated(!isUpdated)
-        } catch (error: any) {
-          Swal.fire({
-            title: error.response.data.error.message,
-            icon: 'error',
-          })
+    if (!action) {
+      Swal.fire({
+        title: 'You must select actions',
+        icon: 'info',
+      })
+      return
+    }
+    if (action === 'delete') {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
+        confirmButtonText: 'Yes, delete all selected!',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await deletePropertiesForSellerService(parseSelectedRowsToString)
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your property has been deleted.',
+              icon: 'success',
+            })
+            setIsUpdated(!isUpdated)
+          } catch (error: any) {
+            Swal.fire({
+              title: error.response.data.error.message,
+              icon: 'error',
+            })
+          }
         }
-      }
-    })
+      })
+    }
   }
 
   const [packageServiceSelected, setPackageServiceSelected] = useState('')
@@ -371,6 +381,7 @@ const TableProperty = ({
       })
     }
   }
+
   const rows =
     properties.length > 0 ? (
       properties.map((element) => (
@@ -393,7 +404,10 @@ const TableProperty = ({
             />
           </Table.Td>
           <Table.Td>{element.propertyId}</Table.Td>
-          <Table.Td onClick={() => handlePropertyView(element)}>
+          <Table.Td
+            onClick={() => handlePropertyView(element)}
+            classNames={{ td: style.tdNameCover }}
+          >
             <div className={style.propertyNameCover}>
               <Image
                 className={style.propertyImage}
@@ -538,13 +552,43 @@ const TableProperty = ({
               </Button>
             </div>
           </div>
+          {/* This comment can be used when we want to change select option into button. 
           <Button
             className="mt-4"
             classNames={{ root: style.rootButtonDeleteAll }}
             onClick={() => handleDeleteAllSelectedRows()}
           >
             Delete All
-          </Button>
+          </Button> */}
+          <div className="flex items-end gap-4 mt-8 justify-end">
+            <Select
+              classNames={{
+                root: style.rootSelectActions,
+                label: style.labelSelectActions,
+                input: style.inputSelectActions,
+                dropdown: style.dropdownSelectActions,
+                options: style.optionsSelectActions,
+                option: style.optionSelectActions,
+              }}
+              label="Actions:"
+              placeholder="Choose Actions"
+              data={[
+                { value: 'delete', label: 'Delete All' },
+                // This comment can be used in future when we want to expand function.
+                // { value: 'disable', label: 'Disable All' },
+              ]}
+              onChange={(value: string | null) => {
+                setAction(value)
+              }}
+              allowDeselect
+            />
+            <Button
+              classNames={{ root: style.rootApplyBtn }}
+              onClick={() => handleDeleteAllSelectedRows()}
+            >
+              Apply
+            </Button>
+          </div>
           <div className={style.tableContent}>
             <Box pos="relative">
               <LoadingOverlay

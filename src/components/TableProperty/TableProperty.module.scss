@@ -58,7 +58,7 @@
 }
 
 .tableContent {
-  @apply mt-8;
+  @apply mt-4;
 }
 
 .propertyNameCover {
@@ -160,6 +160,36 @@
 .renewBtn {
   @apply flex items-center px-12 bg-orangeBtn hover:bg-darkBlue text-base text-white mt-4;
 }
+
+.rootApplyBtn {
+  @apply bg-darkBlue text-white text-base hover:bg-orangeBtn;
+}
+
+.rootSelectActions {
+  @apply flex items-end gap-4;
+}
+
+.labelSelectActions {
+  @apply text-xl text-primary font-bold;
+}
+
+.inputSelectActions {
+  @apply border-primary text-primary font-semibold text-base max-w-50;
+}
+
+.dropdownSelectActions {
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.2);
+  @apply border-none;
+}
+
+.optionsSelectActions {
+}
+.optionSelectActions {
+  @apply bg-second mt-1 hover:bg-blur text-base font-semibold;
+}
+
 // This style for Admin.
 
 .filteringCover {
