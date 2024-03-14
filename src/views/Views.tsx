@@ -29,7 +29,9 @@ const AllRoutes = () => {
             <Route
               key={route.key}
               path={route.path}
-              element={<AppRoute component={route.component} />}
+              element={
+                <AppRoute routeKey={route.key} component={route.component} />
+              }
             />
           ))}
         </Route>
@@ -44,7 +46,7 @@ const AllRoutes = () => {
                   userAuthority={userAuthority}
                   authority={route.authority}
                 >
-                  <AppRoute component={route.component} />
+                  <AppRoute routeKey={route.key} component={route.component} />
                 </AuthorityGuard>
               }
             />
@@ -55,7 +57,9 @@ const AllRoutes = () => {
             <Route
               key={route.key}
               path={route.path}
-              element={<AppRoute component={route.component} />}
+              element={
+                <AppRoute routeKey={route.key} component={route.component} />
+              }
             />
           ))}
         </Route>

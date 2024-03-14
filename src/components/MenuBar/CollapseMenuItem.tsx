@@ -31,7 +31,7 @@ export default function CollapseMenuItem({
         trigger="hover"
         openDelay={OPEN_DELAY}
         closeDelay={CLOSE_DELAY}
-        width={150}
+        width={170}
         position={isOfDrawers ? 'right-start' : 'bottom'}
         withArrow
         transitionProps={{
@@ -61,21 +61,18 @@ export default function CollapseMenuItem({
         </Menu.Target>
         <Menu.Dropdown>
           {categories.map((category) => (
-            <Menu.Item
+            <NavLink
               key={category.categoryId}
-              className={styles.dropdown}
-              onClick={closeDrawer}
+              to={nav.path}
+              state={{
+                categoryId: category.categoryId,
+                featureId: nav.key === 'for-sale' ? 1 : 2,
+              }}
             >
-              <NavLink
-                to={nav.path}
-                state={{
-                  categoryId: category.categoryId,
-                  featureId: nav.key === 'for-sale' ? 1 : 2,
-                }}
-              >
+              <Menu.Item className={styles.dropdown} onClick={closeDrawer}>
                 {category.name}
-              </NavLink>
-            </Menu.Item>
+              </Menu.Item>
+            </NavLink>
           ))}
         </Menu.Dropdown>
       </Menu>

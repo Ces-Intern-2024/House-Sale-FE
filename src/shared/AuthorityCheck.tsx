@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react'
-import useAuthority from '../../hooks/useAuthority'
-import { Roles } from '../../types/role'
+import useAuthority from '../hooks/useAuthority'
+import { Roles } from '../types/role'
 
 type AuthorityCheckProps = PropsWithChildren<{
   userAuthority?: string | null
