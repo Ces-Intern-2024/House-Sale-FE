@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import SearchBar from '../../components/SearchBar/SearchComponent'
+import SearchComponent from '../../components/SearchBar/SearchComponent'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
 import { useAppDispatch } from '../../redux/hooks'
 
@@ -12,7 +12,7 @@ export default function SearchPage() {
   return (
     <>
       <div className=" py-28 lg:px-14 mobile:px-5">
-        <SearchBar />
+        <SearchComponent />
       </div>
     </>
   )

@@ -14,7 +14,7 @@ import {
   NAV_ITEM_TYPE_COLLAPSE,
   NAV_ITEM_TYPE_ITEM,
 } from '../../constants/navigation.constant'
-import AuthorityCheck from '../shared/AuthorityCheck'
+import AuthorityCheck from '../../shared/AuthorityCheck'
 import CollapseMenuItem from './CollapseMenuItem'
 import SingleMenuItem from './SingleMenuItem'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
@@ -138,37 +138,45 @@ export default function MenuBar({
                       <Menu.Dropdown className=" flex-col justify-center">
                         {Number(user.roleId) === Roles.Seller && (
                           <>
-                            <Menu.Item className={styles.dropdown}>
-                              <NavLink to="/seller"> Dashboard</NavLink>
-                            </Menu.Item>
-                            <Menu.Item className={styles.dropdown}>
-                              <NavLink to="/profile"> Profile</NavLink>
-                            </Menu.Item>
+                            <NavLink to="/seller" className={styles.dropdown}>
+                              <Menu.Item className={styles.dropdown}>
+                                Dashboard
+                              </Menu.Item>
+                            </NavLink>
+
+                            <NavLink to="/profile" className={styles.dropdown}>
+                              <Menu.Item className={styles.dropdown}>
+                                Profile
+                              </Menu.Item>
+                            </NavLink>
                           </>
                         )}
                         {Number(user.roleId) === Roles.Admin && (
-                          <>
+                          <NavLink to="/admin">
                             <Menu.Item className={styles.dropdown}>
-                              <NavLink to="/admin"> Dashboard</NavLink>
+                              Dashboard
                             </Menu.Item>
-                          </>
+                          </NavLink>
                         )}
-                        <Menu.Item className={styles.dropdown}>
-                          <h1
-                            className={styles.dropdown}
-                            onClick={() => {
-                              open()
-                            }}
-                          >
-                            Change Password
-                          </h1>
-                        </Menu.Item>
-                        <Menu.Item
-                          className={styles.dropdown}
-                          onClick={closeDrawer}
+
+                        <h1
+                          onClick={() => {
+                            open()
+                          }}
                         >
-                          <h1 onClick={handleLogout}>Log Out</h1>
-                        </Menu.Item>
+                          <Menu.Item className={styles.dropdown}>
+                            Change Password
+                          </Menu.Item>
+                        </h1>
+
+                        <h1 onClick={handleLogout}>
+                          <Menu.Item
+                            className={styles.dropdown}
+                            onClick={closeDrawer}
+                          >
+                            Log Out{' '}
+                          </Menu.Item>
+                        </h1>
                       </Menu.Dropdown>
                     </Menu>
                   </>
