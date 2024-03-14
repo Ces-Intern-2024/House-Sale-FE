@@ -60,11 +60,13 @@ module.exports = {
       minWidth: {
         25: '100px',
         30: '120px',
+        50: '200px',
         125: '500px',
       },
       maxWidth: {
         25: '100px',
         30: '120px',
+        50: '200px',
         125: '500px',
       },
       height: {
@@ -85,11 +87,13 @@ module.exports = {
       },
       minHeight: {
         25: '100px',
+        50: '200px',
         125: '500px',
       },
       maxHeight: {
         25: '100px',
         125: '500px',
+        50: '200px',
       },
       fontSize: {
         24: '24px',
