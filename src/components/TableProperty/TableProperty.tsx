@@ -76,6 +76,7 @@ const TableProperty = ({
   const [categoryId, setCategoryId] = useState('')
   const [keyword, setKeyword] = useState('')
   const [action, setAction] = useState<string | null>(null)
+  const [intervals, setIntervals] = useState<NodeJS.Timer[]>([])
 
   const dispatch = useAppDispatch()
 
@@ -208,27 +209,28 @@ const TableProperty = ({
   const handleUpdateStatus = async (event: boolean, property: Properties) => {
     if (event) {
       Swal.fire({
-        text: `Are you sure to change this property's status`,
+        title: `Are you sure to change this property's status to ${property.status === UN_AVAILABLE ? 'available' : 'unavailable'}?`,
         icon: 'question',
+        showCancelButton: true,
       }).then(async (result) => {
         if (result.isConfirmed) {
-          if (property.remainingTime > 0) {
+          if (property.savedRemainingRentalTime > 0) {
             try {
               setIsLoading(true)
               await updateStatusPropertiesForSellerService(
                 property.propertyId,
-                AVAILABLE,
+                property.status === UN_AVAILABLE ? AVAILABLE : UN_AVAILABLE,
               )
               Swal.fire({
                 icon: 'success',
                 title: 'Status changed!',
                 text: 'This property is now available.',
               })
+              setIsUpdated((prev) => !prev)
             } catch (error) {
               console.error(error)
             } finally {
               setIsLoading(false)
-              setIsUpdated(!isUpdated)
             }
           } else {
             setSelectedProperty(property)
@@ -238,8 +240,9 @@ const TableProperty = ({
       })
     } else {
       Swal.fire({
-        text: `Are you sure to change this property's status`,
+        title: `Are you sure to change this property's status to ${property.status === UN_AVAILABLE ? 'available' : 'unavailable'}?`,
         icon: 'question',
+        showCancelButton: true,
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
@@ -253,11 +256,11 @@ const TableProperty = ({
               title: 'Status changed!',
               text: 'This property is now unavailable.',
             })
+            setIsUpdated((prev) => !prev)
           } catch (error) {
             console.error(error)
           } finally {
             setIsLoading(false)
-            setIsUpdated(!isUpdated)
           }
         }
       })
@@ -344,6 +347,7 @@ const TableProperty = ({
   useEffect(() => {
     getUserProfile()
   }, [])
+
   const handleRenewProperty = async (property: Properties | null) => {
     if (property) {
       if (
@@ -362,6 +366,7 @@ const TableProperty = ({
             title: 'Renew successfully!',
             text: 'This property is now available.',
           })
+          setShouldUpdate((prev) => !prev)
         } catch (error) {
           console.error(error)
         } finally {
@@ -382,6 +387,133 @@ const TableProperty = ({
     }
   }
 
+  /**
+   * When property is available, start countdown timer
+   * the timer will run every second
+   * the first if condition is used to display the countdown time
+   * the second if condition is used to handle when the property is expired,
+   * it will temporarily display EXPIRED to status field, then call API to change status to unavailable
+   * to prevent the memory leak, there will be a clean-up function in an useEffect hook to clear the intervals when the component unmounts
+   */
+  function handleCountdownTimer(property: Properties) {
+    intervals.forEach((interval) => clearInterval(interval))
+    const x = setInterval(async function () {
+      setIntervals((prev) => [...prev, x])
+
+      const countDownDate = new Date(property.expiresAt).getTime()
+      const now = new Date().getTime()
+      const distance = countDownDate - now
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24))
+      const hours = Math.floor(
+        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      )
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000)
+
+      if (
+        document.getElementById(`remainingTime${property.propertyId}`) &&
+        property.remainingTime > 0 &&
+        property.status === AVAILABLE
+      ) {
+        document.getElementById(
+          `remainingTime${property.propertyId}`,
+        )!.innerHTML =
+          days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's '
+        clearInterval(x)
+      }
+
+      if (
+        distance < 0 &&
+        document.getElementById(`remainingTime${property.propertyId}`) &&
+        property.status === AVAILABLE
+      ) {
+        clearInterval(x)
+        document.getElementById(
+          `remainingTime${property.propertyId}`,
+        )!.innerHTML = 'EXPIRED'
+        try {
+          await updateStatusPropertiesForSellerService(
+            property.propertyId,
+            UN_AVAILABLE,
+          )
+          setIsUpdated((prev) => !prev)
+        } catch (err) {
+          // console.log(err)
+          clearInterval(x)
+        } finally {
+          clearInterval(x)
+        }
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(x)
+    }
+  }
+
+  /**
+   * this func is used to check status/remaining time/savedRemainingRentalTime(it exists when sell temporarily sets status to unavailable even there's still remaining time) and choose which func to handle each case.
+   * if the property is not expired or disabled, it will call the handleCountdownTimer func
+   * if the property is temporarily unavailable, it will call the handleStopCountdownTimer func
+   * if the property is disabled, it will return DISABLED
+   * if the property is expired, it will return EXPIRED
+   */
+  function handleCheckBeforeInterval(property: Properties) {
+    if (property.remainingTime > 0 && property.status === AVAILABLE) {
+      handleCountdownTimer(property)
+      return
+    }
+
+    if (
+      property.savedRemainingRentalTime > 0 &&
+      property.status === UN_AVAILABLE
+    ) {
+      handleStopCountdownTimer(property)
+      return
+    }
+
+    return !property.remainingTime && property.status === UN_AVAILABLE
+      ? 'EXPIRED'
+      : 'DISABLED'
+  }
+  function handleStopCountdownTimer(property: Properties) {
+    if (
+      property.savedRemainingRentalTime > 0 &&
+      property.status === UN_AVAILABLE
+    ) {
+      const days = Math.floor(
+        property.savedRemainingRentalTime / (1000 * 60 * 60 * 24),
+      )
+      const hours = Math.floor(
+        (property.savedRemainingRentalTime % (1000 * 60 * 60 * 24)) /
+          (1000 * 60 * 60),
+      )
+      const minutes = Math.floor(
+        (property.savedRemainingRentalTime % (1000 * 60 * 60)) / (1000 * 60),
+      )
+      const seconds = Math.floor(
+        (property.savedRemainingRentalTime % (1000 * 60)) / 1000,
+      )
+      if (document.getElementById(`remainingTime${property.propertyId}`)) {
+        document.getElementById(
+          `remainingTime${property.propertyId}`,
+        )!.innerHTML =
+          days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's '
+      }
+      return ''
+    }
+  }
+
+  useEffect(() => {
+    intervals.forEach((el) => clearInterval(el))
+    setIntervals([])
+    return () => {
+      intervals.forEach((el) => clearInterval(el))
+      setIntervals([])
+    }
+  }, [isUpdated])
+
   const rows =
     properties.length > 0 ? (
       properties.map((element) => (
@@ -390,7 +522,7 @@ const TableProperty = ({
           key={element.propertyId}
           bg={
             selectedRows.includes(element.propertyId)
-              ? 'var(--mantine-color-blue-light)'
+              ? 'const(--mantine-color-blue-light)'
               : undefined
           }
         >
@@ -424,7 +556,12 @@ const TableProperty = ({
           <Table.Td>{element.feature.name}</Table.Td>
           <Table.Td>{element.category.name}</Table.Td>
           <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
-          <Table.Td id="remainingTime">{element.remainingTime}</Table.Td>
+          <Table.Td
+            key={element.propertyId}
+            id={`remainingTime${element.propertyId}`}
+          >
+            {handleCheckBeforeInterval(element)}
+          </Table.Td>
           <Table.Td>
             {element.status === AVAILABLE ? (
               <div className={style.available}>Available</div>
@@ -437,7 +574,7 @@ const TableProperty = ({
 
           <Table.Td>
             <div className={style.propertyActions}>
-              {element.status === 'Disable' ? (
+              {element.status === 'Disabled' ? (
                 <Tooltip label="Disabled" refProp="rootRef">
                   <Switch checked={false} />
                 </Tooltip>
