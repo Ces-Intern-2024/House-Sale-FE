@@ -22,10 +22,10 @@ export default function SellerPage() {
 
   const handleGetConversionRate = async () => {
     const data = await getConversionRateList()
-    const usdRate = data.filter(
+    const usdRate = data.find(
       (item: ConversionRate) => item.currencyFrom === 'USD',
     )
-    setConversionRate(usdRate[0].exchangeRate)
+    setConversionRate(usdRate.exchangeRate)
   }
 
   const handleBuyCredit = async () => {
