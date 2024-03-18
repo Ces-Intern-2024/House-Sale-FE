@@ -11,7 +11,7 @@
 }
 
 .imgContainer {
-  @apply grid gap-1 h-[90vh] mobile:h-[70vh] 
+  @apply grid gap-1 h-[90vh] mobile:h-[70vh]  relative
   xl:grid-cols-2 xl:grid-rows-1 
   lg:grid-cols-1 lg:grid-rows-2 
   md:grid-cols-1 md:grid-rows-2 xs:grid-cols-1 
@@ -20,5 +20,26 @@
 }
 
 .img {
-  @apply w-full h-full object-fill;
+  @apply w-full h-full object-fill relative;
 }
+
+.bottomDiv {
+@apply bottom-0 flex h-[50px] w-full absolute cursor-default
+}
+.statusDiv {
+  @apply bg-black text-white w-[150px] font-bold flex items-center justify-center
+}
+
+.priceDiv {
+  @apply bg-lightBlue text-white w-[150px] font-bold flex items-center justify-center
+}
+
+.control {
+  @apply hover:bg-blur;
+
+  &[data-inactive] {
+    opacity: 0;
+    cursor: default;
+  }
+}
+

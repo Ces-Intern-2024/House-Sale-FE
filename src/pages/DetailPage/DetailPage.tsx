@@ -88,7 +88,13 @@ export default function DetailPage() {
           {paths}
         </Breadcrumbs>
 
-        <DetailsImageList images={property?.images} name={property?.name} />
+        <DetailsImageList
+          images={property?.images}
+          name={property?.name}
+          price={property?.price}
+          status={property?.status}
+          feature={property?.feature.name}
+        />
         <div className={style.container}>
           <div className={style.containerDesc}>
             <DetailsProperty property={property!} />
