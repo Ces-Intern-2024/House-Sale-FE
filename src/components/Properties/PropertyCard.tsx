@@ -1,8 +1,5 @@
 import React, { useState } from 'react'
 import { FaLocationDot, FaRegHeart } from 'react-icons/fa6'
-import { MdOutlineZoomOutMap } from 'react-icons/md'
-import { IoBedOutline } from 'react-icons/io5'
-import { GrSteps } from 'react-icons/gr'
 import { Properties as PropertiesType } from '@/types'
 import style from './styles.module.scss'
 import { axiosInstance } from '../../service/AxiosInstance'
@@ -10,9 +7,13 @@ import { FaHeart } from 'react-icons/fa'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
 import Swal from 'sweetalert2'
-import { formatMoneyToUSD } from '../../utils/commonFunctions'
 import { Link } from 'react-router-dom'
 import { Button } from '@mantine/core'
+import { formatMoneyToUSD } from '../../utils/commonFunctions'
+import area from '../../assets/images/area.png'
+import bedroom from '../../assets/images/bed.png'
+import floor from '../../assets/images/stair.png'
+
 interface Props {
   data: PropertiesType
 }
@@ -45,7 +46,11 @@ const Properties = ({ data }: Props) => {
   return (
     <div className={style.propertyContainer}>
       <div className={style.propertyContent}>
-        <div className={style.propertyFeatured}>{data.feature.name}</div>
+        <div
+          className={`${style.propertyFeatured} ${data.feature.featureId === 1 ? 'bg-darkBlue' : 'bg-emerald-700'}`}
+        >
+          {data.feature.name}
+        </div>
         <div className={style.propertyCoverImage}>
           <Link to={`/details/${data.propertyId}`} key={data.propertyId}>
             {data.images.length > 0 ? (
@@ -144,15 +149,16 @@ const Properties = ({ data }: Props) => {
           )}
           <div className={style.propertyDescription}>
             <span className={style.propertyDesIcon}>
-              <MdOutlineZoomOutMap className="mr-[8px]" size={16} />
-              {data.landArea}
+              <img src={area} className="w-4 h-auto mr-2" />
+              {data.landArea} m²
             </span>
             <span className={style.propertyDesIcon}>
-              <IoBedOutline className="mr-[8px]" size={16} />
+              <img src={bedroom} className="w-5 h-auto mr-2" />
               {data.numberOfBedRoom}
             </span>
             <span className={style.propertyDesIcon}>
-              <GrSteps className="mr-[8px]" size={16} />
+            <img src={floor} className="w-5 h-auto mr-2" />
+
               {data.numberOfFloor}
             </span>
           </div>

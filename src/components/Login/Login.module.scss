@@ -2,7 +2,7 @@
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.2);
-  @apply bg-springGreenLogin hover:bg-turquoiseLoginHover w-full mt-8;
+  @apply bg-login hover:bg-hoverLogin w-full mt-8;
 }
 
 .divider {
