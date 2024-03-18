@@ -123,11 +123,11 @@ export default function MenuBar({
                           <div className=" flex flex-col justify-center gap-y-1 flex-wrap">
                             <div className="flex items-center">
                               <Avatar size={28} color="white" />
-                              <h3 className=" text-white font-bold ml-1  hover:text-orange-100">
+                              <span className="text-base text-white font-bold ml-1 hover:text-orange-100">
                                 {user.fullName
                                   ? user.fullName.toUpperCase()
                                   : 'USER'}
-                              </h3>
+                              </span>
                             </div>
                             <span
                               className={`h-[3px] bg-[#ffa500] ${activeLink === '#' ? 'opacity-100' : 'opacity-0'}`}
@@ -159,7 +159,7 @@ export default function MenuBar({
                           </NavLink>
                         )}
 
-                        <h1
+                        <span
                           onClick={() => {
                             open()
                           }}
@@ -167,16 +167,16 @@ export default function MenuBar({
                           <Menu.Item className={styles.dropdown}>
                             Change Password
                           </Menu.Item>
-                        </h1>
+                        </span>
 
-                        <h1 onClick={handleLogout}>
+                        <span onClick={handleLogout}>
                           <Menu.Item
                             className={styles.dropdown}
                             onClick={closeDrawer}
                           >
                             Log Out{' '}
                           </Menu.Item>
-                        </h1>
+                        </span>
                       </Menu.Dropdown>
                     </Menu>
                   </>
@@ -187,7 +187,7 @@ export default function MenuBar({
                     onClick={closeDrawer}
                   >
                     <div className=" flex flex-col justify-center">
-                      <h1 className={styles.navText}>LOG IN</h1>
+                      <span className={styles.navText}>LOG IN</span>
                       <span
                         className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/login' ? 'opacity-100' : 'opacity-0'}`}
                       ></span>

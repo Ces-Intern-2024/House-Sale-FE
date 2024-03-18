@@ -43,7 +43,7 @@ export default function TextSearchBar() {
     }
   }, [dispatch])
   const leftSection = (
-    <Button onClick={handleSearch} className="px-3 ">
+    <Button onClick={handleSearch} className="px-3 bg-transparent hover:bg-transparent" >
       <IconSearch className={styles.icon} size={30} />
     </Button>
   )

@@ -13,8 +13,6 @@ import {
   Pagination,
   Select,
   Checkbox,
-  Group,
-  Radio,
 } from '@mantine/core'
 import {
   FaPlus,
@@ -38,10 +36,10 @@ import {
 } from '../../constants/codeResponse.constant'
 import { SearchProps } from '@/types/searchProps'
 import {
-  deletePropertiesForSellerService,
-  getAllPropertiesForSellerService,
-  updateStatusPropertiesForSellerService,
+  deletePropertiesForSeller,
+  updateStatusPropertiesForSeller,
   searchPropertyForSeller,
+  getAllPropertiesForSeller,
 } from '../../service/SellerService'
 import {
   AVAILABLE,
@@ -49,11 +47,15 @@ import {
 } from '../../constants/statusProperty.constant'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
-import { cancelBtn, confirmBtn } from '../../constants/color.constant'
-import { getAllRentalPackageService } from '../../service/PackageService'
-import { PackageService } from '../../types/packageService'
-import { getProfile } from '../../service/ProfileService'
-import { User } from '@/types/user'
+import { cancelBtn, confirmBtn, primary } from '../../constants/color.constant'
+import {
+  ADD_PROP,
+  EDIT_PROP,
+  RENEW,
+  UPGRADE,
+  VIEW_PROP,
+} from '../../constants/actions.constant'
+import ModalPackageService from '../ModalPackageService/ModalPackageService'
 
 interface TablePropertyProps {
   setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>
@@ -89,29 +91,42 @@ const TableProperty = ({
   const [filterNum, setFilterNum] = useState<number>(0)
   const [sortBy, setSortBy] = useState('')
   const [orderBy, setOrderBy] = useState('')
+  const [titleModal, setTitleModal] = useState('')
+  const [actionModal, setActionModal] = useState('')
+  const [actionRental, setActionRental] = useState('')
   const dispatch = useAppDispatch()
 
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
+    setTitleModal('View Detail Property')
+    setActionModal(VIEW_PROP)
+    open()
+  }
+  const handlePropertyEdit = (property: Properties) => {
+    setSelectedProperty(property)
+    setTitleModal('Edit Property')
+    setActionModal(EDIT_PROP)
     open()
   }
   const handlePropertyAdd = () => {
     setSelectedProperty(null)
+    setTitleModal('Add New Property')
+    setActionModal(ADD_PROP)
+
     open()
   }
   const handleDelete = async (property: Properties) => {
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: `Are you sure to delete property ID: ${property.propertyId} ?`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: confirmBtn,
       cancelButtonColor: cancelBtn,
-      confirmButtonText: 'Yes, delete property!',
+      confirmButtonText: 'Delete',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deletePropertiesForSellerService(String(property.propertyId))
+          await deletePropertiesForSeller(String(property.propertyId))
           Swal.fire({
             title: 'Deleted!',
             text: 'Your property has been deleted.',
@@ -136,9 +151,9 @@ const TableProperty = ({
     setProperties(properties)
   }, [properties])
 
-  const getAllPropertiesForSeller = async () => {
+  const getAllProperties = async () => {
     try {
-      const res = await getAllPropertiesForSellerService()
+      const res = await getAllPropertiesForSeller()
       setProperties(res?.data.metaData.data)
       setTotalPages(res?.data.metaData.totalPages)
       setTotalItems(res?.data.metaData.totalItems)
@@ -148,7 +163,7 @@ const TableProperty = ({
   }
 
   useEffect(() => {
-    getAllPropertiesForSeller()
+    getAllProperties()
   }, [isUpdated, shouldUpdate])
 
   const categories: Category[] = useAppSelector(
@@ -228,6 +243,7 @@ const TableProperty = ({
       setActivePage(1)
       setResetPage(true)
       setResetFilter((prev) => !prev)
+      setSelectedRows([])
     }
   }
 
@@ -249,18 +265,43 @@ const TableProperty = ({
   }
   const handleUpdateStatus = async (event: boolean, property: Properties) => {
     if (event) {
-      Swal.fire({
-        title: `Are you sure to change this property's status to ${property.status === UN_AVAILABLE ? 'available' : 'unavailable'}?`,
-        icon: 'question',
-        showCancelButton: true,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          if (property.savedRemainingRentalTime > 0) {
+      if (
+        property.savedRemainingRentalTime <= 0 &&
+        property.status === UN_AVAILABLE
+      ) {
+        Swal.fire({
+          text: 'Your property is expired. Please renew your property.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: confirmBtn,
+          confirmButtonText: 'Renew property',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            setSelectedProperty(property)
+            setActionRental(RENEW)
+            openPackageService()
+          }
+        })
+      } else if (
+        property.savedRemainingRentalTime > 0 &&
+        property.status === UN_AVAILABLE
+      ) {
+        Swal.fire({
+          text: `You want to change status of property ID: ${property.propertyId} to ${property.status === UN_AVAILABLE ? 'Available' : 'Unavailable'} Or Upgrade package to property?`,
+          icon: 'question',
+          showCloseButton: true,
+          showDenyButton: true,
+          denyButtonColor: primary,
+          confirmButtonColor: confirmBtn,
+          confirmButtonText: 'Change status',
+          denyButtonText: 'Extend package',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
             try {
               setIsLoading(true)
-              await updateStatusPropertiesForSellerService(
+              await updateStatusPropertiesForSeller(
                 property.propertyId,
-                property.status === UN_AVAILABLE ? AVAILABLE : UN_AVAILABLE,
+                AVAILABLE,
               )
               Swal.fire({
                 icon: 'success',
@@ -273,22 +314,28 @@ const TableProperty = ({
             } finally {
               setIsLoading(false)
             }
-          } else {
+          } else if (result.isDenied) {
             setSelectedProperty(property)
+            setActionRental(UPGRADE)
             openPackageService()
           }
-        }
-      })
+        })
+      }
     } else {
       Swal.fire({
-        title: `Are you sure to change this property's status to ${property.status === UN_AVAILABLE ? 'available' : 'unavailable'}?`,
+        text: `Are you sure to change status of property ID: ${property.propertyId} to ${property.status === UN_AVAILABLE ? 'available' : 'unavailable'}?`,
         icon: 'question',
         showCancelButton: true,
+        showConfirmButton: true,
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
+        confirmButtonText: 'Change status',
+        cancelButtonText: 'Cancel',
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
             setIsLoading(true)
-            await updateStatusPropertiesForSellerService(
+            await updateStatusPropertiesForSeller(
               property.propertyId,
               UN_AVAILABLE,
             )
@@ -332,8 +379,7 @@ const TableProperty = ({
     }
     const parseSelectedRowsToString = String(selectedRows)
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: `Are you sure to delete these properties ID: ${JSON.stringify(parseSelectedRowsToString)}`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: confirmBtn,
@@ -342,7 +388,7 @@ const TableProperty = ({
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await deletePropertiesForSellerService(parseSelectedRowsToString)
+          await deletePropertiesForSeller(parseSelectedRowsToString)
           Swal.fire({
             title: 'Deleted!',
             text: 'Your property has been deleted.',
@@ -357,69 +403,6 @@ const TableProperty = ({
         }
       }
     })
-  }
-
-  const [packageServiceSelected, setPackageServiceSelected] = useState('')
-  const [pricePackageServiceSelected, setPricePackageServiceSelected] =
-    useState<number>()
-  const [packageServiceList, setPackageServiceList] = useState<
-    PackageService[]
-  >([])
-  const getAllPackageService = async () => {
-    const res = await getAllRentalPackageService()
-    setPackageServiceList(res.data.metaData)
-  }
-  useEffect(() => {
-    getAllPackageService()
-  }, [])
-
-  // Get userProfile to get current credit.
-  const [userProfile, setUserProfile] = useState<User | undefined>()
-  const getUserProfile = async () => {
-    const res = await getProfile()
-    setUserProfile(res)
-  }
-  useEffect(() => {
-    getUserProfile()
-  }, [])
-
-  const handleRenewProperty = async (property: Properties | null) => {
-    if (property) {
-      if (
-        userProfile?.balance &&
-        Number(userProfile.balance) >= Number(pricePackageServiceSelected!)
-      ) {
-        try {
-          await updateStatusPropertiesForSellerService(
-            property.propertyId,
-            AVAILABLE,
-            Number(packageServiceSelected),
-          )
-          closePackageService()
-          Swal.fire({
-            icon: 'success',
-            title: 'Renew successfully!',
-            text: 'This property is now available.',
-          })
-          setShouldUpdate((prev) => !prev)
-        } catch (error) {
-          console.error(error)
-        } finally {
-          setIsUpdated(!isUpdated)
-        }
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Insufficient balance',
-          text: 'You have insufficient balance',
-        })
-      }
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Something went wrong',
-      })
-    }
   }
 
   /**
@@ -468,7 +451,7 @@ const TableProperty = ({
           `remainingTime${property.propertyId}`,
         )!.innerHTML = 'EXPIRED'
         try {
-          await updateStatusPropertiesForSellerService(
+          await updateStatusPropertiesForSeller(
             property.propertyId,
             UN_AVAILABLE,
           )
@@ -548,6 +531,12 @@ const TableProperty = ({
     }
   }, [isUpdated])
 
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      setKeyword(event.currentTarget.value)
+      handleFiltering()
+    }
+  }
   const rows =
     properties.length > 0 ? (
       properties.map((element) => (
@@ -561,7 +550,7 @@ const TableProperty = ({
               : undefined
           }
         >
-          <Table.Td>
+          <Table.Td onClick={(event) => event.stopPropagation()}>
             <Checkbox
               aria-label="Select row"
               checked={selectedRows.includes(element.propertyId)}
@@ -584,7 +573,6 @@ const TableProperty = ({
               <span className={style.propertyName}>{element.name}</span>
             </div>
           </Table.Td>
-          <Table.Td>{element.code}</Table.Td>
           <Table.Td>{element.feature.name}</Table.Td>
           <Table.Td>{element.category.name}</Table.Td>
           <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
@@ -631,7 +619,7 @@ const TableProperty = ({
               )}
               <FaEdit
                 className={`${style.actionIcon} ${style.editIcon}`}
-                onClick={() => handlePropertyView(element)}
+                onClick={() => handlePropertyEdit(element)}
               />
               <MdDelete
                 className={`${style.actionIcon} ${style.deleteIcon}`}
@@ -663,9 +651,11 @@ const TableProperty = ({
                   classNames={{ input: style.inputText }}
                   placeholder="Enter your keyword..."
                   onChange={(event) => setKeyword(event.target.value)}
+                  onKeyDown={handleKeyDown}
                 />
               </div>
               <Select
+                comboboxProps={{ zIndex: 20 }}
                 classNames={{
                   input: style.elementSelect,
                   dropdown: style.dropdownSelectActions,
@@ -686,6 +676,7 @@ const TableProperty = ({
               />
 
               <Select
+                comboboxProps={{ zIndex: 20 }}
                 classNames={{
                   input: style.elementSelect,
                   dropdown: style.dropdownSelectActions,
@@ -750,7 +741,7 @@ const TableProperty = ({
             <Box pos="relative">
               <LoadingOverlay
                 visible={isLoading}
-                zIndex={1000}
+                zIndex={10}
                 overlayProps={{ radius: 'sm', blur: 2 }}
                 loaderProps={{ color: 'pink', type: 'bars' }}
               />
@@ -773,7 +764,6 @@ const TableProperty = ({
                     <Table.Th classNames={{ th: style.thName }}>
                       Property Name
                     </Table.Th>
-                    <Table.Th>Code</Table.Th>
                     <Table.Th>Featured</Table.Th>
                     <Table.Th>Category</Table.Th>
                     <Table.Th classNames={{ th: style.thPrice }}>
@@ -800,7 +790,7 @@ const TableProperty = ({
                       </span>
                     </Table.Th>
                     <Table.Th>Remaining Time</Table.Th>
-                    <Table.Th className="min-w-25">Status</Table.Th>
+                    <Table.Th className="min-w-30">Status</Table.Th>
                     <Table.Th>Actions</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
@@ -830,7 +820,7 @@ const TableProperty = ({
           setSelectedProperty(null)
         }}
         size={1280}
-        title="Manage Property"
+        title={titleModal}
         classNames={{
           header: style.headerModal,
           title: style.titleModal,
@@ -842,65 +832,26 @@ const TableProperty = ({
           property={selectedProperty}
           onClose={close}
           setShouldUpdate={setShouldUpdate}
+          action={actionModal}
         />
       </Modal>
       <Modal
         opened={openedPackageservice}
-        onClose={closePackageService}
+        onClose={() => {
+          closePackageService()
+          setSelectedProperty(null)
+        }}
         title="Package Service"
         centered
         classNames={{ title: style.titleModalPackage }}
       >
-        <div>
-          <div className="text-base text-black font-bold">
-            Your property&apos;s effective day is expired. Please, choose a
-            package to renew.
-          </div>
-          <div className="mt-4">
-            <Radio.Group
-              value={packageServiceSelected}
-              onChange={(value) => {
-                setPackageServiceSelected(value)
-              }}
-              withAsterisk
-              label="How long do you want to renew this property?"
-              className="text-base"
-              classNames={{
-                root: style.radioGroupRoot,
-                label: style.radioGroupLabel,
-              }}
-            >
-              <Group classNames={{ root: style.groupRoot }}>
-                {packageServiceList.length > 0 &&
-                  packageServiceList.map((item) => (
-                    <Radio
-                      onChange={() =>
-                        setPricePackageServiceSelected(item.price)
-                      }
-                      key={item.serviceId}
-                      value={String(item.serviceId)}
-                      label={`${item.serviceName} - ${item.price} credits`}
-                    />
-                  ))}
-              </Group>
-            </Radio.Group>
-          </div>
-          <div className="flex justify-center">
-            <Button
-              classNames={{ root: style.renewBtn }}
-              size="sm"
-              onClick={() => {
-                if (selectedProperty) {
-                  handleRenewProperty(selectedProperty)
-                } else {
-                  handleRenewProperty(null)
-                }
-              }}
-            >
-              Renew
-            </Button>
-          </div>
-        </div>
+        <ModalPackageService
+          closePackageService={closePackageService}
+          selectedProperty={selectedProperty}
+          setShouldUpdate={setShouldUpdate}
+          isUpdated={setIsUpdated}
+          actionRental={actionRental}
+        />
       </Modal>
     </>
   )

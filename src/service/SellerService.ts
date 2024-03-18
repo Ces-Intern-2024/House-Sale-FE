@@ -23,17 +23,17 @@ ${queryString.length === 0 ? `?limit=1000` : `&limit=1000`}`)
   return res.data.metaData.data
 }
 
-export const getAllPropertiesForSellerService = async () => {
+export const getAllPropertiesForSeller = async () => {
   const res = await axiosInstance.get('/seller/properties')
   return res
 }
 
-export const deletePropertiesForSellerService = async (listPropertyId:string) => {
+export const deletePropertiesForSeller = async (listPropertyId:string) => {
   const res = await axiosInstance.delete(`/seller/properties?propertyId=${listPropertyId}`)
   return res
 }
 
-export const updateStatusPropertiesForSellerService = async (
+export const updateStatusPropertiesForSeller = async (
   propertyId: number,
   status: string,
   serviceId?: number
@@ -54,7 +54,7 @@ export async function searchPropertyForSeller(searchValues: SearchProps) {
   return res
 }
 
-export const AddNewPropertyForSellerService = async (
+export const AddNewPropertyForSeller = async (
   propertyData: Properties,
   option: object,
 ) => {
@@ -62,5 +62,10 @@ export const AddNewPropertyForSellerService = async (
     propertyData,
     option,
   })
+  return res
+}
+
+export const updatePropertyForSeller = async (propertyId:number, value:any) =>{
+  const res = await axiosInstance.patch(`/seller/properties/${propertyId}`,value)
   return res
 }

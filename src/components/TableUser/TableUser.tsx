@@ -31,13 +31,11 @@ import Swal from 'sweetalert2'
 import { useDisclosure } from '@mantine/hooks'
 import ModalManageUser from '../ModalManageUser/ModalManageUser'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
-import { DELETE } from '../../constants/actions.constant'
-import { TiDeleteOutline } from 'react-icons/ti'
 
 function TableUser() {
   const [email, setEmail] = useState('')
   const [userList, setUserList] = useState<User[]>([])
-  const [roleId, setRoleId] = useState('')
+  const [roleId, setRoleId] = useState<string | null>(null)
   const [activePage, setActivePage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
@@ -46,7 +44,6 @@ function TableUser() {
   const [opened, { open, close }] = useDisclosure(false)
   const [userSelected, setUserSelected] = useState<User | null>(null)
   const [isUpdated, setIsUpdated] = useState(false)
-  const [action, setAction] = useState<string | null>(null)
 
   const getAllUser = async () => {
     try {
@@ -92,10 +89,6 @@ function TableUser() {
     }
   }
 
-  useEffect(() => {
-    handleSearchUsers()
-  }, [roleId])
-
   const handleKeyDown = (event: any) => {
     if (event.key === 'Enter') {
       handleSearchUsers()
@@ -109,7 +102,7 @@ function TableUser() {
         showCancelButton: true,
         confirmButtonColor: confirmBtn,
         cancelButtonColor: cancelBtn,
-        confirmButtonText: 'Yes, update user!',
+        confirmButtonText: 'Enable',
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
@@ -133,12 +126,12 @@ function TableUser() {
       })
     } else {
       Swal.fire({
-        title: `Are you sure, you want to disable user who has id: ${userId} ?`,
+        text: `Are you sure, you want to disable user who has id: ${userId} ?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: confirmBtn,
         cancelButtonColor: cancelBtn,
-        confirmButtonText: 'Yes, update user!',
+        confirmButtonText: 'Disable',
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
@@ -170,7 +163,7 @@ function TableUser() {
 
   useEffect(() => {
     handleSearchUsers()
-  }, [activePage])
+  }, [activePage, roleId])
 
   const openModalUser = (user: User) => {
     setUserSelected(user)
@@ -184,7 +177,7 @@ function TableUser() {
       showCancelButton: true,
       confirmButtonColor: confirmBtn,
       cancelButtonColor: cancelBtn,
-      confirmButtonText: 'Yes, delete user!',
+      confirmButtonText: 'Delete',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -197,6 +190,9 @@ function TableUser() {
           })
           setUserList(
             userList.filter((element) => element.userId !== user.userId),
+          )
+          setSelectedRows(
+            selectedRows.filter((element) => element !== user.userId),
           )
         } catch (error: any) {
           Swal.fire({
@@ -228,60 +224,35 @@ function TableUser() {
     }
   }
 
-  const handleActions = async () => {
-    if (!action) {
+  const handleDeleteAllSelectedRows = () => {
+    if (selectedRows.length > 0) {
+      const parseSelectedRowsToString = String(selectedRows)
       Swal.fire({
-        title: 'You must select actions',
-        icon: 'info',
-      })
-      return
-    }
-    switch (action) {
-      case DELETE: {
-        const parseSelectedRowsToString = String(selectedRows)
-        Swal.fire({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'question',
-          showCancelButton: true,
-          confirmButtonColor: confirmBtn,
-          cancelButtonColor: cancelBtn,
-          confirmButtonText: 'Yes, delete all selected!',
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            try {
-              await deleteUserForAdminService(parseSelectedRowsToString)
-              Swal.fire({
-                title: 'Deleted!',
-                text: `Selected Users has been deleted.`,
-                icon: 'success',
-              })
-              setIsUpdated((prev) => !prev)
-            } catch (error: any) {
-              Swal.fire({
-                title: error.response.data.error.message,
-                icon: 'error',
-              })
-            }
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
+        confirmButtonText: 'Delete',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await deleteUserForAdminService(parseSelectedRowsToString)
+            Swal.fire({
+              title: 'Deleted!',
+              text: `Selected Users has been deleted.`,
+              icon: 'success',
+            })
+            setIsUpdated((prev) => !prev)
+          } catch (error: any) {
+            Swal.fire({
+              title: error.response.data.error.message,
+              icon: 'error',
+            })
           }
-        })
-        break
-      }
-      case String(Roles.User): {
-        setRoleId(String(Roles.User))
-        break
-      }
-      case String(Roles.Seller): {
-        setRoleId(String(Roles.Seller))
-        break
-      }
-      default: {
-        Swal.fire({
-          title: 'Case default - You must select actions',
-          icon: 'info',
-        })
-        break
-      }
+        }
+      })
     }
   }
 
@@ -417,11 +388,6 @@ function TableUser() {
               >
                 <FaSearch size={20} />
               </Button>
-
-              <div className="flex items-center text-lg rounded-md px-2 cursor-pointer text-blur hover:text-[#945305]">
-                <TiDeleteOutline size={24} />
-                <span className='mt-1'>Clear</span>
-              </div>
             </div>
 
             <div className="flex items-end gap-4 justify-end">
@@ -434,26 +400,29 @@ function TableUser() {
                   options: style.optionsSelectActions,
                   option: style.optionSelectActions,
                 }}
-                label="Actions:"
-                placeholder="Choose Actions"
+                placeholder="Filter"
                 data={[
-                  { value: DELETE, label: 'Delete User' },
-                  { value: String(Roles.User), label: 'Filter By User Role ' },
+                  { value: String(Roles.User), label: 'Filter By User Role' },
                   {
                     value: String(Roles.Seller),
-                    label: 'Filter By Seller Role ',
+                    label: 'Filter By Seller Role',
                   },
                 ]}
                 onChange={(value: string | null) => {
-                  setAction(value)
+                  setRoleId(value)
                 }}
                 allowDeselect
               />
               <Button
-                classNames={{ root: style.rootApplyBtn }}
-                onClick={() => handleActions()}
+                classNames={{
+                  root:
+                    selectedRows.length > 0
+                      ? style.rootButtonDeleteAllAfter
+                      : style.rootButtonDeleteAll,
+                }}
+                onClick={() => handleDeleteAllSelectedRows()}
               >
-                Apply
+                Delete ({selectedRows.length}) properties
               </Button>
             </div>
           </div>

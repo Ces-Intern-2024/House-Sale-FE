@@ -5,7 +5,7 @@ import TransactionHistory from '../../components/Transaction/TransactionHistory'
 import { Button, Modal, NumberInput } from '@mantine/core'
 import { IconCurrencyDollar } from '@tabler/icons-react'
 import style from '../../components/Transaction/Transaction.module.scss'
-import { BsCoin } from 'react-icons/bs'
+import { GiCrownCoin } from 'react-icons/gi'
 import { getConversionRateList } from '../../service/TransactionService'
 import { useNavigate } from 'react-router-dom'
 import { MAX_CREDIT, MIN_CREDIT } from '../../constants/credit.constant'
@@ -95,7 +95,7 @@ export default function SellerPage() {
               setCreditAmount(_value)
             }}
             size="lg"
-            leftSection={<BsCoin size={25} color="#396652"></BsCoin>}
+            leftSection={<GiCrownCoin  size={25} color="#396652"></GiCrownCoin>}
             placeholder="Enter credit amount"
             allowDecimal={false}
             allowNegative={false}

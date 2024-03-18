@@ -427,11 +427,11 @@ export default function SearchComponent() {
         onClick={open}
       >
         Filter
-        {numOfFilters > 0 && <h1 className="ml-1">({numOfFilters})</h1>}
+        {numOfFilters > 0 && <span className="ml-1">({numOfFilters})</span>}
       </Button>
 
       <Button
-        className="w-[100px] h-[50px] text-primary font-bold px-0 rounded-none hover:text-[#5625d0] mobile:hidden lg:block"
+        className="w-[100px] h-[50px] text-primary font-bold px-0 rounded-none hover:text-[#5625d0] mobile:hidden lg:block bg-transparent hover:bg-transparent"
         onClick={handleResetFilter}
       >
         Clear Filters

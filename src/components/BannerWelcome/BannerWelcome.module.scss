@@ -11,10 +11,10 @@
 }
 
 .bannerWelcomeText {
-  @apply z-[1]  gap-x-[16px] gap-y-[16px] text-center flex-col justify-evenly items-center mx-auto  
+  @apply z-[1]  text-center flex-col justify-evenly items-center   
   xl:flex xl:max-h-[500px] xl:max-w-[40%] xl:min-h-[500px] xl:min-w-[50%] 
   lg:flex lg:max-h-[500px] lg:max-w-[40%] lg:min-h-[500px] lg:min-w-[50%]
-  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%] mobile:gap-y-[0px] mobile:gap-y-[30px] relative;
+  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%] mobile:gap-y-[0px]  relative;
 }
 
 .bannerWelcomeImage {
