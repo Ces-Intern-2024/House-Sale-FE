@@ -4,7 +4,7 @@ import {
   CODE_RESPONSE_400,
   CODE_RESPONSE_401,
   CODE_RESPONSE_404,
-} from '../constants/codeResponse'
+} from '../constants/codeResponse.constant'
 import axios from 'axios'
 
 export const addToWishListService = async (property: Properties) => {
@@ -49,8 +49,7 @@ export const getAllWishListService = async () => {
   }
 }
 
-
-export async function getPropertyById(propertyId:number) {
-  const res = await axios.get(`/properties/${propertyId}`);
+export async function getPropertyById(propertyId: number) {
+  const res = await axios.get(`/properties/${propertyId}`)
   return res.data.metaData
 }

@@ -12,7 +12,8 @@
   box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.2);
-  @apply flex flex-row items-center rounded-[15px] bg-[#399f83] w-[34px] bg-[#55efc4] hover:bg-[#50dfb6] py-[6px] px-2;
+  @apply flex flex-row items-center rounded-[15px] 
+   w-[34px] bg-zinc-200 hover:bg-zinc-400 py-[6px] px-2;
 }
 
 .rootLoginForm {

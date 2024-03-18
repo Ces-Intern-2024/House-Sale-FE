@@ -45,11 +45,14 @@
 }
 
 .inputText {
-  @apply focus:border-primary rounded-[8px] text-base;
+  @apply border-primary rounded-[8px] text-base;
 }
 
 .elementSelect {
-  @apply focus:border-primary rounded-[8px] text-base;
+  @apply border-primary rounded-[8px] text-base;
+}
+.sectionSelect {
+  @apply text-black;
 }
 
 .iconSearch {
@@ -62,11 +65,11 @@
 }
 
 .propertyNameCover {
-  @apply flex flex-row gap-2 items-center w-100;
+  @apply flex flex-row gap-2 items-center w-80;
 }
 
 .propertyName {
-  @apply text-black text-[17px] font-archivo font-[500] min-w-[260px] max-w-[380px] text-start cursor-pointer
+  @apply text-black text-[17px] font-archivo font-[500] min-w-[260px] max-w-[380px] text-start
   truncate;
 }
 .thName {
@@ -84,7 +87,7 @@
   @apply max-w-[200px] min-w-25 flex flex-row items-center gap-2;
 }
 .propertyActions {
-  @apply flex flex-row items-center justify-between h-full;
+  @apply flex flex-row items-center justify-between h-full gap-2;
 }
 
 .actionIcon {
@@ -190,6 +193,12 @@
   @apply bg-second mt-1 hover:bg-blur text-base font-semibold;
 }
 
+.rootBtnClear {
+  @apply bg-white text-blur text-base hover:bg-white hover:text-blur;
+}
+.rootBtnClearAfter {
+  @apply bg-white text-darkBlue text-base hover:bg-white hover:text-darkBlue;
+}
 // This style for Admin.
 
 .filteringCover {
@@ -228,18 +237,18 @@
 }
 
 .available {
-  @apply rounded-[20px] text-base text-white bg-green-available w-auto py-1 text-center;
+  @apply rounded-[20px] text-base text-white bg-green-available  py-1 text-center;
 }
 
 .unavailable {
-  @apply rounded-[20px] text-base text-white bg-purle-unavailable w-auto py-1 text-center;
+  @apply rounded-[20px] text-base text-white bg-purle-unavailable  py-1 text-center;
 }
 .disabledAdmin {
-  @apply rounded-[20px] text-base text-slate-200 bg-slate-500 w-auto py-1 text-center;
+  @apply rounded-[20px] text-base text-slate-200 bg-slate-500  py-1 text-center;
 }
 
 .tdNameCover {
-  @apply w-100;
+  @apply w-80;
 }
 
 .disabledIcon {
@@ -247,5 +256,9 @@
 }
 
 .rootButtonDeleteAll {
-  @apply bg-orangeBtn hover:bg-darkBlue;
+  @apply bg-slate-200 text-black hover:bg-slate-200 hover:text-black;
+}
+
+.rootButtonDeleteAllAfter {
+  @apply bg-darkBlue text-white hover:bg-darkBlue;
 }

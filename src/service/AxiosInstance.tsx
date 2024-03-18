@@ -3,7 +3,7 @@ import storage from 'redux-persist/lib/storage'
 import { store } from '../redux/store'
 import { Token } from '../types/token'
 import { signInSuccess } from '../redux/reducers/sessionSlice'
-import { CODE_RESPONSE_401 } from '../constants/codeResponse'
+import { CODE_RESPONSE_401 } from '../constants/codeResponse.constant'
 
 let isRefreshing = false
 let failedQueue: any = []

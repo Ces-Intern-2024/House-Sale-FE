@@ -37,16 +37,17 @@ import {
   getAllPropertiesForAdminSerivce,
   updateStatusPropertyForAdminService,
   deletePropertyForAdminService,
+  disablePropertyForAdminService,
 } from '../../service/AdminService'
 import {
   AVAILABLE,
   DISABLED,
   UN_AVAILABLE,
-} from '../../constants/statusProperty'
+} from '../../constants/statusProperty.constant'
 import { optionsFilter } from '../../utils/filterLocation'
 import { PiArrowsDownUp } from 'react-icons/pi'
 import Swal from 'sweetalert2'
-import { cancelBtn, confirmBtn } from '../../constants/colorConstant'
+import { cancelBtn, confirmBtn } from '../../constants/color.constant'
 
 const TablePropertyAdmin = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -150,11 +151,7 @@ const TablePropertyAdmin = () => {
 
   useEffect(() => {
     handleSearching()
-  }, [orderBy, sortBy])
-
-  useEffect(() => {
-    handleSearching()
-  }, [activePage, priceRange])
+  }, [orderBy, sortBy, activePage, priceRange])
 
   const provinces: Province[] = useAppSelector(
     (state) => state.location.provincesList,
@@ -195,6 +192,7 @@ const TablePropertyAdmin = () => {
     setActivePage(1)
     setPriceRange([0, maxPrice])
     setSelectedRows([])
+    setAction(null)
   }
 
   const handleDelete = async (property: Properties) => {
@@ -227,6 +225,7 @@ const TablePropertyAdmin = () => {
   }
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   const allSelected = selectedRows.length === properties.length
+
   const handleSelectBox = (event: boolean, propertyId: number) => {
     if (event) {
       setSelectedRows([...selectedRows, propertyId])
@@ -237,7 +236,7 @@ const TablePropertyAdmin = () => {
 
   const handleDeleteAllSelectedRows = () => {
     const parseSelectedRowsToString = String(selectedRows)
-    if(!action){
+    if (!action) {
       Swal.fire({
         title: 'You must select actions',
         icon: 'info',
@@ -272,6 +271,35 @@ const TablePropertyAdmin = () => {
         }
       })
     }
+    if (action === 'disable') {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
+        confirmButtonText: 'Yes, disable property!',
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await disablePropertyForAdminService(parseSelectedRowsToString)
+            Swal.fire({
+              title: 'Disabled!',
+              text: 'Property has been disabled.',
+              icon: 'success',
+            })
+            setIsUpdated((prev) => !prev)
+            setSelectedRows([])
+          } catch (error: any) {
+            Swal.fire({
+              title: error.response.data.error.message,
+              icon: 'error',
+            })
+          }
+        }
+      })
+    }
   }
 
   const handleSelectAllSelectedRows = () => {
@@ -282,10 +310,50 @@ const TablePropertyAdmin = () => {
       setSelectedRows(allPropertyIds)
     }
   }
+
+  const hanldeDisableProperty = async (property: Properties) => {
+    if (property === null) {
+      Swal.fire({
+        title: 'Something is wrong',
+        icon: 'error',
+      })
+      return
+    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Yes, disable property!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setIsLoading(true)
+          await disablePropertyForAdminService(String(property.propertyId))
+          Swal.fire({
+            title: 'Disabled!',
+            text: 'Property has been disabled.',
+            icon: 'success',
+          })
+          setIsUpdated((prev) => !prev)
+        } catch (error: any) {
+          Swal.fire({
+            title: error.response.data.error.message,
+            icon: 'error',
+          })
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    })
+  }
   const rows =
     properties.length > 0 &&
     properties.map((element) => (
       <Table.Tr
+        onClick={() => handlePropertyView(element)}
         className={style.detailContentTable}
         key={element.propertyId}
         bg={
@@ -304,10 +372,7 @@ const TablePropertyAdmin = () => {
           />
         </Table.Td>
         <Table.Td>{element.propertyId}</Table.Td>
-        <Table.Td
-          classNames={{ td: style.tdNameCover }}
-          onClick={() => handlePropertyView(element)}
-        >
+        <Table.Td classNames={{ td: style.tdNameCover }}>
           <div className={style.propertyNameCover}>
             <Image
               className={style.propertyImage}
@@ -326,7 +391,7 @@ const TablePropertyAdmin = () => {
         <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
         <Table.Td className="font-semibold">{element.seller.fullName}</Table.Td>
 
-        <Table.Td>
+        <Table.Td onClick={(event) => event.stopPropagation()}>
           {/* This comment has been kept as a temporary if there are any errors.
           <Select
             classNames={{
@@ -352,7 +417,7 @@ const TablePropertyAdmin = () => {
             <div className={style.disabledAdmin}>Disabled</div>
           )}
         </Table.Td>
-        <Table.Td>
+        <Table.Td onClick={(event) => event.stopPropagation()}>
           <div className={style.propertyActions}>
             {/* This comment has been kept as a temporary if there are any errors.
             <Tooltip label="Disable property">
@@ -365,12 +430,17 @@ const TablePropertyAdmin = () => {
             </Tooltip> */}
 
             {element.status === DISABLED ? (
-              <Tooltip label="Disable property" refProp="rootRef">
-                <Switch checked={false} />
+              <Tooltip label="Disabled" refProp="rootRef">
+                <Switch checked={false}/>
               </Tooltip>
             ) : (
-              <Tooltip label="Disable property" refProp="rootRef">
-                <Switch checked={true} />
+              <Tooltip label="Click to disable" refProp="rootRef">
+                <Switch
+                  checked={true}
+                  onChange={() => {
+                    hanldeDisableProperty(element)
+                  }}
+                />
               </Tooltip>
             )}
             <Tooltip label="Edit property">
@@ -539,8 +609,8 @@ const TablePropertyAdmin = () => {
               label="Actions:"
               placeholder="Choose Actions"
               data={[
-                { value: 'delete', label: 'Delete All' },
-                { value: 'disable', label: 'Disable All' },
+                { value: 'delete', label: 'Delete Property' },
+                { value: 'disable', label: 'Disable Property' },
               ]}
               onChange={(value: string | null) => {
                 setAction(value)
@@ -599,7 +669,7 @@ const TablePropertyAdmin = () => {
                     </span>
                   </Table.Th>
                   <Table.Th>Seller</Table.Th>
-                  <Table.Th>Status</Table.Th>
+                  <Table.Th className="w-25">Status</Table.Th>
                   <Table.Th>Actions</Table.Th>
                 </Table.Tr>
               </Table.Thead>

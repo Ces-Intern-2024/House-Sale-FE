@@ -5,7 +5,6 @@ import {
   Group,
   Select,
   NumberInput,
-  Textarea,
   TextInput,
   Radio,
 } from '@mantine/core'
@@ -32,7 +31,17 @@ import { User } from '../../types/user'
 import { PackageService } from '@/types/packageService'
 import { getAllRentalPackageService } from '../../service/PackageService'
 import { AddNewPropertyForSellerService } from '../../service/SellerService'
-
+import { RichTextEditor, Link } from '@mantine/tiptap'
+import { useEditor } from '@tiptap/react'
+import Highlight from '@tiptap/extension-highlight'
+import StarterKit from '@tiptap/starter-kit'
+import Underline from '@tiptap/extension-underline'
+import TextAlign from '@tiptap/extension-text-align'
+import Superscript from '@tiptap/extension-superscript'
+import SubScript from '@tiptap/extension-subscript'
+import { Color } from '@tiptap/extension-color'
+import TextStyle from '@tiptap/extension-text-style'
+import { IconColorPicker } from '@tabler/icons-react'
 interface Props {
   property: Properties | null
   onClose: () => void
@@ -46,6 +55,23 @@ const ModalProperty = ({
   isUpdated,
   setShouldUpdate,
 }: Props) => {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Underline,
+      Link,
+      Superscript,
+      TextStyle,
+      Color,
+      SubScript,
+      Highlight,
+      TextAlign.configure({ types: ['heading', 'paragraph'] }),
+    ],
+    onUpdate({ editor }) {
+      form.setFieldValue('description', editor.getHTML())
+    },
+    content: property?.description,
+  })
   const [files, setFiles] = useState<File[]>([])
 
   const [loading, setLoading] = useState(false)
@@ -107,7 +133,6 @@ const ModalProperty = ({
   const modalSchema = useMemo(() => {
     return yup.object().shape({
       name: yup.string().required('Name is required'),
-      code: yup.string().required('Code is required'),
       featureId: yup.string().required('Featured is required'),
       categoryId: yup.string().required('Category is required'),
       provinceCode: yup.string().required('Province Code is required'),
@@ -138,7 +163,6 @@ const ModalProperty = ({
   const form = useForm({
     initialValues: {
       name: property?.name,
-      code: property?.code,
       featureId: feature,
       categoryId: category,
       provinceCode: provinceCode,
@@ -187,6 +211,7 @@ const ModalProperty = ({
       price: Number(value.price),
       currencyCode: 'USD',
     }
+
     const option = {
       serviceId: packageServiceSelected,
     }
@@ -306,7 +331,7 @@ const ModalProperty = ({
               form.setFieldValue('name', event.currentTarget.value)
             }}
           />
-          <TextInput
+          {/* <TextInput
             {...form.getInputProps('code')}
             className={style.colModal}
             label="Property code"
@@ -314,6 +339,15 @@ const ModalProperty = ({
             withAsterisk
             onKeyUp={(event) => {
               form.setFieldValue('code', event.currentTarget.value)
+            }}
+          /> */}
+          <TextInput
+            {...form.getInputProps('direction')}
+            className={style.colModal}
+            label="Direction"
+            placeholder="Enter direction"
+            onKeyUp={(event) => {
+              form.setFieldValue('direction', event.currentTarget.value)
             }}
           />
           <Select
@@ -531,36 +565,25 @@ const ModalProperty = ({
             hideControls
             min={0}
           />
-          <TextInput
-            {...form.getInputProps('direction')}
+          <NumberInput
+            {...form.getInputProps('price')}
             className={style.colModal}
-            label="Direction"
-            placeholder="Enter direction"
-            onKeyUp={(event) => {
-              form.setFieldValue('direction', event.currentTarget.value)
-            }}
+            label="Price"
+            placeholder="Enter price "
+            min={0}
+            hideControls
+            required
           />
-          <div className={style.halfColModal}>
-            <NumberInput
-              {...form.getInputProps('price')}
-              className="w-1/2"
-              label="Price"
-              placeholder="Enter price "
-              min={0}
-              hideControls
-              required
-            />
-            <TextInput
-              className="w-1/2"
-              label="Currency Code"
-              placeholder="Enter currency"
-              readOnly
-              classNames={{
-                input: 'bg-slate-200',
-              }}
-              defaultValue="USD"
-            />
-          </div>
+          <TextInput
+            className={style.colModal}
+            label="Currency Code"
+            placeholder="Enter currency"
+            readOnly
+            classNames={{
+              input: 'bg-slate-200',
+            }}
+            defaultValue="USD"
+          />
         </div>
         <div className={style.mt}>
           <Radio.Group
@@ -587,6 +610,7 @@ const ModalProperty = ({
           </Radio.Group>
         </div>
 
+        {/* This comment is used for future if there is any error.
         <Textarea
           {...form.getInputProps('description')}
           className={style.description}
@@ -597,7 +621,86 @@ const ModalProperty = ({
           onKeyUp={(event) => {
             form.setFieldValue('description', event.currentTarget.value)
           }}
-        />
+        /> */}
+        <div>
+          <div className="font-semibold text-[14px] mt-4 mb-2">
+            Description{' '}
+          </div>
+          <RichTextEditor
+            editor={editor}
+            {...form.getInputProps('description')}
+          >
+            <RichTextEditor.Toolbar sticky stickyOffset={60}>
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Bold />
+                <RichTextEditor.Italic />
+                <RichTextEditor.Underline />
+                <RichTextEditor.Strikethrough />
+                <RichTextEditor.ClearFormatting />
+                <RichTextEditor.Highlight />
+                <RichTextEditor.Code />
+              </RichTextEditor.ControlsGroup>
+              <RichTextEditor.ColorPicker
+                colors={[
+                  '#25262b',
+                  '#868e96',
+                  '#fa5252',
+                  '#e64980',
+                  '#be4bdb',
+                  '#7950f2',
+                  '#4c6ef5',
+                  '#228be6',
+                  '#15aabf',
+                  '#12b886',
+                  '#40c057',
+                  '#82c91e',
+                  '#fab005',
+                  '#fd7e14',
+                ]}
+              />
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Control interactive={false}>
+                  <IconColorPicker size="1rem" stroke={1.5} />
+                </RichTextEditor.Control>
+                <RichTextEditor.Color color="#F03E3E" />
+                <RichTextEditor.Color color="#7048E8" />
+                <RichTextEditor.Color color="#1098AD" />
+                <RichTextEditor.Color color="#37B24D" />
+                <RichTextEditor.Color color="#F59F00" />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.UnsetColor />
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Blockquote />
+                <RichTextEditor.Hr />
+                <RichTextEditor.BulletList />
+                <RichTextEditor.OrderedList />
+                <RichTextEditor.Subscript />
+                <RichTextEditor.Superscript />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Link />
+                <RichTextEditor.Unlink />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.AlignLeft />
+                <RichTextEditor.AlignCenter />
+                <RichTextEditor.AlignJustify />
+                <RichTextEditor.AlignRight />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Undo />
+                <RichTextEditor.Redo />
+              </RichTextEditor.ControlsGroup>
+            </RichTextEditor.Toolbar>
+
+            <RichTextEditor.Content />
+          </RichTextEditor>
+        </div>
 
         <div className="mt-[20px]">
           {property === null && (
@@ -620,8 +723,8 @@ const ModalProperty = ({
             </Group>
           )}
 
-          <div className="border border-grey mt-[12px] bg-white min-h-25">
-            {files.length > 0 && (
+          {files.length > 0 && (
+            <div className="border border-grey mt-[12px] bg-white min-h-25">
               <div className="px-[16px] py-[8px] overflow-hidden flex flex-wrap gap-4">
                 {files.map((file, index) => (
                   <img
@@ -632,8 +735,10 @@ const ModalProperty = ({
                   />
                 ))}
               </div>
-            )}
-            {property !== null && (
+            </div>
+          )}
+          {property !== null && (
+            <div className="border border-grey mt-[12px] bg-white min-h-25">
               <div className="px-[16px] py-[8px] overflow-hidden flex flex-wrap gap-4">
                 {property?.images.map((image, index) => (
                   <img
@@ -644,8 +749,8 @@ const ModalProperty = ({
                   />
                 ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         <div className="text-base text-primary font-semibold mt-4 ">
           NOTE: You cannot change some information of your new property, so

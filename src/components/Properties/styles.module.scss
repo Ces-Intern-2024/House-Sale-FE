@@ -24,8 +24,7 @@
       uppercase 
       inline-block 
       z-[1]
-      text-white
-      bg-emerald-700;
+      text-white;
 }
 
 .propertyName {
@@ -73,7 +72,7 @@
 }
 
 .propertyDescription {
-  @apply p-3 flex justify-between leading-3;
+  @apply p-2 flex justify-between leading-3;
 }
 
 .propertyDesIcon {

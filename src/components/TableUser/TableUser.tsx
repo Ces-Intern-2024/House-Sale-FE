@@ -12,6 +12,7 @@ import {
   LoadingOverlay,
   Pagination,
   Modal,
+  Checkbox,
 } from '@mantine/core'
 import { FaEdit, FaSearch } from 'react-icons/fa'
 import {
@@ -29,7 +30,9 @@ import { SearchUsers } from '@/types/searchUsers'
 import Swal from 'sweetalert2'
 import { useDisclosure } from '@mantine/hooks'
 import ModalManageUser from '../ModalManageUser/ModalManageUser'
-import { cancelBtn, confirmBtn } from '../../constants/colorConstant'
+import { cancelBtn, confirmBtn } from '../../constants/color.constant'
+import { DELETE } from '../../constants/actions.constant'
+import { TiDeleteOutline } from 'react-icons/ti'
 
 function TableUser() {
   const [email, setEmail] = useState('')
@@ -43,6 +46,7 @@ function TableUser() {
   const [opened, { open, close }] = useDisclosure(false)
   const [userSelected, setUserSelected] = useState<User | null>(null)
   const [isUpdated, setIsUpdated] = useState(false)
+  const [action, setAction] = useState<string | null>(null)
 
   const getAllUser = async () => {
     try {
@@ -100,7 +104,7 @@ function TableUser() {
   const handleUpdateStatusUser = async (userId: number, event: boolean) => {
     if (event) {
       Swal.fire({
-        text: `Are you sure, you want to activate user who has id: ${userId} ?`,
+        text: `Are you sure, you want to enable user who has id: ${userId} ?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: confirmBtn,
@@ -129,7 +133,7 @@ function TableUser() {
       })
     } else {
       Swal.fire({
-        title: `Are you sure, you want to de-activate user who has id: ${userId} ?`,
+        title: `Are you sure, you want to disable user who has id: ${userId} ?`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: confirmBtn,
@@ -185,7 +189,7 @@ function TableUser() {
       if (result.isConfirmed) {
         try {
           setIsLoading(true)
-          await deleteUserForAdminService(user.userId)
+          await deleteUserForAdminService(String(user.userId))
           Swal.fire({
             title: 'Deleted!',
             text: `${user.fullName} has been deleted.`,
@@ -205,10 +209,103 @@ function TableUser() {
       }
     })
   }
+
+  const [selectedRows, setSelectedRows] = useState<number[]>([])
+  const allSelected = selectedRows.length === userList.length
+  const handleSelectBox = (event: boolean, userId: number) => {
+    if (event) {
+      setSelectedRows([...selectedRows, userId])
+    } else {
+      setSelectedRows(selectedRows.filter((id) => id !== userId))
+    }
+  }
+  const handleSelectAllSelectedRows = () => {
+    if (allSelected) {
+      setSelectedRows([])
+    } else {
+      const allUserIds = userList.map((user) => user.userId)
+      setSelectedRows(allUserIds)
+    }
+  }
+
+  const handleActions = async () => {
+    if (!action) {
+      Swal.fire({
+        title: 'You must select actions',
+        icon: 'info',
+      })
+      return
+    }
+    switch (action) {
+      case DELETE: {
+        const parseSelectedRowsToString = String(selectedRows)
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: confirmBtn,
+          cancelButtonColor: cancelBtn,
+          confirmButtonText: 'Yes, delete all selected!',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              await deleteUserForAdminService(parseSelectedRowsToString)
+              Swal.fire({
+                title: 'Deleted!',
+                text: `Selected Users has been deleted.`,
+                icon: 'success',
+              })
+              setIsUpdated((prev) => !prev)
+            } catch (error: any) {
+              Swal.fire({
+                title: error.response.data.error.message,
+                icon: 'error',
+              })
+            }
+          }
+        })
+        break
+      }
+      case String(Roles.User): {
+        setRoleId(String(Roles.User))
+        break
+      }
+      case String(Roles.Seller): {
+        setRoleId(String(Roles.Seller))
+        break
+      }
+      default: {
+        Swal.fire({
+          title: 'Case default - You must select actions',
+          icon: 'info',
+        })
+        break
+      }
+    }
+  }
+
   const rows =
     userList.length > 0 ? (
       userList.map((user) => (
-        <Table.Tr key={user.userId} className="text-base h-16">
+        <Table.Tr
+          key={user.userId}
+          className="text-base h-16"
+          bg={
+            selectedRows.includes(user.userId)
+              ? 'var(--mantine-color-blue-light)'
+              : undefined
+          }
+        >
+          <Table.Td>
+            <Checkbox
+              aria-label="Select row"
+              checked={selectedRows.includes(user.userId)}
+              onChange={(event) =>
+                handleSelectBox(event.currentTarget.checked, user.userId)
+              }
+            />
+          </Table.Td>
           <Table.Td>{user.userId}</Table.Td>
           <Table.Td onClick={() => openModalUser(user)}>
             {user.avatar ? (
@@ -245,7 +342,7 @@ function TableUser() {
           <Table.Td>{formatDateNoHours(user.createdAt)}</Table.Td>
           <Table.Td>
             {user.isActive ? (
-              <Tooltip label="Actived" refProp="rootRef">
+              <Tooltip label="Click to disable" refProp="rootRef">
                 <Switch
                   size="md"
                   checked={user.isActive ? true : false}
@@ -260,7 +357,7 @@ function TableUser() {
                 />
               </Tooltip>
             ) : (
-              <Tooltip label="De-activated" refProp="rootRef">
+              <Tooltip label="Click to enable" refProp="rootRef">
                 <Switch
                   size="md"
                   checked={user.isActive ? true : false}
@@ -320,30 +417,45 @@ function TableUser() {
               >
                 <FaSearch size={20} />
               </Button>
+
+              <div className="flex items-center text-lg rounded-md px-2 cursor-pointer text-blur hover:text-[#945305]">
+                <TiDeleteOutline size={24} />
+                <span className='mt-1'>Clear</span>
+              </div>
             </div>
-            <Select
-              className="col-span-1"
-              classNames={{
-                label: 'text-sm',
-                input:
-                  'h-auto rounded-none border-primary text-primary text-sm font-semibold',
-              }}
-              size="md"
-              allowDeselect
-              checkIconPosition="right"
-              placeholder="Filter By"
-              data={[
-                { label: 'User', value: '1' },
-                { label: 'Seller', value: '2' },
-              ]}
-              onChange={(value) => {
-                if (value) {
-                  setRoleId(value)
-                } else {
-                  setRoleId('')
-                }
-              }}
-            />
+
+            <div className="flex items-end gap-4 justify-end">
+              <Select
+                classNames={{
+                  root: style.rootSelectActions,
+                  label: style.labelSelectActions,
+                  input: style.inputSelectActions,
+                  dropdown: style.dropdownSelectActions,
+                  options: style.optionsSelectActions,
+                  option: style.optionSelectActions,
+                }}
+                label="Actions:"
+                placeholder="Choose Actions"
+                data={[
+                  { value: DELETE, label: 'Delete User' },
+                  { value: String(Roles.User), label: 'Filter By User Role ' },
+                  {
+                    value: String(Roles.Seller),
+                    label: 'Filter By Seller Role ',
+                  },
+                ]}
+                onChange={(value: string | null) => {
+                  setAction(value)
+                }}
+                allowDeselect
+              />
+              <Button
+                classNames={{ root: style.rootApplyBtn }}
+                onClick={() => handleActions()}
+              >
+                Apply
+              </Button>
+            </div>
           </div>
           <div className="mt-8">
             <Box pos="relative">
@@ -361,6 +473,12 @@ function TableUser() {
               >
                 <Table.Thead>
                   <Table.Tr className="text-base">
+                    <Table.Th>
+                      <Checkbox
+                        checked={allSelected}
+                        onChange={() => handleSelectAllSelectedRows()}
+                      />
+                    </Table.Th>
                     <Table.Th>ID</Table.Th>
                     <Table.Th>Avatar</Table.Th>
                     <Table.Th>Full name</Table.Th>

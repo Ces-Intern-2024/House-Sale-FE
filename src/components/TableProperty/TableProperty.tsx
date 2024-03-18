@@ -16,7 +16,13 @@ import {
   Group,
   Radio,
 } from '@mantine/core'
-import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa'
+import {
+  FaPlus,
+  FaSearch,
+  FaEdit,
+  FaLongArrowAltDown,
+  FaLongArrowAltUp,
+} from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 import { useDisclosure } from '@mantine/hooks'
 import ModalProperty from '../ModalProperty/ModalProperty'
@@ -29,7 +35,7 @@ import { PiArrowsDownUp } from 'react-icons/pi'
 import {
   CODE_RESPONSE_400,
   CODE_RESPONSE_401,
-} from '../../constants/codeResponse'
+} from '../../constants/codeResponse.constant'
 import { SearchProps } from '@/types/searchProps'
 import {
   deletePropertiesForSellerService,
@@ -37,10 +43,13 @@ import {
   updateStatusPropertiesForSellerService,
   searchPropertyForSeller,
 } from '../../service/SellerService'
-import { AVAILABLE, UN_AVAILABLE } from '../../constants/statusProperty'
+import {
+  AVAILABLE,
+  UN_AVAILABLE,
+} from '../../constants/statusProperty.constant'
 import { getAllFeatures } from '../../redux/reducers/featureSlice'
 import { getAllCategories } from '../../redux/reducers/categorySlice'
-import { cancelBtn, confirmBtn } from '../../constants/colorConstant'
+import { cancelBtn, confirmBtn } from '../../constants/color.constant'
 import { getAllRentalPackageService } from '../../service/PackageService'
 import { PackageService } from '../../types/packageService'
 import { getProfile } from '../../service/ProfileService'
@@ -72,12 +81,14 @@ const TableProperty = ({
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
   const [resetPage, setResetPage] = useState(true)
-  const [featureId, setFeatureId] = useState('')
-  const [categoryId, setCategoryId] = useState('')
+  const [featureId, setFeatureId] = useState<string | null>(null)
+  const [categoryId, setCategoryId] = useState<string | null>(null)
   const [keyword, setKeyword] = useState('')
-  const [action, setAction] = useState<string | null>(null)
   const [intervals, setIntervals] = useState<NodeJS.Timer[]>([])
-
+  const [resetFilter, setResetFilter] = useState(false)
+  const [filterNum, setFilterNum] = useState<number>(0)
+  const [sortBy, setSortBy] = useState('')
+  const [orderBy, setOrderBy] = useState('')
   const dispatch = useAppDispatch()
 
   const handlePropertyView = (property: Properties) => {
@@ -154,7 +165,7 @@ const TableProperty = ({
     dispatch(getAllFeatures())
   }, [dispatch])
 
-  const getPropertiesSortByPrice = async () => {
+  const _getPropertiesSortByPrice = async () => {
     try {
       setSort(!sort)
       if (sort) {
@@ -185,9 +196,12 @@ const TableProperty = ({
       categoryId: categoryId ? Number(categoryId) : null,
       featureId: featureId ? Number(featureId) : null,
       page: resetPage ? 1 : activePage,
+      sortBy: sortBy ? (sortBy.includes('asc') ? 'desc' : 'asc') : null,
+      orderBy: orderBy ? (orderBy.startsWith('p') ? 'price' : null) : null,
     }
 
     try {
+      setIsLoading(true)
       const res = await searchPropertyForSeller(data)
       setProperties(res.data.metaData.data)
       setTotalPages(res.data.metaData.totalPages)
@@ -196,11 +210,38 @@ const TableProperty = ({
       setResetPage(true)
     } catch (error: any) {
       setError(error.response.data.error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
   useEffect(() => {
     handleFiltering()
-  }, [activePage])
+  }, [activePage, featureId, categoryId, resetFilter, orderBy, sortBy])
+
+  const handleResetFilter = () => {
+    if (filterNum > 0) {
+      setKeyword('')
+      setCategoryId(null)
+      setFeatureId(null)
+      setSortBy('')
+      setOrderBy('')
+      setActivePage(1)
+      setResetPage(true)
+      setResetFilter((prev) => !prev)
+    }
+  }
+
+  const checkNumFilter = () => {
+    setFilterNum(0)
+    if (keyword) setFilterNum((prev) => prev + 1)
+    if (categoryId) setFilterNum((prev) => prev + 1)
+    if (featureId) setFilterNum((prev) => prev + 1)
+    if (sortBy) setFilterNum((prev) => prev + 1)
+  }
+
+  useEffect(() => {
+    checkNumFilter()
+  }, [keyword, categoryId, featureId, sortBy])
 
   const handleChangeActivePage = async (page: any) => {
     setResetPage(false)
@@ -286,42 +327,36 @@ const TableProperty = ({
   }
 
   const handleDeleteAllSelectedRows = () => {
-    const parseSelectedRowsToString = String(selectedRows)
-    if (!action) {
-      Swal.fire({
-        title: 'You must select actions',
-        icon: 'info',
-      })
+    if (selectedRows.length === 0) {
       return
     }
-    if (action === 'delete') {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: confirmBtn,
-        cancelButtonColor: cancelBtn,
-        confirmButtonText: 'Yes, delete all selected!',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            await deletePropertiesForSellerService(parseSelectedRowsToString)
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'Your property has been deleted.',
-              icon: 'success',
-            })
-            setIsUpdated(!isUpdated)
-          } catch (error: any) {
-            Swal.fire({
-              title: error.response.data.error.message,
-              icon: 'error',
-            })
-          }
+    const parseSelectedRowsToString = String(selectedRows)
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Yes, delete selected property!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePropertiesForSellerService(parseSelectedRowsToString)
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your property has been deleted.',
+            icon: 'success',
+          })
+          setIsUpdated(!isUpdated)
+        } catch (error: any) {
+          Swal.fire({
+            title: error.response.data.error.message,
+            icon: 'error',
+          })
         }
-      })
-    }
+      }
+    })
   }
 
   const [packageServiceSelected, setPackageServiceSelected] = useState('')
@@ -439,7 +474,6 @@ const TableProperty = ({
           )
           setIsUpdated((prev) => !prev)
         } catch (err) {
-          // console.log(err)
           clearInterval(x)
         } finally {
           clearInterval(x)
@@ -518,11 +552,12 @@ const TableProperty = ({
     properties.length > 0 ? (
       properties.map((element) => (
         <Table.Tr
+          onClick={() => handlePropertyView(element)}
           className={style.detailContentTable}
           key={element.propertyId}
           bg={
             selectedRows.includes(element.propertyId)
-              ? 'const(--mantine-color-blue-light)'
+              ? 'var(--mantine-color-blue-light)'
               : undefined
           }
         >
@@ -536,10 +571,7 @@ const TableProperty = ({
             />
           </Table.Td>
           <Table.Td>{element.propertyId}</Table.Td>
-          <Table.Td
-            onClick={() => handlePropertyView(element)}
-            classNames={{ td: style.tdNameCover }}
-          >
+          <Table.Td classNames={{ td: style.tdNameCover }}>
             <div className={style.propertyNameCover}>
               <Image
                 className={style.propertyImage}
@@ -562,7 +594,7 @@ const TableProperty = ({
           >
             {handleCheckBeforeInterval(element)}
           </Table.Td>
-          <Table.Td>
+          <Table.Td onClick={(event) => event.stopPropagation()}>
             {element.status === AVAILABLE ? (
               <div className={style.available}>Available</div>
             ) : element.status === UN_AVAILABLE ? (
@@ -572,14 +604,14 @@ const TableProperty = ({
             )}
           </Table.Td>
 
-          <Table.Td>
+          <Table.Td onClick={(event) => event.stopPropagation()}>
             <div className={style.propertyActions}>
               {element.status === 'Disabled' ? (
                 <Tooltip label="Disabled" refProp="rootRef">
                   <Switch checked={false} />
                 </Tooltip>
               ) : element.status === 'Available' ? (
-                <Tooltip label="Available property" refProp="rootRef">
+                <Tooltip label="Disable property" refProp="rootRef">
                   <Switch
                     checked={element.status === 'Available' ? true : false}
                     onChange={(event) =>
@@ -588,7 +620,7 @@ const TableProperty = ({
                   />
                 </Tooltip>
               ) : (
-                <Tooltip label="Unavailable property" refProp="rootRef">
+                <Tooltip label="Enable property" refProp="rootRef">
                   <Switch
                     checked={element.status === 'Available' ? true : false}
                     onChange={(event) =>
@@ -634,7 +666,12 @@ const TableProperty = ({
                 />
               </div>
               <Select
-                classNames={{ input: style.elementSelect }}
+                classNames={{
+                  input: style.elementSelect,
+                  dropdown: style.dropdownSelectActions,
+                  options: style.optionsSelectActions,
+                  option: style.optionSelectActions,
+                }}
                 placeholder="Select Featured"
                 data={features.flatMap((feature) => [
                   {
@@ -643,17 +680,18 @@ const TableProperty = ({
                   },
                 ])}
                 onChange={(value: string | null) => {
-                  if (value !== null) {
-                    setFeatureId(value)
-                  } else {
-                    setFeatureId('')
-                  }
+                  setFeatureId(value)
                 }}
                 allowDeselect
               />
 
               <Select
-                classNames={{ input: style.elementSelect }}
+                classNames={{
+                  input: style.elementSelect,
+                  dropdown: style.dropdownSelectActions,
+                  options: style.optionsSelectActions,
+                  option: style.optionSelectActions,
+                }}
                 placeholder="Select Category"
                 data={categories.flatMap((category) => [
                   {
@@ -662,11 +700,7 @@ const TableProperty = ({
                   },
                 ])}
                 onChange={(value: string | null) => {
-                  if (value !== null) {
-                    setCategoryId(value)
-                  } else {
-                    setCategoryId('')
-                  }
+                  setCategoryId(value)
                 }}
                 allowDeselect
               />
@@ -689,41 +723,27 @@ const TableProperty = ({
               </Button>
             </div>
           </div>
-          {/* This comment can be used when we want to change select option into button. 
-          <Button
-            className="mt-4"
-            classNames={{ root: style.rootButtonDeleteAll }}
-            onClick={() => handleDeleteAllSelectedRows()}
-          >
-            Delete All
-          </Button> */}
-          <div className="flex items-end gap-4 mt-8 justify-end">
-            <Select
-              classNames={{
-                root: style.rootSelectActions,
-                label: style.labelSelectActions,
-                input: style.inputSelectActions,
-                dropdown: style.dropdownSelectActions,
-                options: style.optionsSelectActions,
-                option: style.optionSelectActions,
-              }}
-              label="Actions:"
-              placeholder="Choose Actions"
-              data={[
-                { value: 'delete', label: 'Delete All' },
-                // This comment can be used in future when we want to expand function.
-                // { value: 'disable', label: 'Disable All' },
-              ]}
-              onChange={(value: string | null) => {
-                setAction(value)
-              }}
-              allowDeselect
-            />
+          <div className="mt-4 flex justify-between">
             <Button
-              classNames={{ root: style.rootApplyBtn }}
+              classNames={{
+                root:
+                  selectedRows.length > 0
+                    ? style.rootButtonDeleteAllAfter
+                    : style.rootButtonDeleteAll,
+              }}
               onClick={() => handleDeleteAllSelectedRows()}
             >
-              Apply
+              Delete ({selectedRows.length}) properties
+            </Button>
+
+            <Button
+              classNames={{
+                root:
+                  filterNum > 0 ? style.rootBtnClearAfter : style.rootBtnClear,
+              }}
+              onClick={() => handleResetFilter()}
+            >
+              Clear filter {filterNum > 0 && <span>({filterNum})</span>}
             </Button>
           </div>
           <div className={style.tableContent}>
@@ -758,15 +778,29 @@ const TableProperty = ({
                     <Table.Th>Category</Table.Th>
                     <Table.Th classNames={{ th: style.thPrice }}>
                       <span>Price</span>
-
-                      <PiArrowsDownUp
-                        onClick={() => getPropertiesSortByPrice()}
-                        className="cursor-pointer"
-                        size={20}
-                      />
+                      <span
+                        className="flex justify-between cursor-pointer"
+                        onClick={() => {
+                          setOrderBy('price')
+                          setSortBy(sortBy.includes('asc') ? 'desc' : 'asc')
+                        }}
+                      >
+                        {sortBy ? (
+                          sortBy === 'desc' ? (
+                            <FaLongArrowAltUp />
+                          ) : (
+                            <FaLongArrowAltDown />
+                          )
+                        ) : (
+                          <PiArrowsDownUp
+                            className="cursor-pointer"
+                            size={20}
+                          />
+                        )}
+                      </span>
                     </Table.Th>
                     <Table.Th>Remaining Time</Table.Th>
-                    <Table.Th>Status</Table.Th>
+                    <Table.Th className="min-w-25">Status</Table.Th>
                     <Table.Th>Actions</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
