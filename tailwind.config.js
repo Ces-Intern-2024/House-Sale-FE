@@ -32,6 +32,7 @@ module.exports = {
         feedbackBackground: '#f3f3fe',
         'green-available': '#37d159',
         'purle-unavailable': '#3b4cb8',
+        lightBlue: '#4dc7ec',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],
