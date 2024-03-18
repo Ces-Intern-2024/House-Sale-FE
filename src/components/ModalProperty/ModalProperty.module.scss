@@ -37,13 +37,21 @@
 }
 
 .radioGroupRoot {
-  @apply flex flex-row gap-1;
+  @apply flex flex-row gap-4;
 }
 
-.radioGroupLabel{
-  @apply w-1/4 
+.radioGroupLabel {
+  
 }
 
 .groupRoot {
-  @apply flex flex-row;
+  @apply gap-12;
+}
+
+.resetBtn {
+  @apply bg-slate-200 hover:bg-slate-200;
+}
+
+.resetBtnAfter {
+  @apply bg-slate-500 hover:bg-slate-600 text-white;
 }

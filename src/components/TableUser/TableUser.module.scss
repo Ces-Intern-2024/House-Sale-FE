@@ -86,3 +86,10 @@
 .rootApplyBtn {
   @apply bg-darkBlue text-white text-base hover:bg-orangeBtn;
 }
+.rootButtonDeleteAll {
+  @apply bg-slate-200 text-black hover:bg-slate-200 hover:text-black;
+}
+
+.rootButtonDeleteAllAfter {
+  @apply bg-darkBlue text-white hover:bg-darkBlue;
+}

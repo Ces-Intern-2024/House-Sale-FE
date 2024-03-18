@@ -69,7 +69,7 @@ const Properties = ({ data }: Props) => {
             <Link
               to={`/details/${data.propertyId}`}
               key={data.propertyId}
-              className={style.propertyName}
+              className={style.propertyNameLink}
             >
               {data.name}
             </Link>

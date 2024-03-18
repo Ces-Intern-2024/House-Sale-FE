@@ -34,7 +34,7 @@
 }
 
 .navText {
-  @apply font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
+  @apply text-base font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
 }
 
 .outer {

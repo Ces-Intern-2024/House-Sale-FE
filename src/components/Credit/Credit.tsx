@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import style from './Credit.module.scss'
-import { BsCoin } from 'react-icons/bs'
 import { IoIosNotifications } from 'react-icons/io'
 import { getTransactionRentService } from '../../service/SellerService'
 import { formatDate, sortTransactionsByDate } from '../../utils/commonFunctions'
@@ -9,6 +8,7 @@ import { User } from '@/types/user'
 import { IoCalendarNumberOutline } from 'react-icons/io5'
 import { Button } from '@mantine/core'
 import { HistoryTransaction } from '../../types/historyTransaction'
+import { GiCrownCoin } from 'react-icons/gi'
 
 interface CreditProps {
   shouldUpdate: boolean
@@ -50,7 +50,7 @@ const Credit = ({ shouldUpdate }: CreditProps) => {
                 </span>
               )}
               <span className={style.creditIcon}>
-                <BsCoin />
+                <GiCrownCoin />
               </span>
             </div>
           </div>
@@ -88,7 +88,7 @@ const Credit = ({ shouldUpdate }: CreditProps) => {
                     </span>
                     <span className={style.money}>{history.amount}</span>
                     <span className={style.icon}>
-                      <BsCoin />
+                      <GiCrownCoin  />
                     </span>
                   </div>
                 </div>

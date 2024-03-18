@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import {
   FileButton,
   Button,
@@ -24,13 +24,15 @@ import { Ward } from '@/types/ward'
 import { useForm } from '@mantine/form'
 import { yupResolver } from 'mantine-form-yup-resolver'
 import * as yup from 'yup'
-import { axiosInstance } from '../../service/AxiosInstance'
 import Swal from 'sweetalert2'
 import { getProfile } from '../../service/ProfileService'
 import { User } from '../../types/user'
 import { PackageService } from '@/types/packageService'
 import { getAllRentalPackageService } from '../../service/PackageService'
-import { AddNewPropertyForSellerService } from '../../service/SellerService'
+import {
+  AddNewPropertyForSeller,
+  updatePropertyForSeller,
+} from '../../service/SellerService'
 import { RichTextEditor, Link } from '@mantine/tiptap'
 import { useEditor } from '@tiptap/react'
 import Highlight from '@tiptap/extension-highlight'
@@ -42,18 +44,26 @@ import SubScript from '@tiptap/extension-subscript'
 import { Color } from '@tiptap/extension-color'
 import TextStyle from '@tiptap/extension-text-style'
 import { IconColorPicker } from '@tabler/icons-react'
+import { TiDelete } from 'react-icons/ti'
+import {
+  ADD_PROP,
+  EDIT_PROP,
+  VIEW_PROP,
+} from '../../constants/actions.constant'
+import { AVAILABLE } from '../../constants/statusProperty.constant'
 interface Props {
   property: Properties | null
   onClose: () => void
   isUpdated?: (value: boolean) => void
   setShouldUpdate?: React.Dispatch<React.SetStateAction<boolean>>
+  action?: string
 }
 
 const ModalProperty = ({
   property,
   onClose,
-  isUpdated,
   setShouldUpdate,
+  action,
 }: Props) => {
   const editor = useEditor({
     extensions: [
@@ -73,6 +83,7 @@ const ModalProperty = ({
     content: property?.description,
   })
   const [files, setFiles] = useState<File[]>([])
+  const resetRef = useRef<() => void>(null)
 
   const [loading, setLoading] = useState(false)
 
@@ -119,7 +130,19 @@ const ModalProperty = ({
   const features: Feature[] = useAppSelector(
     (state) => state.feature.featuresList,
   )
+  useEffect(() => {
+    setDistrictCode('')
+    setWardCode('')
+  }, [provinceCode])
 
+  useEffect(() => {
+    setWardCode('')
+  }, [districtCode])
+
+  const clearFile = () => {
+    setFiles([])
+    resetRef.current?.()
+  }
   // Get userProfile to get current credit.
   const [userProfile, setUserProfile] = useState<User | undefined>()
   const getUserProfile = async () => {
@@ -200,6 +223,28 @@ const ModalProperty = ({
     return imageUrl
   }
 
+  const handleRemoveImage = (file: File) => {
+    setFiles(files.filter((f) => f !== file))
+  }
+  const handleAddMoreImage = (inputFiles: File[]) => {
+    if (files.length > 0) {
+      setFiles([...files, ...inputFiles])
+    } else {
+      setFiles(inputFiles)
+    }
+  }
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-right',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer
+      toast.onmouseleave = Swal.resumeTimer
+    },
+  })
   const handleAddNew = async (value: any) => {
     const convertProperty = {
       ...value,
@@ -228,7 +273,7 @@ const ModalProperty = ({
           }
           // After all of images is pushed. Send it to server.
           const newProperty = { ...convertProperty, images: arr }
-          const res = await AddNewPropertyForSellerService(newProperty, option)
+          const res = await AddNewPropertyForSeller(newProperty, option)
           setLoading(false)
           onClose()
           Swal.fire({
@@ -253,8 +298,8 @@ const ModalProperty = ({
       }
     } catch (error: any) {
       setLoading(false)
-      Swal.fire({
-        title: error.response.data.error.message,
+      Toast.fire({
+        text: error.response.data.error.message,
         icon: 'error',
       })
     }
@@ -271,25 +316,23 @@ const ModalProperty = ({
     delete value.numberOfBedRoom
     delete value.numberOfToilet
     delete value.numberOfFloor
-    try {
-      setLoading(true)
-      const res = await axiosInstance.patch(
-        `/seller/properties/${property?.propertyId}`,
-        value,
-      )
-      setLoading(false)
-      onClose()
-      Swal.fire({
-        title: 'Updated successfully',
-        icon: 'success',
-      })
-      isUpdated!(true)
-      return res
-    } catch (error: any) {
-      Swal.fire({
-        title: error.response.data.error.message,
-        icon: 'error',
-      })
+    if (property?.propertyId) {
+      try {
+        setLoading(true)
+        await updatePropertyForSeller(property?.propertyId, value)
+        setLoading(false)
+        onClose()
+        Swal.fire({
+          title: 'Updated successfully',
+          icon: 'success',
+        })
+        setShouldUpdate!((prev) => !prev)
+      } catch (error: any) {
+        Toast.fire({
+          text: error.response.data.error.message,
+          icon: 'error',
+        })
+      }
     }
   }
 
@@ -307,7 +350,6 @@ const ModalProperty = ({
     const res = await getAllRentalPackageService()
     setPackageService(res.data.metaData)
   }
-
   useEffect(() => {
     getAllPackageService()
   }, [])
@@ -330,8 +372,21 @@ const ModalProperty = ({
             onKeyUp={(event) => {
               form.setFieldValue('name', event.currentTarget.value)
             }}
+            readOnly={
+              action === VIEW_PROP
+                ? true
+                : action === EDIT_PROP
+                  ? false
+                  : action === ADD_PROP
+                    ? false
+                    : true
+            }
+            classNames={{
+              input: action === VIEW_PROP ? 'bg-slate-200' : 'bg-white',
+            }}
           />
-          {/* <TextInput
+          {/* this comment can be use in future if this project will expand. 
+          <TextInput
             {...form.getInputProps('code')}
             className={style.colModal}
             label="Property code"
@@ -348,6 +403,18 @@ const ModalProperty = ({
             placeholder="Enter direction"
             onKeyUp={(event) => {
               form.setFieldValue('direction', event.currentTarget.value)
+            }}
+            readOnly={
+              action === VIEW_PROP
+                ? true
+                : action === EDIT_PROP
+                  ? false
+                  : action === ADD_PROP
+                    ? false
+                    : true
+            }
+            classNames={{
+              input: action === VIEW_PROP ? 'bg-slate-200' : 'bg-white',
             }}
           />
           <Select
@@ -551,11 +618,25 @@ const ModalProperty = ({
           />
         </div>
         <div className={`${style.rowModal} ${style.mt}`}>
-          <TextInput
+          <NumberInput
             {...form.getInputProps('landArea')}
             className={style.colModal}
             label="Land of Area"
             placeholder="Enter number"
+            hideControls
+            min={0}
+            readOnly={
+              action === VIEW_PROP
+                ? true
+                : action === EDIT_PROP
+                  ? false
+                  : action === ADD_PROP
+                    ? false
+                    : true
+            }
+            classNames={{
+              input: action === VIEW_PROP ? 'bg-slate-200' : 'bg-white',
+            }}
           />
           <NumberInput
             {...form.getInputProps('areaOfUse')}
@@ -564,6 +645,18 @@ const ModalProperty = ({
             placeholder="Enter number "
             hideControls
             min={0}
+            readOnly={
+              action === VIEW_PROP
+                ? true
+                : action === EDIT_PROP
+                  ? false
+                  : action === ADD_PROP
+                    ? false
+                    : true
+            }
+            classNames={{
+              input: action === VIEW_PROP ? 'bg-slate-200' : 'bg-white',
+            }}
           />
           <NumberInput
             {...form.getInputProps('price')}
@@ -573,6 +666,18 @@ const ModalProperty = ({
             min={0}
             hideControls
             required
+            readOnly={
+              action === VIEW_PROP
+                ? true
+                : action === EDIT_PROP
+                  ? false
+                  : action === ADD_PROP
+                    ? false
+                    : true
+            }
+            classNames={{
+              input: action === VIEW_PROP ? 'bg-slate-200' : 'bg-white',
+            }}
           />
           <TextInput
             className={style.colModal}
@@ -585,30 +690,38 @@ const ModalProperty = ({
             defaultValue="USD"
           />
         </div>
-        <div className={style.mt}>
-          <Radio.Group
-            value={packageServiceSelected}
-            onChange={(value) => setPackageServiceSelected(value)}
-            withAsterisk
-            label="How long do you want to public this property?"
-            className="text-base"
-            classNames={{
-              root: style.radioGroupRoot,
-              label: style.radioGroupLabel,
-            }}
-          >
-            <Group classNames={{ root: style.groupRoot }}>
-              {packageService.length > 0 &&
-                packageService.map((item) => (
-                  <Radio
-                    key={item.serviceId}
-                    value={String(item.serviceId)}
-                    label={`${item.duration} days`}
-                  />
-                ))}
-            </Group>
-          </Radio.Group>
-        </div>
+        {!property && (
+          <div className={style.mt}>
+            <Radio.Group
+              value={packageServiceSelected}
+              onChange={(value) => setPackageServiceSelected(value)}
+              withAsterisk
+              label="How long do you want to public this property?"
+              className="text-base"
+              classNames={{
+                root: style.radioGroupRoot,
+                label: style.radioGroupLabel,
+              }}
+            >
+              <Group classNames={{ root: style.groupRoot }}>
+                {packageService.length > 0 &&
+                  packageService.map((item) => (
+                    <div
+                      key={item.serviceId}
+                      className="flex gap-1 items-center text-[14px]"
+                    >
+                      <Radio
+                        key={item.serviceId}
+                        value={String(item.serviceId)}
+                        label={`${item.duration} days`}
+                      />{' '}
+                      - {Number(item.price)} credits
+                    </div>
+                  ))}
+              </Group>
+            </Radio.Group>
+          </div>
+        )}
 
         {/* This comment is used for future if there is any error.
         <Textarea
@@ -640,6 +753,14 @@ const ModalProperty = ({
                 <RichTextEditor.Highlight />
                 <RichTextEditor.Code />
               </RichTextEditor.ControlsGroup>
+              
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.H1 />
+                <RichTextEditor.H2 />
+                <RichTextEditor.H3 />
+                <RichTextEditor.H4 />
+              </RichTextEditor.ControlsGroup>
+
               <RichTextEditor.ColorPicker
                 colors={[
                   '#25262b',
@@ -706,7 +827,10 @@ const ModalProperty = ({
           {property === null && (
             <Group justify="start">
               <FileButton
-                onChange={setFiles}
+                resetRef={resetRef}
+                onChange={(file: File[]) => {
+                  handleAddMoreImage(file)
+                }}
                 accept="image/png,image/jpeg"
                 multiple
               >
@@ -720,31 +844,48 @@ const ModalProperty = ({
                   </Button>
                 )}
               </FileButton>
+              <Button
+                disabled={files.length > 0 ? false : true}
+                className={
+                  files.length > 0 ? style.resetBtnAfter : style.resetBtn
+                }
+                onClick={clearFile}
+              >
+                Reset
+              </Button>
             </Group>
           )}
 
           {files.length > 0 && (
-            <div className="border border-grey mt-[12px] bg-white min-h-25">
-              <div className="px-[16px] py-[8px] overflow-hidden flex flex-wrap gap-4">
+            <div className="border flex flex-row border-grey mt-[12px] bg-white min-h-25 w-full">
+              <div className=" px-4 py-2 overflow-hidden flex flex-wrap gap-4 relative">
                 {files.map((file, index) => (
-                  <img
-                    key={index}
-                    alt="uploaded image"
-                    className="w-1/6 object-scale-down shadow-xl h-[180px]"
-                    src={URL.createObjectURL(file)}
-                  />
+                  <div key={index} className="relative">
+                    <img
+                      key={index}
+                      alt="uploaded image"
+                      className="object-contain shadow-xl h-40 w-36"
+                      src={URL.createObjectURL(file)}
+                    />
+                    <TiDelete
+                      size={24}
+                      className="bg-slate-200 rounded-md absolute top-0 right-0 cursor-pointer "
+                      color="grey"
+                      onClick={() => handleRemoveImage(file)}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
           )}
           {property !== null && (
-            <div className="border border-grey mt-[12px] bg-white min-h-25">
-              <div className="px-[16px] py-[8px] overflow-hidden flex flex-wrap gap-4">
+            <div className="border flex flex-row border-grey mt-[12px] bg-white min-h-25 w-full">
+              <div className=" px-4 py-2 overflow-hidden flex flex-wrap gap-4">
                 {property?.images.map((image, index) => (
                   <img
                     key={index}
                     alt="uploaded image"
-                    className="w-1/6 object-scale-down shadow-xl h-[180px]"
+                    className="object-contain shadow-xl h-40 w-36"
                     src={image.imageUrl}
                   />
                 ))}
@@ -757,7 +898,7 @@ const ModalProperty = ({
           please make sure you use the right information!
         </div>
         <div className={style.coverBtn}>
-          {property === null ? (
+          {action === ADD_PROP ? (
             <Button
               type="submit"
               classNames={{ root: style.rootButton }}
@@ -765,7 +906,7 @@ const ModalProperty = ({
             >
               Add New
             </Button>
-          ) : property.status === 'Available' ? (
+          ) : action === EDIT_PROP && property?.status === AVAILABLE ? (
             <Button
               type="submit"
               classNames={{ root: style.rootButton }}

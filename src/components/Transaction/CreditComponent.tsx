@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import style from './Transaction.module.scss'
 import { User } from '../../types/user'
 import { getProfile } from '../../service/ProfileService'
-import { BsCoin } from 'react-icons/bs'
 import { Button } from '@mantine/core'
+import { GiCrownCoin } from 'react-icons/gi'
 
 interface CreditComponentProps {
   setOpened: (value: boolean) => void
@@ -33,7 +33,7 @@ export default function CreditComponent({
             </span>
           )}
           <span className={style.creditIcon}>
-            <BsCoin />
+            <GiCrownCoin/>
           </span>
         </div>
       </div>

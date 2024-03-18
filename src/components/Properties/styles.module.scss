@@ -27,8 +27,8 @@
       text-white;
 }
 
-.propertyName {
-  @apply h-[24px] text-base px-3 text-nowrap text-ellipsis overflow-hidden;
+.propertyName  {
+  @apply h-[24px] text-base px-3  text-nowrap text-ellipsis overflow-hidden;
 }
 
 .propertyNameLink {
@@ -57,7 +57,8 @@
 }
 
 .heartIsAdded {
-  @apply text-orangeHeart hover:text-[#AA0000] cursor-pointer px-2 mt-1  hover:ease-in hover:duration-300;
+  @apply text-orangeHeart hover:text-[#AA0000] cursor-pointer px-2 mt-1  
+  hover:ease-in hover:duration-300 bg-transparent hover:bg-transparent;
 }
 
 .propertyCoverIcon {

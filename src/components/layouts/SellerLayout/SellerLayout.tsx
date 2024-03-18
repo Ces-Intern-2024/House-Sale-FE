@@ -30,7 +30,7 @@ export default function SellerLayout() {
   const [isSmallNav, setIsSmallNav] = useState(false)
   const SMALL_SCREEN_WIDTH = 70
   const LARGE_SCREEN_WIDTH = 180
-  const ICON_SIZE = 30
+  const ICON_SIZE = 24
   const APPSHELL_HEIGHT = 80
   const dispatch = useAppDispatch()
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
@@ -116,8 +116,8 @@ export default function SellerLayout() {
             className="flex items-center text-white font-bold gap-x-2 cursor-pointer"
             onClick={handleLogout}
           >
-            <h1 className=" hidden md:block">Log Out</h1>
-            <IconLogout color="white" size={30} />
+            <span className=" hidden md:block text-lg">Log Out</span>
+            <IconLogout color="white" size={24} />
           </div>
         </AppShell.Header>
 
@@ -141,7 +141,7 @@ export default function SellerLayout() {
                       size={ICON_SIZE}
                     />
                     {(!isSmallNav || isSmallScreen) && (
-                      <h1 className={styles.navText}>Dashboard</h1>
+                      <h3 className={styles.navText}>Dashboard</h3>
                     )}
                   </div>
                 </NavLink>
@@ -159,7 +159,7 @@ export default function SellerLayout() {
                   <div className={styles.navItem}>
                     <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
                     {(!isSmallNav || isSmallScreen) && (
-                      <h1 className={styles.navText}>Profile</h1>
+                      <h3 className={styles.navText}>Profile</h3>
                     )}
                   </div>
                 </NavLink>
@@ -177,7 +177,7 @@ export default function SellerLayout() {
                   <div className={styles.navItem}>
                     <IconGraph className={styles.navIcon} size={ICON_SIZE} />
                     {(!isSmallNav || isSmallScreen) && (
-                      <h1 className={styles.navText}>Report</h1>
+                      <h3 className={styles.navText}>Report</h3>
                     )}
                   </div>
                 </NavLink>
