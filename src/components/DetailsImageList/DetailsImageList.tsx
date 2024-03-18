@@ -5,14 +5,21 @@ import { Modal, Image } from '@mantine/core'
 import { Carousel, Embla, useAnimationOffsetEffect } from '@mantine/carousel'
 import styles from './DetailsImageList.module.scss'
 import { Image as PropertyImage } from '../../types'
+import { formatMoneyToUSD } from '../../utils/commonFunctions'
 
 interface DetailsImageListProps {
   images?: PropertyImage[]
   name?: string
+  price?: number
+  status?: string
+  feature?: string
 }
 export default function DetailsImageList({
   images,
   name,
+  price,
+  status,
+  feature,
 }: DetailsImageListProps) {
   const TRANSITION_DURATION = 200
   const [opened, setOpened] = useState(false)
@@ -43,6 +50,13 @@ export default function DetailsImageList({
               setOpened(true)
             }}
           />
+          <div className={styles.bottomDiv}>
+            <div className={styles.statusDiv}>{status}</div>
+            <div className={styles.priceDiv}>
+              {formatMoneyToUSD(price!)}
+              {feature === 'Rent' ? ' /month' : ''}
+            </div>
+          </div>
 
           {images && (
             <ImageList className="my-0" cols={2}>
@@ -75,7 +89,11 @@ export default function DetailsImageList({
             withCloseButton={false}
             onClose={() => setOpened(false)}
           >
-            <Carousel getEmblaApi={setEmbla} initialSlide={chosenImg} loop>
+            <Carousel
+              getEmblaApi={setEmbla}
+              initialSlide={chosenImg}
+              classNames={{ control: styles.control }}
+            >
               {slides}
             </Carousel>
           </Modal>

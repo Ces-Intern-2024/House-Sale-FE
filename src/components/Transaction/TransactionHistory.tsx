@@ -128,7 +128,7 @@ export default function TransactionHistory({
       <Box pos="relative">
         <LoadingOverlay
           visible={visible}
-          zIndex={1000}
+          zIndex={10}
           loaderProps={{ color: 'pink', type: 'bars' }}
           overlayProps={{ radius: 'sm', blur: 0.7 }}
         />

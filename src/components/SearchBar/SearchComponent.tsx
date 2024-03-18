@@ -214,7 +214,6 @@ export default function SearchComponent() {
       setTotalItems(data.totalItems)
       setPage(resetPage ? 1 : activePage)
       setResetPage(true)
-
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error: any) {
       console.error(error.response.data.error.message)
@@ -261,6 +260,7 @@ export default function SearchComponent() {
     return () => {
       setTempSearchValue('')
       setSearchValue('')
+
       handleResetFilter()
     }
   }, [query.state])
@@ -297,7 +297,33 @@ export default function SearchComponent() {
   }, [dispatch])
   const SharedComponents = () => (
     <>
-      <Divider mb="lg" />
+      <Divider mb="sm" />
+      <CustomSelect
+        selectValue={categoryNum}
+        setSelectValue={setCategoryNum}
+        dataList={categoryFlatMap}
+        icon={<IconHome></IconHome>}
+        placeHolder="Category"
+        customStyle={true}
+        radio={true}
+        isRadioRange={false}
+        open={openCategory}
+        setOpen={setOpenCategory}
+      />
+      <Divider my="sm" />
+      <CustomSelect
+        dataList={featureFlatMap}
+        selectValue={featureNum}
+        setSelectValue={setFeatureNum}
+        icon={<IconTexture></IconTexture>}
+        placeHolder="For Rent/Sale"
+        customStyle={true}
+        radio={true}
+        isRadioRange={false}
+        open={openFeature}
+        setOpen={setOpenFeature}
+      />
+      <Divider mt="sm" mb="md" />
       <div className=" flex flex-col gap-y-6">
         <CustomSelect
           selectValue={provinceCode}
@@ -371,31 +397,6 @@ export default function SearchComponent() {
       />
       <Divider my="sm" />
 
-      <CustomSelect
-        selectValue={categoryNum}
-        setSelectValue={setCategoryNum}
-        dataList={categoryFlatMap}
-        icon={<IconHome></IconHome>}
-        placeHolder="Category"
-        customStyle={true}
-        radio={true}
-        isRadioRange={false}
-        open={openCategory}
-        setOpen={setOpenCategory}
-      />
-      <Divider my="sm" />
-      <CustomSelect
-        dataList={featureFlatMap}
-        selectValue={featureNum}
-        setSelectValue={setFeatureNum}
-        icon={<IconTexture></IconTexture>}
-        placeHolder="For Rent/Sale"
-        customStyle={true}
-        radio={true}
-        isRadioRange={false}
-        open={openFeature}
-        setOpen={setOpenFeature}
-      />
       <Divider mb="lg" mt="sm" />
       <div className={styles.priceRangeBlock}>
         <small className=" text-primary">Price: </small>
@@ -465,7 +466,7 @@ export default function SearchComponent() {
               }}
               size="md"
               leftSection={<IconSortAscending className=" text-primary" />}
-              allowDeselect={true}
+              allowDeselect={false}
               checkIconPosition="right"
               placeholder="Sort By"
               value={sortBy}
@@ -502,7 +503,7 @@ export default function SearchComponent() {
                 label="Sort By"
                 size="md"
                 leftSection={<IconSortAscending className=" text-primary" />}
-                allowDeselect={true}
+                allowDeselect={false}
                 checkIconPosition="right"
                 placeholder="Sort By"
                 value={sortBy}
@@ -573,7 +574,7 @@ export default function SearchComponent() {
           {totalItems === 0 ? (
             <div className={styles.noContentArea}>
               <LoadingOverlay
-                loaderProps={{ size: 'xl' }}
+                loaderProps={{ size: 'xl', color: 'pink', type: 'bars' }}
                 classNames={{
                   loader: 'absolute top-20 ',
                   overlay: ' opacity-90',
