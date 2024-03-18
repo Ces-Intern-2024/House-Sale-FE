@@ -21,7 +21,7 @@ import { MdDelete } from 'react-icons/md'
 import { useDisclosure, getHotkeyHandler } from '@mantine/hooks'
 import Swal from 'sweetalert2'
 import { ConversionRate } from '../../types/conversionRate'
-import { primary, confirmBtn, cancelBtn } from '../../constants/colorConstant'
+import { primary, confirmBtn, cancelBtn } from '../../constants/color.constant'
 
 export default function ConversionRateComponent() {
   const [isLoading, setIsLoading] = useState(false)

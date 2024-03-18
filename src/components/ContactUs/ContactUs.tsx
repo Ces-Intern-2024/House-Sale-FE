@@ -73,8 +73,28 @@ const ContactUs = ({ property }: ContactUsProps) => {
   return (
     <div className={style.ContactContainer}>
       <div className={style.ContactContent}>
-        <div className={style.ContactPriceProperty}>$ 300.00</div>
-        <p className={style.ContactText}>PROPERTY FOR SALE</p>
+        <div className={style.ContactInfoSeller}>
+          <div className={style.ContactAvatar}>
+            <Avatar src={property?.seller.avatar} size={100}></Avatar>
+          </div>
+          <div className={style.ContactInfoDetail}>
+            <div className={style.ContactNameSeller}>
+              {property?.seller.fullName}
+            </div>
+            <div className={style.ContactPhoneEmail}>
+              <FaPhoneAlt size={20} color="green" />
+              <span className={style.ContactTextSeller}>
+                {property?.seller.phone}
+              </span>
+            </div>
+            <div className={style.ContactPhoneEmail}>
+              <MdEmail size={20} color="green" />
+              <span className={style.ContactTextSeller}>
+                {property?.seller.email}
+              </span>
+            </div>
+          </div>
+        </div>
         <div className={style.ContactInputContainer}>
           <form
             onSubmit={form.onSubmit((values) => handleContactSeller(values))}
@@ -144,28 +164,7 @@ const ContactUs = ({ property }: ContactUsProps) => {
           </form>
         </div>
 
-        <div className={style.ContactInfoSeller}>
-          <div className={style.ContactAvatar}>
-            <Avatar src={property?.seller.avatar} size={100}></Avatar>
-          </div>
-          <div className={style.ContactInfoDetail}>
-            <div className={style.ContactNameSeller}>
-              {property?.seller.fullName}
-            </div>
-            <div className={style.ContactPhoneEmail}>
-              <FaPhoneAlt size={20} color="green" />
-              <span className={style.ContactTextSeller}>
-                {property?.seller.phone}
-              </span>
-            </div>
-            <div className={style.ContactPhoneEmail}>
-              <MdEmail size={20} color="green" />
-              <span className={style.ContactTextSeller}>
-                {property?.seller.email}
-              </span>
-            </div>
-          </div>
-        </div>
+        
       </div>
     </div>
   )

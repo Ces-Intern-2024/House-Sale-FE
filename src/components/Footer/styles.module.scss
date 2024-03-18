@@ -12,7 +12,7 @@
 }
 
 .footerTitleCol {
-  @apply text-white font-bold text-[18px] mobile:py-[10px] mobile:text-center;
+  @apply text-white font-bold text-[18px] mobile:py-[10px] lg:text-left mobile:text-center;
 }
 
 .footerContentCol {

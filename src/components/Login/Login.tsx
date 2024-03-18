@@ -200,7 +200,7 @@ export function Login() {
           radius="xl"
           classNames={{ root: style.btnLogIn }}
         >
-          Sign In
+          Log In
         </Button>
         <Group justify="space-between" mt="xl">
           <Anchor>

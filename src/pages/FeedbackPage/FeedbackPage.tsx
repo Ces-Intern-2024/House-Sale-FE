@@ -16,7 +16,7 @@ import * as yup from 'yup'
 import { useForm } from '@mantine/form'
 import Swal from 'sweetalert2'
 import { validateEmail } from '../../utils/validate'
-import { confirmBtn } from '../../constants/colorConstant'
+import { confirmBtn } from '../../constants/color.constant'
 
 export default function Feedback() {
   const [loading, setLoading] = useState(false)

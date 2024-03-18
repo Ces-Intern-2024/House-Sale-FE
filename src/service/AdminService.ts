@@ -67,8 +67,8 @@ export const updateUserProfileForAdminService = async (
   return res
 }
 
-export const deleteUserForAdminService = async (userId: number) => {
-  const res = axiosInstance.delete(`/admin/manage-user/${userId}`)
+export const deleteUserForAdminService = async (listUserId: string) => {
+  const res = axiosInstance.delete(`/admin/manage-user?userId=${listUserId}`)
   return res
 }
 
@@ -110,5 +110,11 @@ export async function editConversionRate(conversionRateId:number, newExchangeRat
 
 export async function deleteConversionRate(conversionRateId:number){
   const res = await axiosInstance.delete(`/admin/manage-conversion-rate/${conversionRateId}`)
+  return res
+}
+
+
+export const disablePropertyForAdminService = async (listPropertyId: string) => {
+  const res = await axiosInstance.patch(`/admin/manage-property/disable?propertyId=${listPropertyId}`)
   return res
 }

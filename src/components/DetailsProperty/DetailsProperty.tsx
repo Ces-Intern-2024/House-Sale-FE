@@ -1,4 +1,4 @@
-import React from 'react'
+import React  from 'react'
 import style from './DetailsProperty.module.scss'
 import { Properties } from '../../types'
 import { formatDate } from '../../utils/commonFunctions'
@@ -7,6 +7,13 @@ interface DetailsPropertyProps {
   property: Properties
 }
 const DetailsProperty = ({ property }: DetailsPropertyProps) => {
+
+  const displayDesc = () => {
+    if(document.getElementById('description')){
+      document.getElementById('description')!.innerHTML = property.description
+    }
+    return ''
+  }
   return (
     <div>
       <div className={style.tableContainer}>
@@ -37,11 +44,11 @@ const DetailsProperty = ({ property }: DetailsPropertyProps) => {
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Land area:</span>
-              <span className={style.value}>{property?.landArea}</span>
+              <span className={style.value}>{property?.landArea} m²</span>
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Land of use:</span>
-              <span className={style.value}>{property?.areaOfUse}</span>
+              <span className={style.value}>{property?.areaOfUse} m²</span>
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Updated Date:</span>
@@ -54,7 +61,10 @@ const DetailsProperty = ({ property }: DetailsPropertyProps) => {
       </div>
       <div>
         <div className={style.tableTitle}>MORE DESCRIPTION</div>
-        <div className={style.detailDescription}>{property?.description}</div>
+        <div id='description' className={style.detailDescription} >
+          {property?.description}
+          {displayDesc()}
+        </div>
       </div>
     </div>
   )

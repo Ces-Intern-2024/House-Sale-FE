@@ -12,6 +12,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import '@mantine/carousel/styles.css'
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
+import '@mantine/tiptap/styles.css';
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL
 

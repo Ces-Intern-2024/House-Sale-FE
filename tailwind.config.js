@@ -33,6 +33,8 @@ module.exports = {
         'green-available': '#37d159',
         'purle-unavailable': '#3b4cb8',
         lightBlue: '#4dc7ec',
+        login: '#328971',
+        hoverLogin: '#35947a',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],
