@@ -48,6 +48,7 @@ import { optionsFilter } from '../../utils/filterLocation'
 import { PiArrowsDownUp } from 'react-icons/pi'
 import Swal from 'sweetalert2'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
+import { EDIT_PROP, VIEW_PROP } from '../../constants/actions.constant'
 
 const TablePropertyAdmin = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -69,9 +70,27 @@ const TablePropertyAdmin = () => {
   const [maxPrice, setMaxPrice] = useState<number>(0)
   const [priceRange, setPriceRange] = useState<[number, number]>([0, maxPrice])
   const [isLoading, setIsLoading] = useState(false)
-  const [action, setAction] = useState<string | null>(null)
+  const [filterNum, setFilterNum] = useState<number>(0)
+  const [resetFilter, setResetFilter] = useState(false)
+  const [actionModal, setActionModal] = useState('')
+  const [titleModal, setTitleModal] = useState('')
 
   const dispatch = useAppDispatch()
+
+  const checkNumFilter = () => {
+    setFilterNum(0)
+    if (keyword) setFilterNum((prev) => prev + 1)
+    if (categoryId) setFilterNum((prev) => prev + 1)
+    if (featureId) setFilterNum((prev) => prev + 1)
+    if (sortBy) setFilterNum((prev) => prev + 1)
+    if (provinceCode) setFilterNum((prev) => prev + 1)
+    if (priceRange[0] !== 0 || priceRange[1] !== maxPrice) {
+      setFilterNum((prev) => prev + 1)
+    }
+  }
+  useEffect(() => {
+    checkNumFilter()
+  }, [keyword, categoryId, featureId, sortBy, priceRange, provinceCode])
 
   const handleGetMaxPrice = async () => {
     const res = await getPropertiesForAdminService({
@@ -86,9 +105,16 @@ const TablePropertyAdmin = () => {
   }, [])
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
+    setTitleModal('View Detail Property')
+    setActionModal(VIEW_PROP)
     open()
   }
-
+  const handlePropertyEdit = (property: Properties) => {
+    setSelectedProperty(property)
+    setTitleModal('Edit Property')
+    setActionModal(EDIT_PROP)
+    open()
+  }
   const getAllProperties = async () => {
     try {
       const res = await getAllPropertiesForAdminSerivce()
@@ -125,6 +151,7 @@ const TablePropertyAdmin = () => {
       keyword: keyword ? keyword : null,
       categoryId: categoryId ? Number(categoryId) : null,
       featureId: featureId ? Number(featureId) : null,
+      provinceCode: provinceCode ? provinceCode : null,
       page: activePage ? activePage : null,
       priceFrom: priceRange ? priceRange[0] : null,
       priceTo: priceRange ? priceRange[1] : null,
@@ -151,7 +178,16 @@ const TablePropertyAdmin = () => {
 
   useEffect(() => {
     handleSearching()
-  }, [orderBy, sortBy, activePage, priceRange])
+  }, [
+    orderBy,
+    sortBy,
+    activePage,
+    priceRange,
+    provinceCode,
+    featureId,
+    categoryId,
+    resetFilter,
+  ])
 
   const provinces: Province[] = useAppSelector(
     (state) => state.location.provincesList,
@@ -183,49 +219,29 @@ const TablePropertyAdmin = () => {
   }
 
   const handleResetFilter = () => {
-    setProvinceCode('')
-    setKeyword('')
-    setFeatureId('')
-    setCategoryId('')
-    setSortBy('')
-    setOrderBy('')
-    setActivePage(1)
-    setPriceRange([0, maxPrice])
-    setSelectedRows([])
-    setAction(null)
+    if (filterNum > 0) {
+      setProvinceCode('')
+      setKeyword('')
+      setFeatureId('')
+      setCategoryId('')
+      setSortBy('')
+      setOrderBy('')
+      setActivePage(1)
+      setPriceRange([0, maxPrice])
+      setSelectedRows([])
+      setResetFilter((prev) => !prev)
+    }
   }
 
-  const handleDelete = async (property: Properties) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: confirmBtn,
-      cancelButtonColor: cancelBtn,
-      confirmButtonText: 'Yes, delete property!',
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deletePropertyForAdminService(String(property.propertyId))
-          Swal.fire({
-            title: 'Deleted!',
-            text: 'Your property has been deleted.',
-            icon: 'success',
-          })
-          setIsUpdated(!isUpdated)
-        } catch (error: any) {
-          Swal.fire({
-            icon: 'error',
-            text: error.response.data.error.message,
-          })
-        }
-      }
-    })
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      setKeyword(event.currentTarget.value)
+      handleSearching()
+    }
   }
+
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   const allSelected = selectedRows.length === properties.length
-
   const handleSelectBox = (event: boolean, propertyId: number) => {
     if (event) {
       setSelectedRows([...selectedRows, propertyId])
@@ -236,70 +252,63 @@ const TablePropertyAdmin = () => {
 
   const handleDeleteAllSelectedRows = () => {
     const parseSelectedRowsToString = String(selectedRows)
-    if (!action) {
-      Swal.fire({
-        title: 'You must select actions',
-        icon: 'info',
-      })
-      return
-    }
-    if (action === 'delete') {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: confirmBtn,
-        cancelButtonColor: cancelBtn,
-        confirmButtonText: 'Yes, delete all selected!',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            await deletePropertyForAdminService(parseSelectedRowsToString)
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'Your property has been deleted.',
-              icon: 'success',
-            })
-            setIsUpdated(!isUpdated)
-          } catch (error: any) {
-            Swal.fire({
-              title: error.response.data.error.message,
-              icon: 'error',
-            })
-          }
+
+    Swal.fire({
+      text: `Are you sure to delete these properties ID: ${JSON.stringify(parseSelectedRowsToString)}`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Delete',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePropertyForAdminService(parseSelectedRowsToString)
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your property has been deleted.',
+            icon: 'success',
+          })
+          setSelectedRows([])
+          setIsUpdated(!isUpdated)
+        } catch (error: any) {
+          Swal.fire({
+            title: error.response.data.error.message,
+            icon: 'error',
+          })
         }
-      })
-    }
-    if (action === 'disable') {
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: confirmBtn,
-        cancelButtonColor: cancelBtn,
-        confirmButtonText: 'Yes, disable property!',
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            await disablePropertyForAdminService(parseSelectedRowsToString)
-            Swal.fire({
-              title: 'Disabled!',
-              text: 'Property has been disabled.',
-              icon: 'success',
-            })
-            setIsUpdated((prev) => !prev)
-            setSelectedRows([])
-          } catch (error: any) {
-            Swal.fire({
-              title: error.response.data.error.message,
-              icon: 'error',
-            })
-          }
+      }
+    })
+  }
+
+  const handleDisabledSelectedProperty = () => {
+    const parseSelectedRowsToString = String(selectedRows)
+    Swal.fire({
+      text: `Are you sure to disable these properties ID: ${JSON.stringify(parseSelectedRowsToString)}`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Disable',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await disablePropertyForAdminService(parseSelectedRowsToString)
+          Swal.fire({
+            title: 'Disabled!',
+            text: 'Property has been disabled.',
+            icon: 'success',
+          })
+          setIsUpdated((prev) => !prev)
+          setSelectedRows([])
+        } catch (error: any) {
+          Swal.fire({
+            title: error.response.data.error.message,
+            icon: 'error',
+          })
         }
-      })
-    }
+      }
+    })
   }
 
   const handleSelectAllSelectedRows = () => {
@@ -320,13 +329,12 @@ const TablePropertyAdmin = () => {
       return
     }
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      text: `Are you sure to disable these properties ID: ${property.propertyId}`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonColor: confirmBtn,
       cancelButtonColor: cancelBtn,
-      confirmButtonText: 'Yes, disable property!',
+      confirmButtonText: 'Disable',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
@@ -337,6 +345,9 @@ const TablePropertyAdmin = () => {
             text: 'Property has been disabled.',
             icon: 'success',
           })
+          setSelectedRows(
+            selectedRows.filter((element) => element !== property.propertyId),
+          )
           setIsUpdated((prev) => !prev)
         } catch (error: any) {
           Swal.fire({
@@ -345,6 +356,36 @@ const TablePropertyAdmin = () => {
           })
         } finally {
           setIsLoading(false)
+        }
+      }
+    })
+  }
+  const handleDelete = async (property: Properties) => {
+    Swal.fire({
+      text: `Are you sure to delete property ID: ${property.propertyId}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Delete',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deletePropertyForAdminService(String(property.propertyId))
+          Swal.fire({
+            title: 'Deleted!',
+            text: 'Your property has been deleted.',
+            icon: 'success',
+          })
+          setSelectedRows(
+            selectedRows.filter((element) => element !== property.propertyId),
+          )
+          setIsUpdated(!isUpdated)
+        } catch (error: any) {
+          Swal.fire({
+            icon: 'error',
+            text: error.response.data.error.message,
+          })
         }
       }
     })
@@ -362,7 +403,7 @@ const TablePropertyAdmin = () => {
             : undefined
         }
       >
-        <Table.Td>
+        <Table.Td onClick={(event) => event.stopPropagation()}>
           <Checkbox
             aria-label="Select row"
             checked={selectedRows.includes(element.propertyId)}
@@ -385,7 +426,6 @@ const TablePropertyAdmin = () => {
             <span className={style.propertyName}>{element.name}</span>
           </div>
         </Table.Td>
-        <Table.Td>{element.code}</Table.Td>
         <Table.Td>{element.feature.name}</Table.Td>
         <Table.Td>{element.category.name}</Table.Td>
         <Table.Td>{formatMoneyToUSD(element.price)}</Table.Td>
@@ -431,7 +471,7 @@ const TablePropertyAdmin = () => {
 
             {element.status === DISABLED ? (
               <Tooltip label="Disabled" refProp="rootRef">
-                <Switch checked={false}/>
+                <Switch checked={false} />
               </Tooltip>
             ) : (
               <Tooltip label="Click to disable" refProp="rootRef">
@@ -447,7 +487,7 @@ const TablePropertyAdmin = () => {
               <div>
                 <FaEdit
                   className={`${style.actionIcon} ${style.editIcon}`}
-                  onClick={() => handlePropertyView(element)}
+                  onClick={() => handlePropertyEdit(element)}
                 />
               </div>
             </Tooltip>
@@ -477,14 +517,21 @@ const TablePropertyAdmin = () => {
 
           <div className={style.tableSideBar}>
             <div className={style.tableSelectAdmin}>
-              <div className="grid grid-cols-4 gap-8">
+              <div className={style.firstRowFilterContainer}>
                 <TextInput
                   classNames={{ input: style.inputText }}
                   placeholder="Enter your keyword..."
                   onChange={(event) => setKeyword(event.target.value)}
+                  onKeyDown={handleKeyDown}
                 />
                 <Select
-                  classNames={{ input: style.elementSelect }}
+                  comboboxProps={{ zIndex: 20 }}
+                  classNames={{
+                    input: style.elementSelect,
+                    dropdown: style.dropdownSelectActions,
+                    options: style.optionsSelectActions,
+                    option: style.optionSelectActions,
+                  }}
                   placeholder="Select Featured"
                   data={features.flatMap((feature) => [
                     {
@@ -503,7 +550,13 @@ const TablePropertyAdmin = () => {
                 />
 
                 <Select
-                  classNames={{ input: style.elementSelect }}
+                  comboboxProps={{ zIndex: 20 }}
+                  classNames={{
+                    input: style.elementSelect,
+                    dropdown: style.dropdownSelectActions,
+                    options: style.optionsSelectActions,
+                    option: style.optionSelectActions,
+                  }}
                   placeholder="Select Category"
                   data={categories.flatMap((category) => [
                     {
@@ -521,7 +574,12 @@ const TablePropertyAdmin = () => {
                   allowDeselect
                 />
                 <Select
-                  classNames={{ input: style.elementSelect }}
+                  classNames={{
+                    input: style.elementSelect,
+                    dropdown: style.dropdownSelectActions,
+                    options: style.optionsSelectActions,
+                    option: style.optionSelectActions,
+                  }}
                   placeholder="Select City/Province"
                   withAsterisk
                   searchable
@@ -537,6 +595,7 @@ const TablePropertyAdmin = () => {
                     position: 'bottom',
                     offset: 0,
                     transitionProps: { transition: 'pop', duration: 200 },
+                    zIndex: 20,
                   }}
                   onChange={(value: string | null) => {
                     if (value !== null) {
@@ -548,12 +607,10 @@ const TablePropertyAdmin = () => {
                   defaultValue={provinceCode}
                 />
               </div>
-              <div className="flex flex-row justify-between mt-5 items-baseline">
-                <div className="flex items-baseline gap-12">
-                  <div className="flex gap-3 items-baseline mt-5">
-                    <Text className="text-base font-semibold text-primary">
-                      Price range:
-                    </Text>
+              <div className={style.secondRowFilterContainer}>
+                <div className={style.priceRangeContainer}>
+                  <div className={style.priceRangeChild}>
+                    <Text className={style.labelPriceRange}>Price range:</Text>
                     <RangeSlider
                       classNames={{
                         root: style.rootRangeSlider,
@@ -575,29 +632,53 @@ const TablePropertyAdmin = () => {
                   >
                     <FaSearch size={16} />
                   </Button>
+                  <Button
+                    classNames={{
+                      root:
+                        filterNum > 0
+                          ? style.rootBtnClearAfter
+                          : style.rootBtnClear,
+                    }}
+                    onClick={() => {
+                      handleResetFilter()
+                    }}
+                  >
+                    Clear Filter {filterNum > 0 && <span>({filterNum})</span>}
+                  </Button>
                 </div>
-                <Button
-                  className="text-primary text-lg font-bold px-0 rounded-none hover:text-[#5625d0]"
-                  onClick={() => {
-                    handleResetFilter()
-                  }}
-                >
-                  Clear Filters
-                </Button>
+
+                <div className={style.actionsContainer}>
+                  <Button
+                    classNames={{
+                      root:
+                        selectedRows.length > 0
+                          ? style.rootButtonDeleteAllAfter
+                          : style.rootButtonDeleteAll,
+                    }}
+                    onClick={() => handleDeleteAllSelectedRows()}
+                  >
+                    Delete ({selectedRows.length}) properties
+                  </Button>
+                  <Button
+                    classNames={{
+                      root:
+                        selectedRows.length > 0
+                          ? style.rootButtonDeleteAllAfter
+                          : style.rootButtonDeleteAll,
+                    }}
+                    onClick={() => handleDisabledSelectedProperty()}
+                  >
+                    Disable ({selectedRows.length}) properties
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* This comment has been kept as a temporary if there are any errors.
-           <Button
-            className="mt-4"
-            classNames={{ root: style.rootButtonDeleteAll }}
-            onClick={() => handleDeleteAllSelectedRows()}
-          >
-            Delete All
-          </Button> */}
-          <div className="flex items-end gap-4 mt-4 justify-end">
+          {/* This comment has been kept as a temporary if there are any changes about UI.
+           <div className="flex items-end gap-4 mt-4 justify-end">
             <Select
+            comboboxProps={{ zIndex: 20 }}
               classNames={{
                 root: style.rootSelectActions,
                 label: style.labelSelectActions,
@@ -623,7 +704,7 @@ const TablePropertyAdmin = () => {
             >
               Apply
             </Button>
-          </div>
+          </div> */}
           <div className={style.tableContent}>
             <Table
               className="relative"
@@ -645,13 +726,12 @@ const TablePropertyAdmin = () => {
                   <Table.Th classNames={{ th: style.thName }}>
                     Property Name
                   </Table.Th>
-                  <Table.Th>Code</Table.Th>
                   <Table.Th>Featured</Table.Th>
                   <Table.Th>Category</Table.Th>
                   <Table.Th classNames={{ th: style.thPrice }}>
                     <span>Price</span>
                     <span
-                      className="flex justify-between cursor-pointer"
+                      className={style.iconSortTh}
                       onClick={() => {
                         setOrderBy('price')
                         setSortBy(sortBy.includes('asc') ? 'desc' : 'asc')
@@ -669,7 +749,7 @@ const TablePropertyAdmin = () => {
                     </span>
                   </Table.Th>
                   <Table.Th>Seller</Table.Th>
-                  <Table.Th className="w-25">Status</Table.Th>
+                  <Table.Th className="min-w-30">Status</Table.Th>
                   <Table.Th>Actions</Table.Th>
                 </Table.Tr>
               </Table.Thead>
@@ -692,9 +772,7 @@ const TablePropertyAdmin = () => {
               mt="sm"
               classNames={{ control: style.paginationControl }}
             />
-            <div className="text-lg mr-2 text-primary font-bold">
-              Result: {totalItems}
-            </div>
+            <div className={style.totalItems}>Result: {totalItems}</div>
           </div>
         </div>
       </div>
@@ -705,7 +783,7 @@ const TablePropertyAdmin = () => {
           setSelectedProperty(null)
         }}
         size={1280}
-        title="Property Add"
+        title={titleModal}
         classNames={{
           header: style.headerModal,
           title: style.titleModal,
@@ -717,6 +795,7 @@ const TablePropertyAdmin = () => {
           property={selectedProperty}
           onClose={close}
           isUpdated={setIsUpdated}
+          action={actionModal}
         />
       </Modal>
     </>

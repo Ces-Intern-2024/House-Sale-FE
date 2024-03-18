@@ -1,4 +1,4 @@
-import React  from 'react'
+import React from 'react'
 import style from './DetailsProperty.module.scss'
 import { Properties } from '../../types'
 import { formatDate } from '../../utils/commonFunctions'
@@ -7,13 +7,12 @@ interface DetailsPropertyProps {
   property: Properties
 }
 const DetailsProperty = ({ property }: DetailsPropertyProps) => {
-
-  const displayDesc = () => {
-    if(document.getElementById('description')){
-      document.getElementById('description')!.innerHTML = property.description
-    }
-    return ''
+  const handleParser = (description: string) => {
+    const domParser = new DOMParser()
+    const doc = domParser.parseFromString(description, 'text/html')
+    return doc.body.innerHTML
   }
+
   return (
     <div>
       <div className={style.tableContainer}>
@@ -61,9 +60,13 @@ const DetailsProperty = ({ property }: DetailsPropertyProps) => {
       </div>
       <div>
         <div className={style.tableTitle}>MORE DESCRIPTION</div>
-        <div id='description' className={style.detailDescription} >
-          {property?.description}
-          {displayDesc()}
+        <div className={style.detailDescription}>
+          <h1>fasdfasfd</h1>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: handleParser(property?.description || ''),
+            }}
+          />
         </div>
       </div>
     </div>

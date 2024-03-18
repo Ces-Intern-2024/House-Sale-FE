@@ -33,7 +33,7 @@ export default function AdminLayout() {
   const [isSmallNav, setIsSmallNav] = useState(false)
   const SMALL_SCREEN_WIDTH = 70
   const LARGE_SCREEN_WIDTH = 180
-  const ICON_SIZE = 30
+  const ICON_SIZE = 24
   const APPSHELL_HEIGHT = 80
   const dispatch = useAppDispatch()
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
@@ -100,7 +100,7 @@ export default function AdminLayout() {
             className="flex items-center text-white font-bold gap-x-2 cursor-pointer"
             onClick={handleLogout}
           >
-            <h1 className=" hidden md:block">Log Out</h1>
+            <span className=" hidden md:block">Log Out</span>
             <IconLogout color="white" size={30} />
           </div>
         </AppShell.Header>
@@ -120,7 +120,7 @@ export default function AdminLayout() {
               <div className={styles.navItem}>
                 <IconDashboard className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>Dashboard</h1>
+                  <h3 className={styles.navText}>Dashboard</h3>
                 )}
               </div>
             </NavLink>
@@ -137,7 +137,7 @@ export default function AdminLayout() {
               <div className={styles.navItem}>
                 <FaLayerGroup className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>Property</h1>
+                  <h3 className={styles.navText}>Property</h3>
                 )}
               </div>
             </NavLink>
@@ -154,7 +154,7 @@ export default function AdminLayout() {
               <div className={styles.navItem}>
                 <IoPerson className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>User</h1>
+                  <h3 className={styles.navText}>User</h3>
                 )}
               </div>
             </NavLink>
@@ -171,7 +171,7 @@ export default function AdminLayout() {
               <div className={styles.navItem}>
                 <FaMoneyCheck className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>Transaction</h1>
+                  <h3 className={styles.navText}>Transaction</h3>
                 )}
               </div>
             </NavLink>
@@ -188,7 +188,7 @@ export default function AdminLayout() {
               <div className={styles.navItem}>
                 <IconTransform className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>Conversion Rate</h1>
+                  <h3 className={styles.navText}>Conversion Rate</h3>
                 )}
               </div>
             </NavLink>
@@ -206,7 +206,7 @@ export default function AdminLayout() {
               <div className={styles.navItem}>
                 <IconGraph className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
-                  <h1 className={styles.navText}>Report</h1>
+                  <h3 className={styles.navText}>Report</h3>
                 )}
               </div>
             </NavLink>

@@ -4,7 +4,7 @@ import { DatePicker } from '@mantine/dates'
 import style from './Transaction.module.scss'
 import { IoIosNotifications } from 'react-icons/io'
 import { IoCalendarNumberOutline } from 'react-icons/io5'
-import { BsCoin } from 'react-icons/bs'
+import { GiCrownCoin } from 'react-icons/gi'
 import { HistoryTransaction } from '../../types/historyTransaction'
 import {
   convertISOToVNDateTimeString,
@@ -146,7 +146,7 @@ export default function TransactionHistory({
                   </span>
                   <span className={style.money}>{Number(history.amount)}</span>
                   <span className={style.icon}>
-                    <BsCoin />
+                    <GiCrownCoin />
                   </span>
                 </div>
               </div>

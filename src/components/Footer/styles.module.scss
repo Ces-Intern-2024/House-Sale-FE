@@ -34,8 +34,8 @@
 }
 
 .footerLink {
-  @apply flex leading-[24px] items-center justify-start no-underline text-blur
-  hover:text-white;
+  @apply flex leading-[24px] items-center lg:justify-start no-underline text-blur
+  hover:text-white mobile:justify-center;
 }
 
 .iconLink {

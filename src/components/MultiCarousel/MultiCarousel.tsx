@@ -5,7 +5,6 @@ import PropertyCard from '../Properties/PropertyCard'
 import styles from './MultiCarousel.module.scss'
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import { Properties } from '../../types'
-import { Link } from 'react-router-dom'
 
 interface MultiCarouselProps {
   properties: Properties[]
@@ -61,15 +60,11 @@ export default function MultiCarousel({
             {properties.map((propertyItem, index) => (
               <div key={index} className="py-3">
                 <div className={styles.carouselItem}>
-                  <Link
-                    to={`/details/${propertyItem.propertyId}`}
-                    key={propertyItem.propertyId}
-                  >
+                  
                     <PropertyCard
                       key={propertyItem.propertyId}
                       data={propertyItem}
                     />
-                  </Link>
                 </div>
               </div>
             ))}
