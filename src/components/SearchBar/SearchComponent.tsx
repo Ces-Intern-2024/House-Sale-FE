@@ -29,25 +29,28 @@ import {
   IconTexture,
   IconSearch,
   IconAdjustmentsHorizontal,
-  IconSortAscending,
+  IconArrowsSort,
 } from '@tabler/icons-react'
 import CustomSelect from './CustomSelect'
 import { searchProperty } from '../../service/SearchService'
 import PropertyCard from '../Properties/PropertyCard'
-import { useLocation } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useDisclosure } from '@mantine/hooks'
 import { Properties } from '../../types/properties'
 import { setIsSmallScreen } from '../../redux/reducers/resizeSlice'
 
 export default function SearchComponent() {
-  const query = useLocation()
+  const [flag, setFlag] = useState(false) // to make sure initial call of setRangeValue not recall api
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+
   const [opened, { open, close }] = useDisclosure(false)
   const [isLoading, setIsLoading] = useState(false)
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
   const dispatch = useAppDispatch()
 
-  const [activePage, setPage] = useState(1)
-  const [resetPage, setResetPage] = useState(true)
+  const [activePage, setActivePage] = useState(1)
+  const [resetActivePage, setResetActivePage] = useState(true)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [totalItems, setTotalItems] = useState<number>(0)
   const [properties, setProperties] = useState<Properties[]>([])
@@ -57,42 +60,76 @@ export default function SearchComponent() {
 
   const { data: provinces = [] } = useFetchProvincesQuery()
 
-  const [provinceCode, setProvinceCode] = useState('')
+  const [provinceCode, setProvinceCode] = useState(
+    searchParams.get('provinceCode') ?? '',
+  )
   const [openProvince, setOpenProvince] = useState(false)
 
   const { data: districts = [] } = useFetchDistrictsQuery(provinceCode, {
     skip: !provinceCode,
   })
-  const [districtCode, setDistrictCode] = useState<string>('')
+  const [districtCode, setDistrictCode] = useState<string>(
+    searchParams.get('districtCode') ?? '',
+  )
   const [openDistrict, setOpenDistrict] = useState(false)
 
   const { data: wards = [] } = useFetchWardsQuery(districtCode, {
-    skip: !provinceCode,
+    skip: !provinceCode || !districtCode,
   })
-  const [wardCode, setWardCode] = useState<string>('')
+  const [wardCode, setWardCode] = useState<string>(
+    searchParams.get('wardCode') ?? '',
+  )
   const [openWard, setOpenWard] = useState(false)
 
-  const categories = useAppSelector((state) => state.category.categoriesList)
-  const [bedNum, setBedNum] = useState<[string, string] | null>(null)
+  const [bedNum, setBedNum] = useState<[string, string] | null>(
+    searchParams.get('numberOfBedRoomFrom') ||
+      searchParams.get('numberOfBedRoomTo')
+      ? [
+          searchParams.get('numberOfBedRoomFrom') || '',
+          searchParams.get('numberOfBedRoomTo') || '',
+        ]
+      : null,
+  )
   const [openBedNum, setOpenBedNum] = useState(false)
-  const [bathNum, setBathNum] = useState<[string, string] | null>(null)
+
+  const [bathNum, setBathNum] = useState<[string, string] | null>(
+    searchParams.get('numberOfToiletFrom') ||
+      searchParams.get('numberOfToiletTo')
+      ? [
+          searchParams.get('numberOfToiletFrom') || '',
+          searchParams.get('numberOfToiletTo') || '',
+        ]
+      : null,
+  )
   const [openBathNum, setOpenBathNum] = useState(false)
+
+  const categories = useAppSelector((state) => state.category.categoriesList)
   const [categoryNum, setCategoryNum] = useState<string>(
-    query.state && query.state.categoryId ? String(query.state.categoryId) : '',
+    searchParams.get('categoryId') ?? '',
   )
   const [openCategory, setOpenCategory] = useState(false)
+
+  const features = useAppSelector((state) => state.feature.featuresList)
   const [featureNum, setFeatureNum] = useState<string>(
-    query.state && query.state.featureId ? String(query.state.featureId) : '',
+    searchParams.get('featureId') ?? '',
   )
   const [openFeature, setOpenFeature] = useState(false)
-  const [areaNum, setAreaNum] = useState<[string, string] | null>(null)
+
+  const [areaNum, setAreaNum] = useState<[string, string] | null>(
+    searchParams.get('landAreaFrom') || searchParams.get('landAreaTo')
+      ? [
+          searchParams.get('landAreaFrom') || '',
+          searchParams.get('landAreaTo') || '',
+        ]
+      : null,
+  )
+
   const [openAreaNum, setOpenAreaNum] = useState(false)
   const [sortBy, setSortBy] = useState('ASC')
   const [numOfFilters, setNumOfFilters] = useState(0)
 
-  const features = useAppSelector((state) => state.feature.featuresList)
   const [searchValue, setSearchValue] = useState(
-    query.state && query.state.searchValue ? query.state.searchValue : '',
+    searchParams.get('keyword') ?? '',
   )
 
   const [tempSearchValue, setTempSearchValue] = useState(searchValue)
@@ -123,9 +160,9 @@ export default function SearchComponent() {
   const bedAndBathFlapMap = [
     { key: '1 - 2', value: ['1', '2'] },
     { key: '3 - 4', value: ['3', '4'] },
-    { key: '4 - 5', value: ['4', '5'] },
-    { key: '6 - 7', value: ['6', '7'] },
-    { key: '7+', value: ['7', '100'] },
+    { key: '5 - 6', value: ['5', '6'] },
+    { key: '7 - 8', value: ['7', '8'] },
+    { key: '8+', value: ['8', '100'] },
   ]
 
   const areaFlapMap = [
@@ -150,70 +187,88 @@ export default function SearchComponent() {
 
   const handleCheckNumOfFilter = () => {
     setNumOfFilters(0)
-    if (provinceCode) setNumOfFilters((prev) => prev + 1)
-    if (districtCode) setNumOfFilters((prev) => prev + 1)
-    if (wardCode) setNumOfFilters((prev) => prev + 1)
-    if (bedNum) setNumOfFilters((prev) => prev + 1)
-    if (bathNum) setNumOfFilters((prev) => prev + 1)
-    if (areaNum) setNumOfFilters((prev) => prev + 1)
-    if (categoryNum) setNumOfFilters((prev) => prev + 1)
-    if (featureNum) setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('provinceCode')) setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('districtCode')) setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('wardCode')) setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('numberOfBedRoomTo'))
+      setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('numberOfToiletTo'))
+      setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('landAreaTo')) setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('categoryId')) setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('featureId')) setNumOfFilters((prev) => prev + 1)
     if (priceRange[0] !== 0 || priceRange[1] !== maxPrice)
       setNumOfFilters((prev) => prev + 1)
   }
 
   const handleResetFilter = () => {
-    setProvinceCode('')
-    setDistrictCode('')
-    setWardCode('')
-    setBedNum(null)
-    setBathNum(null)
-    setAreaNum(null)
-    setCategoryNum('')
-    setFeatureNum('')
-    setPriceRange([0, maxPrice])
-    setSortBy('ASC')
-    handleCheckNumOfFilter()
+    setProvinceCode((_prev) => '')
+    setDistrictCode((_prev) => '')
+    setWardCode((_prev) => '')
+    setBedNum((_prev) => null)
+    setBathNum((_prev) => null)
+    setAreaNum((_prev) => null)
+    setCategoryNum((_prev) => '')
+    setFeatureNum((_prev) => '')
+    setPriceRange((_prev) => [0, maxPrice])
+    setSortBy((_prev) => 'ASC')
   }
 
   const handleGetMaxPrice = async () => {
     const data = await searchProperty({ orderBy: 'price', sortBy: 'desc' })
     if (data.data.length > 0) {
       setMaxPrice(Number(data.data[0].price))
+      setFlag(true)
       setPriceRange([0, Number(data.data[0].price)])
     }
   }
 
   const handleSubmitSearch = async () => {
     const searchValues = {
-      provinceCode: provinceCode ? provinceCode : null,
-      districtCode: districtCode ? districtCode : null,
-      wardCode: wardCode ? wardCode : null,
-      featureId:
-        featureNum && featureNum !== undefined ? Number(featureNum) : null,
-      categoryId: categoryNum ? Number(categoryNum) : null,
-      landAreaFrom: areaNum ? Number(areaNum[0]) : null,
-      landAreaTo: areaNum ? Number(areaNum[1]) : null,
-      numberOfBedRoomFrom: bedNum ? Number(bedNum[0]) : null,
-      numberOfBedRoomTo: bedNum ? Number(bedNum[1]) : null,
-      numberOfToiletFrom: bathNum ? Number(bathNum[0]) : null,
-      numberOfToiletTo: bathNum ? Number(bathNum[1]) : null,
-      priceFrom: priceRange ? priceRange[0] : null,
-      priceTo: priceRange ? priceRange[1] : null,
+      provinceCode: searchParams.get('provinceCode') ?? null,
+      districtCode: searchParams.get('districtCode') ?? null,
+      wardCode: searchParams.get('wardCode') ?? null,
+      featureId: searchParams.get('featureId')
+        ? Number(searchParams.get('featureId'))
+        : null,
+      categoryId: searchParams.get('categoryId')
+        ? Number(searchParams.get('categoryId'))
+        : null,
+      landAreaFrom: searchParams.get('landAreaFrom')
+        ? Number(searchParams.get('landAreaFrom'))
+        : null,
+      landAreaTo: searchParams.get('landAreaTo')
+        ? Number(searchParams.get('landAreaTo'))
+        : null,
+      numberOfBedRoomFrom: searchParams.get('numberOfBedRoomFrom')
+        ? Number(searchParams.get('numberOfBedRoomFrom'))
+        : null,
+      numberOfBedRoomTo: searchParams.get('numberOfBedRoomTo')
+        ? Number(searchParams.get('numberOfBedRoomTo'))
+        : null,
+      numberOfToiletFrom: searchParams.get('numberOfToiletFrom')
+        ? Number(searchParams.get('numberOfToiletFrom'))
+        : null,
+      numberOfToiletTo: searchParams.get('numberOfToiletTo')
+        ? Number(searchParams.get('numberOfToiletTo'))
+        : null,
+      priceFrom: priceRange && priceRange[0] !== 0 ? priceRange[0] : null,
+      priceTo: priceRange && priceRange[1] !== maxPrice ? priceRange[1] : null,
       orderBy: sortBy.startsWith('P') ? 'price' : 'createdAt',
       sortBy: sortBy.startsWith('P') ? sortBy.slice(1, sortBy.length) : sortBy,
       keyword: tempSearchValue ? tempSearchValue : null,
-      page: resetPage ? 1 : activePage,
+      page: resetActivePage ? 1 : activePage,
     }
+
     try {
       setIsLoading(true)
       const data = await searchProperty(searchValues)
       setIsLoading(false)
-      setProperties(data.data)
+      setProperties((_prev) => data.data)
       setTotalPages(data.totalPages)
       setTotalItems(data.totalItems)
-      setPage(resetPage ? 1 : activePage)
-      setResetPage(true)
+      setActivePage(resetActivePage ? 1 : activePage)
+      setResetActivePage(true)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error: any) {
       console.error(error.response.data.error.message)
@@ -223,14 +278,17 @@ export default function SearchComponent() {
   }
 
   const handleChangeActivePage = async (page: any) => {
-    setResetPage(false)
-    setPage(page)
+    setResetActivePage(false)
+    setActivePage((_prev) => page)
   }
 
   const handleKeyDown = (event: any) => {
     if (event.key === 'Enter') {
       setSearchValue(event.currentTarget.value)
-      handleSubmitSearch()
+      searchParams.set('keyword', event.currentTarget.value)
+      navigate({
+        search: searchParams.toString(),
+      })
     }
   }
 
@@ -248,27 +306,76 @@ export default function SearchComponent() {
   }, [districtCode])
 
   useEffect(() => {
-    setFeatureNum(
-      query.state && query.state.featureId ? String(query.state.featureId) : '',
-    )
-    setCategoryNum(
-      query.state && query.state.categoryId
-        ? String(query.state.categoryId)
-        : '',
-    )
-
-    return () => {
-      setTempSearchValue('')
-      setSearchValue('')
-
-      handleResetFilter()
+    if (flag) {
+      setFlag(false)
+      return
     }
-  }, [query.state])
 
-  useEffect(() => {
+    let searchValues = {}
     if (priceRange[1] !== 0) {
-      handleSubmitSearch()
-      handleCheckNumOfFilter()
+      if (featureNum) searchValues = { ...searchValues, featureId: featureNum }
+      if (categoryNum)
+        searchValues = { ...searchValues, categoryId: categoryNum }
+      if (provinceCode)
+        searchValues = { ...searchValues, provinceCode: provinceCode }
+      if (districtCode)
+        searchValues = { ...searchValues, districtCode: districtCode }
+      if (wardCode) searchValues = { ...searchValues, wardCode: wardCode }
+      if (areaNum)
+        searchValues = {
+          ...searchValues,
+          landAreaFrom: areaNum ? areaNum[0] : '',
+        }
+      if (areaNum)
+        searchValues = {
+          ...searchValues,
+          landAreaTo: areaNum ? areaNum[1] : '',
+        }
+      if (bedNum) {
+        searchValues = {
+          ...searchValues,
+          numberOfBedRoomFrom: bedNum ? bedNum[0] : '',
+        }
+        searchValues = {
+          ...searchValues,
+          numberOfBedRoomTo: bedNum ? bedNum[1] : '',
+        }
+      }
+      if (bathNum) {
+        searchValues = {
+          ...searchValues,
+          numberOfToiletFrom: bathNum ? bathNum[0] : '',
+        }
+        searchValues = {
+          ...searchValues,
+          numberOfToiletTo: bathNum ? bathNum[1] : '',
+        }
+      }
+      if (priceRange) {
+        searchValues = {
+          ...searchValues,
+          priceFrom: priceRange ? priceRange[0].toString() : '',
+          priceTo: priceRange ? priceRange[1].toString() : '',
+        }
+      }
+      if (sortBy) {
+        searchValues = {
+          ...searchValues,
+          orderBy: sortBy.startsWith('P') ? 'price' : 'createdAt',
+          sortBy: sortBy.startsWith('P')
+            ? sortBy.slice(1, sortBy.length)
+            : sortBy,
+        }
+      }
+      if (tempSearchValue) {
+        searchValues = { ...searchValues, keyword: tempSearchValue }
+      }
+      if (resetActivePage) {
+        searchValues = { ...searchValues, page: 1 }
+      } else {
+        searchValues = { ...searchValues, page: activePage }
+      }
+      setSearchParams((_prev) => searchValues)
     }
   }, [
     activePage,
@@ -283,6 +390,12 @@ export default function SearchComponent() {
     sortBy,
     priceRange,
   ])
+
+  useEffect(() => {
+    handleSubmitSearch()
+    handleCheckNumOfFilter()
+  }, [searchParams, setSearchParams])
+
   useEffect(() => {
     const handleResize = () => {
       dispatch(setIsSmallScreen(window.innerWidth < 1024))
@@ -295,22 +408,11 @@ export default function SearchComponent() {
       window.removeEventListener('resize', handleResize)
     }
   }, [dispatch])
+
   const SharedComponents = () => (
     <>
       <Divider mb="sm" />
-      <CustomSelect
-        selectValue={categoryNum}
-        setSelectValue={setCategoryNum}
-        dataList={categoryFlatMap}
-        icon={<IconHome></IconHome>}
-        placeHolder="Category"
-        customStyle={true}
-        radio={true}
-        isRadioRange={false}
-        open={openCategory}
-        setOpen={setOpenCategory}
-      />
-      <Divider my="sm" />
+
       <CustomSelect
         dataList={featureFlatMap}
         selectValue={featureNum}
@@ -322,6 +424,19 @@ export default function SearchComponent() {
         isRadioRange={false}
         open={openFeature}
         setOpen={setOpenFeature}
+      />
+      <Divider my="sm" />
+      <CustomSelect
+        selectValue={categoryNum}
+        setSelectValue={setCategoryNum}
+        dataList={categoryFlatMap}
+        icon={<IconHome></IconHome>}
+        placeHolder="Category"
+        customStyle={true}
+        radio={true}
+        isRadioRange={false}
+        open={openCategory}
+        setOpen={setOpenCategory}
       />
       <Divider mt="sm" mb="md" />
       <div className=" flex flex-col gap-y-6">
@@ -423,7 +538,7 @@ export default function SearchComponent() {
         disabled={isSmallScreen ? false : true}
         leftSection={<IconAdjustmentsHorizontal />}
         variant="outline"
-        className=" lg:w-[150px] mobile:w-full h-[50px] rounded-none border-primary text-primary"
+        className=" lg:w-[150px] hover:text-primary mobile:w-full h-[50px] rounded-none border-primary text-primary"
         onClick={open}
       >
         Filter
@@ -431,7 +546,8 @@ export default function SearchComponent() {
       </Button>
 
       <Button
-        className="w-[100px] h-[50px] text-primary font-bold px-0 rounded-none hover:text-[#5625d0] mobile:hidden lg:block bg-transparent hover:bg-transparent"
+        className="w-[100px] h-[50px] hover:bg-transparent text-primary font-bold px-0 rounded-none
+         hover:text-clearFilters mobile:hidden lg:block"
         onClick={handleResetFilter}
       >
         Clear Filters
@@ -465,7 +581,7 @@ export default function SearchComponent() {
                   'h-[50px] rounded-none border-primary text-primary text-sm font-semibold',
               }}
               size="md"
-              leftSection={<IconSortAscending className=" text-primary" />}
+              leftSection={<IconArrowsSort className=" text-primary" />}
               allowDeselect={false}
               checkIconPosition="right"
               placeholder="Sort By"
@@ -502,7 +618,7 @@ export default function SearchComponent() {
                 classNames={{ label: 'text-sm' }}
                 label="Sort By"
                 size="md"
-                leftSection={<IconSortAscending className=" text-primary" />}
+                leftSection={<IconArrowsSort className=" text-primary" />}
                 allowDeselect={false}
                 checkIconPosition="right"
                 placeholder="Sort By"
@@ -539,13 +655,13 @@ export default function SearchComponent() {
                 disabled
                 leftSection={<IconAdjustmentsHorizontal />}
                 variant="outline"
-                className=" w-[150px] h-[50px] rounded-none border-primary text-primary"
+                className=" w-[150px] hover:bg-transparent h-[50px] rounded-none border-primary text-primary"
               >
                 Filter
                 {numOfFilters > 0 && <h1 className="ml-1">({numOfFilters})</h1>}
               </Button>
               <Button
-                className="w-[100px] h-[50px] font-bold px-0 rounded-none text-primary"
+                className="w-[100px] hover:bg-transparent hover:text-clearFilters  h-[50px] font-bold px-0 rounded-none text-primary"
                 onClick={handleResetFilter}
               >
                 Clear Filters

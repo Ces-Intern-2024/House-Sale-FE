@@ -79,4 +79,12 @@ export function getSevenDaysBeforeToday() {
   return lastWeek
 }
 
+export function formatRoutePath(routeName:string){
+  const lowerCaseString = routeName.toLowerCase();
+  const formattedStr = lowerCaseString.replace(" ", "-");
+  return formattedStr
+}
+
+
+
 

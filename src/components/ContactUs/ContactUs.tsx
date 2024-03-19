@@ -83,15 +83,21 @@ const ContactUs = ({ property }: ContactUsProps) => {
             </div>
             <div className={style.ContactPhoneEmail}>
               <FaPhoneAlt size={20} color="green" />
-              <span className={style.ContactTextSeller}>
+              <a
+                href={`tel:${property?.seller.phone}`}
+                className={style.ContactTextSeller}
+              >
                 {property?.seller.phone}
-              </span>
+              </a>
             </div>
             <div className={style.ContactPhoneEmail}>
               <MdEmail size={20} color="green" />
-              <span className={style.ContactTextSeller}>
+              <a
+                href={`mailto:${property?.seller.email}`}
+                className={style.ContactTextSeller}
+              >
                 {property?.seller.email}
-              </span>
+              </a>
             </div>
           </div>
         </div>
@@ -140,8 +146,10 @@ const ContactUs = ({ property }: ContactUsProps) => {
             </div>
             <div className={style.ContactInputRow}>
               <Textarea
-                size="md"
-                minRows={3}
+                size="lg"
+                autosize
+                minRows={4}
+                maxRows={7}
                 placeholder="Message"
                 {...form.getInputProps('message')}
                 onChange={(event: any) => {
@@ -163,8 +171,6 @@ const ContactUs = ({ property }: ContactUsProps) => {
             </div>
           </form>
         </div>
-
-        
       </div>
     </div>
   )

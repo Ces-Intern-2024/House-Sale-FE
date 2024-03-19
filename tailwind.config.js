@@ -38,6 +38,7 @@ module.exports = {
         lightBlue: '#4dc7ec',
         login: '#328971',
         hoverLogin: '#35947a',
+        clearFilters: '#5625d0',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],

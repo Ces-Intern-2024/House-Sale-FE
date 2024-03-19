@@ -21,6 +21,11 @@ const Layouts = () => {
     '/for-rent',
     '/feedback',
     '/search',
+    '/apartment',
+    '/hotel',
+    '/house',
+    '/serviced-apartment',
+    '/villa',
   ]
 
   const AppLayout = useMemo(() => {
