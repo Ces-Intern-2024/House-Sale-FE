@@ -16,6 +16,7 @@ import {
   IconGraph,
   IconLogout,
 } from '@tabler/icons-react'
+import { FaMoneyCheck } from 'react-icons/fa'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { setIsSmallScreen } from '../../../redux/reducers/resizeSlice'
@@ -160,6 +161,23 @@ export default function SellerLayout() {
                     <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
                     {(!isSmallNav || isSmallScreen) && (
                       <h3 className={styles.navText}>Profile</h3>
+                    )}
+                  </div>
+                </NavLink>
+                <NavLink
+                  to="/transaction-history"
+                  className={({ isActive }) =>
+                    isActive ? styles.navItemActive : ''
+                  }
+                  onClick={() => {
+                    handleSetActiveLink('/transaction-history')
+                    if (opened) toggle()
+                  }}
+                >
+                  <div className={styles.navItem}>
+                    <FaMoneyCheck className={styles.navIcon} size={ICON_SIZE} />
+                    {(!isSmallNav || isSmallScreen) && (
+                      <h1 className={styles.navText}>Transaction</h1>
                     )}
                   </div>
                 </NavLink>

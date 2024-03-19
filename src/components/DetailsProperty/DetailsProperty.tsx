@@ -1,7 +1,7 @@
 import React from 'react'
 import style from './DetailsProperty.module.scss'
 import { Properties } from '../../types'
-import { formatDate } from '../../utils/commonFunctions'
+import { formatDateNoHours } from '../../utils/commonFunctions'
 
 interface DetailsPropertyProps {
   property: Properties
@@ -52,7 +52,7 @@ const DetailsProperty = ({ property }: DetailsPropertyProps) => {
             <div className={style.tableRow}>
               <span className={style.labelText}>Updated Date:</span>
               <span className={style.value}>
-                {formatDate(property?.createdAt)}
+                {formatDateNoHours(property?.updatedAt)}
               </span>
             </div>
           </div>

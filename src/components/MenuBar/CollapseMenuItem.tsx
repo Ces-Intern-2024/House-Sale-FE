@@ -1,11 +1,12 @@
-import { Menu } from '@mantine/core'
-import { IconChevronDown } from '@tabler/icons-react'
 import React from 'react'
 import styles from './MenuBar.module.scss'
+import { Menu } from '@mantine/core'
+import { IconChevronDown } from '@tabler/icons-react'
 import { NavigationTree } from '../../types/navigation'
 import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../../redux/hooks'
 import { Category } from '../../types'
+// import { formatRoutePath } from '../../utils/commonFunctions'
 
 interface CollapseMenuItemProps {
   nav: NavigationTree
@@ -43,8 +44,7 @@ export default function CollapseMenuItem({
       >
         <Menu.Target>
           <NavLink
-            to={nav.path}
-            state={{ featureId: nav.key === 'for-sale' ? 1 : 2 }}
+            to={`/search?featureId=${nav.key === 'for-sale' ? '1' : '2'}`}
             className={styles.navLink}
             onClick={closeDrawer}
           >
@@ -54,7 +54,7 @@ export default function CollapseMenuItem({
                 <IconChevronDown className={styles.icon} />
               </h1>
               <span
-                className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === nav.path ? 'opacity-100' : 'opacity-0'}`}
+                className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink.includes(nav.path) ? 'opacity-100' : 'opacity-0'}`}
               ></span>
             </div>
           </NavLink>
@@ -63,13 +63,14 @@ export default function CollapseMenuItem({
           {categories.map((category) => (
             <NavLink
               key={category.categoryId}
-              to={nav.path}
-              state={{
-                categoryId: category.categoryId,
-                featureId: nav.key === 'for-sale' ? 1 : 2,
-              }}
+              to={`/search?featureId=${nav.key === 'for-sale' ? '1' : '2'}&categoryId=${category.categoryId.toString()}`}
             >
-              <Menu.Item className={styles.dropdown} onClick={closeDrawer}>
+              <Menu.Item
+                className={styles.dropdown}
+                onClick={() => {
+                  closeDrawer
+                }}
+              >
                 {category.name}
               </Menu.Item>
             </NavLink>

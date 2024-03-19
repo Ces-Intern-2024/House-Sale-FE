@@ -13,16 +13,19 @@ export async function proceedToPayment(amount: number, description?: string) {
     return res.data
 }
 
-export async function getTransactionHistory(fromDateRange?:string | null, toDateRange?:string | null) { 
-      const queryString = qs.stringify({fromDateRange, toDateRange}, {
+export async function getTransactionHistory(
+  fromDateRange?:string | null, 
+  toDateRange?:string | null,
+  page?: number | null
+  ) { 
+      const queryString = qs.stringify({fromDateRange, toDateRange,page}, {
     skipNulls: true,
     addQueryPrefix: true,
     encode: false,
   }) 
   
 
-const res = await axiosInstance.get(`/transaction/deposit${queryString}
-${queryString.length === 0 ? `?limit=1000` : `&limit=1000`}`)
+const res = await axiosInstance.get(`/transaction/deposit${queryString}`)
     
-    return res.data.metaData.data
+    return res.data.metaData
 }

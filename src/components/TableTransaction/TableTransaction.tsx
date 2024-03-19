@@ -8,6 +8,7 @@ import {
   TextInput,
 } from '@mantine/core'
 import { getAllTransactions } from '../../service/AdminService'
+import { getTransactionHistory } from '../../service/TransactionService'
 import {
   convertISOToVNDateTimeString,
   formatDateToYYYYMMDD,
@@ -18,7 +19,11 @@ import { DatePickerInput } from '@mantine/dates'
 import { IconCalendar } from '@tabler/icons-react'
 import { primary } from '../../constants/color.constant'
 
-export default function TableTransaction() {
+interface TableTransactionProps {
+  isSeller: boolean
+}
+
+export default function TableTransaction({ isSeller }: TableTransactionProps) {
   const [activePage, setActivePage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
@@ -44,11 +49,17 @@ export default function TableTransaction() {
   ) => {
     try {
       setIsLoading(true)
-      const res = await getAllTransactions(
-        fromDateRange ?? null,
-        toDateRange ?? null,
-        page ?? activePage,
-      )
+      const res = !isSeller
+        ? await getAllTransactions(
+            fromDateRange ?? null,
+            toDateRange ?? null,
+            page ?? activePage,
+          )
+        : await getTransactionHistory(
+            fromDateRange ?? null,
+            toDateRange ?? null,
+            page ?? activePage,
+          )
 
       setTransactions(res.data)
       setTotalPages(res.totalPages)
@@ -94,7 +105,7 @@ export default function TableTransaction() {
       transactions.map((transaction: any) => (
         <Table.Tr key={transaction.transactionId} className="text-base h-16">
           <Table.Td>{transaction.transactionId}</Table.Td>
-          <Table.Td>{transaction.userId}</Table.Td>
+          {!isSeller && <Table.Td>{transaction.userId}</Table.Td>}
           <Table.Td>{transaction.amount}</Table.Td>
           <Table.Td>{transaction.balance}</Table.Td>
           <Table.Td>{transaction.description}</Table.Td>
@@ -116,18 +127,22 @@ export default function TableTransaction() {
             <span className={style.subTitle}>Manage Your Transaction</span>
           </div>
         </div>
-        <div className="mt-0 flex justify-between items-end">
-          <div className={style.searchContainer}>
-            <TextInput
-              leftSection={<FaSearch color={primary} size={20} />}
-              placeholder="Enter email..."
-              size="md"
-              radius={4}
-              classNames={{ input: style.textInput }}
-              onChange={(event) => setSearchEmail(event.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-          </div>
+        <div
+          className={`mt-0 flex items-end ${isSeller ? 'justify-end' : 'justify-between'}`}
+        >
+          {!isSeller && (
+            <div className={style.searchContainer}>
+              <TextInput
+                leftSection={<FaSearch color={primary} size={20} />}
+                placeholder="Enter email..."
+                size="md"
+                radius={4}
+                classNames={{ input: style.textInput }}
+                onChange={(event) => setSearchEmail(event.target.value)}
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+          )}
 
           <DatePickerInput
             clearable={true}
@@ -163,7 +178,7 @@ export default function TableTransaction() {
               <Table.Thead>
                 <Table.Tr className="text-base">
                   <Table.Th>Transaction ID</Table.Th>
-                  <Table.Th>User ID</Table.Th>
+                  {!isSeller && <Table.Th>User ID</Table.Th>}
                   <Table.Th>Amount</Table.Th>
                   <Table.Th>Balance</Table.Th>
                   <Table.Th>Description</Table.Th>

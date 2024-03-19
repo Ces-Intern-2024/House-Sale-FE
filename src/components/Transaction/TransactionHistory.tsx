@@ -35,7 +35,7 @@ export default function TransactionHistory({
         dateFrom,
         dateTo ?? null,
       )
-      const combinedHistory = [...data, ...rentServiceHistory]
+      const combinedHistory = [...data.data, ...rentServiceHistory]
       setHistories(sortTransactionsByDate(combinedHistory))
     } catch (error) {
       setHistories([])

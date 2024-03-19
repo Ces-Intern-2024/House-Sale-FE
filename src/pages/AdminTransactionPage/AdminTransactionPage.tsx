@@ -4,7 +4,7 @@ import TableTransaction from '../../components/TableTransaction/TableTransaction
 function AdminPropertyPage() {
   return (
     <div className="mt-8">
-      <TableTransaction />
+      <TableTransaction isSeller={false} />
     </div>
   )
 }

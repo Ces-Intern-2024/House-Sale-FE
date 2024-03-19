@@ -51,11 +51,11 @@ export default function DetailsImageList({
             }}
           />
           <div className={styles.bottomDiv}>
-            <div className={styles.statusDiv}>{status}</div>
             <div className={styles.priceDiv}>
               {formatMoneyToUSD(price!)}
               {feature === 'Rent' ? ' /month' : ''}
             </div>
+            <div className={styles.statusDiv}>{status}</div>
           </div>
 
           {images && (

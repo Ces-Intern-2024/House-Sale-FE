@@ -83,9 +83,20 @@ export default function SellerPage() {
         }}
       >
         <div className="flex flex-col gap-y-5">
-          <h1 className=" font-bold text-center text-lg">
+          <h1 className=" font-bold text-center text-lg my-0">
             Enter the number of credits you want to buy:
+            <span className="font-bold text-center text-sm flex items-center justify-center my-0">
+              1{' '}
+              <GiCrownCoin
+                size={25}
+                color="#396652"
+                className=" mr-3"
+              ></GiCrownCoin>
+              <span className="mr-3">=</span>
+              {Number(conversionRate).toFixed()} dollars
+            </span>
           </h1>
+
           <NumberInput
             readOnly={shouldShowCheckoutForm ? true : false}
             error={creditAmountError}
@@ -95,7 +106,7 @@ export default function SellerPage() {
               setCreditAmount(_value)
             }}
             size="lg"
-            leftSection={<GiCrownCoin  size={25} color="#396652"></GiCrownCoin>}
+            leftSection={<GiCrownCoin size={25} color="#396652"></GiCrownCoin>}
             placeholder="Enter credit amount"
             allowDecimal={false}
             allowNegative={false}
