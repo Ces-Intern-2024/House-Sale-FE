@@ -56,6 +56,7 @@ import {
   VIEW_PROP,
 } from '../../constants/actions.constant'
 import ModalPackageService from '../ModalPackageService/ModalPackageService'
+import useInterval from 'use-interval'
 
 interface TablePropertyProps {
   setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>
@@ -65,6 +66,7 @@ const TableProperty = ({
   setShouldUpdate,
   shouldUpdate,
 }: TablePropertyProps) => {
+  const [flag, setFlag] = useState(false)
   const [opened, { open, close }] = useDisclosure(false)
   const [
     openedPackageservice,
@@ -86,7 +88,6 @@ const TableProperty = ({
   const [featureId, setFeatureId] = useState<string | null>(null)
   const [categoryId, setCategoryId] = useState<string | null>(null)
   const [keyword, setKeyword] = useState('')
-  const [intervals, setIntervals] = useState<NodeJS.Timer[]>([])
   const [resetFilter, setResetFilter] = useState(false)
   const [filterNum, setFilterNum] = useState<number>(0)
   const [sortBy, setSortBy] = useState('')
@@ -405,6 +406,11 @@ const TableProperty = ({
     })
   }
 
+  useInterval(() => {
+    if (properties.length > 0) {
+      properties.forEach((property) => handleCheckBeforeInterval(property))
+    }
+  }, 1000)
   /**
    * When property is available, start countdown timer
    * the timer will run every second
@@ -413,59 +419,61 @@ const TableProperty = ({
    * it will temporarily display EXPIRED to status field, then call API to change status to unavailable
    * to prevent the memory leak, there will be a clean-up function in an useEffect hook to clear the intervals when the component unmounts
    */
-  function handleCountdownTimer(property: Properties) {
-    intervals.forEach((interval) => clearInterval(interval))
-    const x = setInterval(async function () {
-      setIntervals((prev) => [...prev, x])
+  async function handleCountdownTimer(property: Properties) {
+    if (flag === true) return
 
-      const countDownDate = new Date(property.expiresAt).getTime()
-      const now = new Date().getTime()
-      const distance = countDownDate - now
+    const countDownDate = new Date(property.expiresAt).getTime()
+    const now = new Date().getTime()
+    const distance = countDownDate - now
 
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24))
-      const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      )
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000)
+    const days =
+      distance > 1000 ? Math.floor(distance / (1000 * 60 * 60 * 24)) : 0
+    const hours =
+      distance > 1000
+        ? Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        : 0
+    const minutes =
+      distance > 1000
+        ? Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+        : 0
+    const seconds =
+      distance > 1000 ? Math.floor((distance % (1000 * 60)) / 1000) : 0
 
-      if (
-        document.getElementById(`remainingTime${property.propertyId}`) &&
-        property.remainingTime > 0 &&
-        property.status === AVAILABLE
-      ) {
-        document.getElementById(
-          `remainingTime${property.propertyId}`,
-        )!.innerHTML =
-          days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's '
-        clearInterval(x)
+    if (
+      document.getElementById(`remainingTime${property.propertyId}`) &&
+      property.remainingTime > 0 &&
+      property.status === AVAILABLE
+    ) {
+      document.getElementById(
+        `remainingTime${property.propertyId}`,
+      )!.innerHTML =
+        seconds >= 0
+          ? days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's '
+          : ''
+    }
+
+    if (
+      distance <= 2000 &&
+      distance >= 0 &&
+      document.getElementById(`remainingTime${property.propertyId}`) &&
+      property.status === AVAILABLE &&
+      flag === false
+    ) {
+      document.getElementById(
+        `remainingTime${property.propertyId}`,
+      )!.innerHTML = 'EXPIRY SOON...'
+      document.getElementById(`status${property.propertyId}`)!.innerHTML = '...'
+      try {
+        setFlag((_prev) => true)
+        await updateStatusPropertiesForSeller(property.propertyId, UN_AVAILABLE)
+        setIsUpdated((prev) => !prev)
+      } catch (err) {
+        console.log(err)
+      } finally {
+        setFlag((_prev) => false)
       }
-
-      if (
-        distance < 0 &&
-        document.getElementById(`remainingTime${property.propertyId}`) &&
-        property.status === AVAILABLE
-      ) {
-        clearInterval(x)
-        document.getElementById(
-          `remainingTime${property.propertyId}`,
-        )!.innerHTML = 'EXPIRED'
-        try {
-          await updateStatusPropertiesForSeller(
-            property.propertyId,
-            UN_AVAILABLE,
-          )
-          setIsUpdated((prev) => !prev)
-        } catch (err) {
-          clearInterval(x)
-        } finally {
-          clearInterval(x)
-        }
-      }
-    }, 1000)
-
-    return () => {
-      clearInterval(x)
+    } else {
+      return
     }
   }
 
@@ -489,10 +497,6 @@ const TableProperty = ({
       handleStopCountdownTimer(property)
       return
     }
-
-    return !property.remainingTime && property.status === UN_AVAILABLE
-      ? 'EXPIRED'
-      : 'DISABLED'
   }
   function handleStopCountdownTimer(property: Properties) {
     if (
@@ -518,18 +522,9 @@ const TableProperty = ({
         )!.innerHTML =
           days + 'd ' + hours + 'h ' + minutes + 'm ' + seconds + 's '
       }
-      return ''
+      return
     }
   }
-
-  useEffect(() => {
-    intervals.forEach((el) => clearInterval(el))
-    setIntervals([])
-    return () => {
-      intervals.forEach((el) => clearInterval(el))
-      setIntervals([])
-    }
-  }, [isUpdated])
 
   const handleKeyDown = (event: any) => {
     if (event.key === 'Enter') {
@@ -579,12 +574,15 @@ const TableProperty = ({
           <Table.Td
             key={element.propertyId}
             id={`remainingTime${element.propertyId}`}
-          >
-            {handleCheckBeforeInterval(element)}
-          </Table.Td>
+          ></Table.Td>
           <Table.Td onClick={(event) => event.stopPropagation()}>
             {element.status === AVAILABLE ? (
-              <div className={style.available}>Available</div>
+              <div
+                className={style.available}
+                id={`status${element.propertyId}`}
+              >
+                Available
+              </div>
             ) : element.status === UN_AVAILABLE ? (
               <div className={style.unavailable}>Unavailable</div>
             ) : (

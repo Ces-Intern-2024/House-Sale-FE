@@ -4,7 +4,7 @@ import { IconChevronDown, IconChevronUp, IconSearch } from '@tabler/icons-react'
 import styles from './TextSearchBar.module.scss'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { setIsSmallScreen } from '../../redux/reducers/resizeSlice'
-import { useNavigate } from 'react-router-dom'
+import { createSearchParams, useNavigate } from 'react-router-dom'
 import { FOR_RENT } from '../../constants/category.constant'
 
 export default function TextSearchBar() {
@@ -15,13 +15,15 @@ export default function TextSearchBar() {
   const [dropdownOpen, setDropdownOpen] = useState(false)
 
   const navigate = useNavigate()
+  const params = {
+    keyword: searchValue,
+    featureId: featureValue ? (featureValue === FOR_RENT ? '2' : '1') : '',
+  }
 
   const handleSearch = () => {
-    navigate('/search', {
-      state: {
-        searchValue: searchValue,
-        featureId: featureValue ? (featureValue === FOR_RENT ? '2' : '1') : '',
-      },
+    navigate({
+      pathname: '/search',
+      search: `?${createSearchParams(params)}`,
     })
   }
 
@@ -77,6 +79,7 @@ export default function TextSearchBar() {
   return (
     <>
       <TextInput
+        radius="md"
         rightSectionWidth={isSmallScreen ? 120 : 150}
         onChange={(event) => setSearchValue(event.currentTarget.value)}
         onKeyDown={handleKeyDown}

@@ -157,7 +157,7 @@ const Properties = ({ data }: Props) => {
               {data.numberOfBedRoom}
             </span>
             <span className={style.propertyDesIcon}>
-            <img src={floor} className="w-5 h-auto mr-2" />
+              <img src={floor} className="w-5 h-auto mr-2" />
 
               {data.numberOfFloor}
             </span>

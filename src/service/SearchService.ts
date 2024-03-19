@@ -19,6 +19,7 @@ export async function searchProperty(
       ? `?limit=${isAll ? NUM_OF_RETURN_ELEMENTS_FOR_CAROUSEL : NUM_OF_RETURN_ELEMENTS}` 
       : `&limit=${isAll ? NUM_OF_RETURN_ELEMENTS_FOR_CAROUSEL : NUM_OF_RETURN_ELEMENTS}`}`,
   )
+  
 
   return res.data.metaData
 }
