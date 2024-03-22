@@ -61,6 +61,7 @@ export default function TextSearchBar() {
       classNames={{
         input: styles.selectInput,
         option: 'hover:bg-blur',
+        wrapper: styles.wrapperInput,
       }}
       comboboxProps={{ zIndex: 2 }}
       placeholder="Feature"
@@ -91,6 +92,7 @@ export default function TextSearchBar() {
         classNames={{
           wrapper: styles.wrapper,
           input: styles.input,
+          
         }}
         value={searchValue}
       />

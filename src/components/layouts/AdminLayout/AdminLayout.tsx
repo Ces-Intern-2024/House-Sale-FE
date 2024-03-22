@@ -16,9 +16,9 @@ import {
   IconLogout,
   IconTransform,
 } from '@tabler/icons-react'
-import { FaLayerGroup } from 'react-icons/fa6'
-import { IoPerson } from 'react-icons/io5'
-import { FaMoneyCheck } from 'react-icons/fa'
+import { TbBuildingSkyscraper } from "react-icons/tb";
+import { FaRegUser } from "react-icons/fa";
+import { CiCreditCard1 } from 'react-icons/ci'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { setIsSmallScreen } from '../../../redux/reducers/resizeSlice'
@@ -135,7 +135,7 @@ export default function AdminLayout() {
               }}
             >
               <div className={styles.navItem}>
-                <FaLayerGroup className={styles.navIcon} size={ICON_SIZE} />
+                <TbBuildingSkyscraper className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>Property</h3>
                 )}
@@ -152,7 +152,7 @@ export default function AdminLayout() {
               }}
             >
               <div className={styles.navItem}>
-                <IoPerson className={styles.navIcon} size={ICON_SIZE} />
+                <FaRegUser className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>User</h3>
                 )}
@@ -169,7 +169,7 @@ export default function AdminLayout() {
               }}
             >
               <div className={styles.navItem}>
-                <FaMoneyCheck className={styles.navIcon} size={ICON_SIZE} />
+                <CiCreditCard1 className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>Transaction</h3>
                 )}

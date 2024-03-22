@@ -22,7 +22,7 @@ export interface Properties {
   remainingTime: number
   expiresAt: string
   savedRemainingRentalTime: number
-
+  fullLocationText: string
 }
 
 export interface Feature {

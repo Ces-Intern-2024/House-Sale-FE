@@ -16,7 +16,6 @@ export default function DetailPage() {
   const { id } = useParams()
   const [property, setProperty] = useState<Properties>()
   const navigate = useNavigate()
-
   const paths = [
     { title: 'Home', href: '/home' },
     {
@@ -98,7 +97,7 @@ export default function DetailPage() {
         <div className={style.container}>
           <div className={style.containerDesc}>
             <DetailsProperty property={property!} />
-            <Map />
+            <Map location={property?.fullLocationText} />
           </div>
           <div className={style.containerContact}>
             <ContactUs property={property!} />

@@ -13,13 +13,14 @@ import '@mantine/carousel/styles.css'
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
 import '@mantine/tiptap/styles.css';
+import { REACT_APP_GOOGLE_CLIENT_ID } from './constants/google.constant'
 
 axios.defaults.baseURL = process.env.REACT_APP_BASE_URL
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <Provider store={store}>
-    <GoogleOAuthProvider clientId="170035210473-2iq76agv4quik014o80lfhi7c31eveeh.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={REACT_APP_GOOGLE_CLIENT_ID!}>
       <PersistGate loading={true} persistor={persistor}>
         <BrowserRouter>
           <App />

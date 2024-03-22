@@ -24,6 +24,9 @@
   @apply text-center;
 }
 
-.rootButton {
-  @apply bg-primary text-base;
+.rootButtonRent {
+  @apply bg-primary text-base text-center mt-5 hover:bg-primary;
+}
+.rootButtonSale {
+  @apply bg-labelBlue text-base text-center mt-5 hover:bg-labelBlue;
 }

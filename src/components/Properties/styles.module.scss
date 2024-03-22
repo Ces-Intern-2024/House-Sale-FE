@@ -1,4 +1,7 @@
 .propertyContainer {
+  box-shadow:
+    0 0px 2px 0 rgba(0, 0, 0, 0.1),
+    0 2px 12px 0 rgba(0, 0, 0, 0.15);
   @apply col-span-1 
       relative
       border-[1.2px] 
@@ -27,7 +30,7 @@
       text-white;
 }
 
-.propertyName  {
+.propertyName {
   @apply h-[24px] text-base px-3  text-nowrap text-ellipsis overflow-hidden;
 }
 
@@ -44,32 +47,33 @@
 
 .propertyLocation {
   @apply flex justify-between items-center
-    text-base
-    text-[#7e7e7e]
     leading-[25px]
     text-left
-    px-3 pb-1;
+    px-2 pb-1;
 }
-
+.propertyDetailLocation {
+  @apply text-base
+  text-grey truncate;
+}
+.propertyIcon {
+  @apply mr-1 text-grey;
+}
 .heartCoverIcon {
-  @apply cursor-pointer px-2 mt-1 text-primary 
+  @apply cursor-pointer px-2 text-primary
   hover:text-red hover:ease-in hover:duration-300;
 }
 
 .heartIsAdded {
-  @apply text-orangeHeart hover:text-[#AA0000] cursor-pointer px-2 mt-1  
+  @apply text-orangeHeart hover:text-[#AA0000] cursor-pointer px-2   
   hover:ease-in hover:duration-300 bg-transparent hover:bg-transparent;
 }
 
 .propertyCoverIcon {
   @apply flex items-center;
 }
-.propertyIcon {
-  @apply mr-1;
-}
 
 .propertyPrice {
-  @apply bg-emerald-600 w-full h-9 items-center flex text-slate-50 text-base  px-3;
+  @apply w-full h-9 items-center flex text-slate-50 text-base  px-3;
 }
 
 .propertyDescription {
