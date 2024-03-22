@@ -23,5 +23,8 @@
 }
 
 .selectInput {
-  @apply text-primary px-0 pl-5 mobile:text-[16px] lg:text-lg font-semibold;
+  @apply text-primary px-0 pl-5 mobile:text-[16px] lg:text-lg font-semibold border-l-2 border-l-black;
+}
+
+.wrapperInput{
 }

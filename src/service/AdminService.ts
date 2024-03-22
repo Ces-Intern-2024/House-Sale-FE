@@ -118,3 +118,8 @@ export const disablePropertyForAdminService = async (listPropertyId: string) => 
   const res = await axiosInstance.patch(`/admin/manage-property/disable?propertyId=${listPropertyId}`)
   return res
 }
+
+export const resetPasswordForAdmin = async (userId: number) => {
+ const res = await axiosInstance.post(`/admin/manage-user/${userId}/reset-password`)
+ return res
+}

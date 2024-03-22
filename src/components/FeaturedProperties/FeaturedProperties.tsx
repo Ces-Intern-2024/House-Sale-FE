@@ -3,6 +3,7 @@ import { Properties } from '@/types'
 import PropertyCard from '../Properties/PropertyCard'
 import style from './styles.module.scss'
 import { Button } from '@mantine/core'
+import { FEATURED_FOR_RENT } from '../../constants/category.constant'
 
 type Props = {
   title?: string
@@ -42,8 +43,7 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
       <div className={style.buttonContainer}>
         {visibleProperty === propertiesToShow.length && (
           <Button
-            className="text-center mt-[20px]"
-            classNames={{ root: style.rootButton }}
+            classNames={{ root: title === FEATURED_FOR_RENT ? style.rootButtonRent : style.rootButtonSale }}
             variant="filled"
             onClick={handleViewMore}
           >

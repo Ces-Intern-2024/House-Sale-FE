@@ -18,7 +18,7 @@
 }
 
 .labelText {
-  @apply lg:w-3/6 block
+  @apply lg:w-3/6 block font-semibold
   mobile:w-full;
 }
 
@@ -29,4 +29,8 @@
 
 .detailDescription {
   @apply px-5 pb-7.5 whitespace-break-spaces;
+}
+
+.location{
+  @apply font-semibold mr-4 text-base
 }
