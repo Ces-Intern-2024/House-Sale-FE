@@ -468,7 +468,7 @@ const TableProperty = ({
         await updateStatusPropertiesForSeller(property.propertyId, UN_AVAILABLE)
         setIsUpdated((prev) => !prev)
       } catch (err) {
-        console.log(err)
+        console.error(err)
       } finally {
         setFlag((_prev) => false)
       }

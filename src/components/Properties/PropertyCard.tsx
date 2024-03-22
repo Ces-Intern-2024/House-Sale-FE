@@ -47,7 +47,7 @@ const Properties = ({ data }: Props) => {
     <div className={style.propertyContainer}>
       <div className={style.propertyContent}>
         <div
-          className={`${style.propertyFeatured} ${data.feature.featureId === 1 ? 'bg-darkBlue' : 'bg-emerald-700'}`}
+          className={`${style.propertyFeatured} ${data.feature.featureId === 1 ? 'bg-labelBlue' : 'bg-emerald-700'}`}
         >
           {data.feature.name}
         </div>
@@ -75,10 +75,14 @@ const Properties = ({ data }: Props) => {
             </Link>
           </div>
           <div className={style.propertyLocation}>
-            <span className={style.propertyCoverIcon}>
-              <FaLocationDot className={style.propertyIcon} size={16} />
-              {data.location.address}
-            </span>
+            <div className="flex truncate">
+              <span>
+                <FaLocationDot className={style.propertyIcon} size={20} />
+              </span>
+              <span className={style.propertyDetailLocation}>
+                {data.location.address}
+              </span>
+            </div>
             {/* This comment has been kept as a temporary if there are any errors.
             {user !== null ? (
               wishList.filter(
@@ -114,36 +118,38 @@ const Properties = ({ data }: Props) => {
                 <FaRegHeart size={24} />
               </span>
             )} */}
-            {loggedIn &&
-            wishList &&
-            wishList.find(
-              (property: PropertiesType) =>
-                property.propertyId === data.propertyId,
-            ) ? (
-              <Button
-                loading={isLoading}
-                className={style.heartIsAdded}
-                onClick={() => handleAddToWishlist(data.propertyId)}
-              >
-                <FaHeart size={24} />
-              </Button>
-            ) : (
-              <Button
-                loading={isLoading}
-                className={style.heartIsAdded}
-                onClick={() => handleAddToWishlist(data.propertyId)}
-              >
-                <FaRegHeart size={24} />
-              </Button>
-            )}
+            <span>
+              {loggedIn &&
+              wishList &&
+              wishList.find(
+                (property: PropertiesType) =>
+                  property.propertyId === data.propertyId,
+              ) ? (
+                <Button
+                  loading={isLoading}
+                  className={style.heartIsAdded}
+                  onClick={() => handleAddToWishlist(data.propertyId)}
+                >
+                  <FaHeart size={20} />
+                </Button>
+              ) : (
+                <Button
+                  loading={isLoading}
+                  className={style.heartIsAdded}
+                  onClick={() => handleAddToWishlist(data.propertyId)}
+                >
+                  <FaRegHeart size={20} />
+                </Button>
+              )}
+            </span>
           </div>
 
           {data.feature.name === 'Rent' ? (
-            <div className={style.propertyPrice}>
+            <div className={`${style.propertyPrice} bg-emerald-600`}>
               {formatMoneyToUSD(data.price)} {data.currencyCode}/month
             </div>
           ) : (
-            <div className={style.propertyPrice}>
+            <div className={`${style.propertyPrice} bg-lightBlue`}>
               {formatMoneyToUSD(data.price)} {data.currencyCode}
             </div>
           )}

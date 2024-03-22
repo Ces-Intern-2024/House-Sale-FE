@@ -19,6 +19,7 @@ import {
   deleteUserForAdminService,
   getAllUsersForAdminService,
   getUsersForAdminService,
+  resetPasswordForAdmin,
   updateStatusUserForAdminService,
 } from '../../service/AdminService'
 import { User } from '../../types/user'
@@ -256,6 +257,35 @@ function TableUser() {
     }
   }
 
+  const handleResetPassword = (userId: number) => {
+    if (!userId) return
+    Swal.fire({
+      text: `Are you sure to reset your password for userId: ${userId}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: confirmBtn,
+      cancelButtonColor: cancelBtn,
+      confirmButtonText: 'Reset',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setIsLoading(true)
+          await resetPasswordForAdmin(userId)
+          Swal.fire({
+            text: 'Reset Password successfully',
+            icon: 'success',
+          })
+        } catch (error) {
+          Swal.fire({
+            text: 'something went wrong',
+            icon: 'error',
+          })
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    })
+  }
   const rows =
     userList.length > 0 ? (
       userList.map((user) => (
@@ -285,15 +315,13 @@ function TableUser() {
               <RxAvatar className="ml-1" size={30} />
             )}
           </Table.Td>
-          <Table.Td onClick={() => openModalUser(user)}>
-            {user.fullName ? user.fullName : 'User'}
-          </Table.Td>
-          <Table.Td>{user.email}</Table.Td>
+
+          <Table.Td onClick={() => openModalUser(user)}>{user.email}</Table.Td>
           {user.phone ? (
             <Table.Td>{user.phone}</Table.Td>
           ) : (
             <Table.Td>
-              <span className="text-base bg-blue-700 text-white px-2 rounded-[6px] py-1">
+              <span className="text-base text-[#7B54F4] bg-[#F1EDFE] px-2 rounded-[6px] py-1">
                 Not registered
               </span>
             </Table.Td>
@@ -311,6 +339,14 @@ function TableUser() {
                 : 'Undefined'}
           </Table.Td>
           <Table.Td>{formatDateNoHours(user.createdAt)}</Table.Td>
+          <Table.Td>
+            <Button
+              color="teal"
+              onClick={() => handleResetPassword(user.userId)}
+            >
+              Reset
+            </Button>
+          </Table.Td>
           <Table.Td>
             {user.isActive ? (
               <Tooltip label="Click to disable" refProp="rootRef">
@@ -450,12 +486,12 @@ function TableUser() {
                     </Table.Th>
                     <Table.Th>ID</Table.Th>
                     <Table.Th>Avatar</Table.Th>
-                    <Table.Th>Full name</Table.Th>
                     <Table.Th>Email</Table.Th>
                     <Table.Th>Phone</Table.Th>
                     <Table.Th>Balance</Table.Th>
                     <Table.Th>Role</Table.Th>
                     <Table.Th>Created On</Table.Th>
+                    <Table.Th>Password</Table.Th>
                     <Table.Th>Status</Table.Th>
                     <Table.Th>Action</Table.Th>
                   </Table.Tr>

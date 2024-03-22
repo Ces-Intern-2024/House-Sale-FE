@@ -116,16 +116,16 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
     <div className="">
       <div className="flex flex-row ">
         <div className="bg-[#f8fafb]">
-          <div className="p-8">
+          <div className="py-8">
             {user?.avatar ? (
               <img
                 src={user.avatar}
-                className=" w-80 h-50 object-cover rounded-[20px]"
+                className=" w-60 mx-3 h-50 object-cover rounded-[20px]"
               />
             ) : (
               <img
                 src={image}
-                className=" w-80 h-50 object-contain rounded-[20px]"
+                className=" w-60 h-50 object-contain rounded-[20px]"
               />
             )}
           </div>
@@ -148,7 +148,7 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
 
                 <TextInput
                   {...form.getInputProps('fullName')}
-                  className="font-semibold w-full"
+                  className="font-semibold w-full shadow-md"
                   classNames={{ input: style.inputTextInput }}
                   label="Full Name"
                   rightSection={<IconPencil></IconPencil>}
@@ -158,9 +158,9 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
                   }}
                 />
 
-                <div className="flex justify-between">
+                <div className="flex justify-between ">
                   <TextInput
-                    className="font-semibold"
+                    className="font-semibold shadow-md"
                     classNames={{ input: style.inputTextInput }}
                     label="Email"
                     readOnly
@@ -168,7 +168,7 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
                   />
                   <TextInput
                     {...form.getInputProps('phone')}
-                    className="font-semibold"
+                    className="font-semibold shadow-md"
                     classNames={{ input: style.inputTextInput }}
                     label="Phone Number"
                     rightSection={<IconPencil></IconPencil>}
@@ -181,6 +181,7 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
                 <div className="flex flex-row gap-4">
                   <Select
                     classNames={{ input: style.inputTextInput }}
+                    className="shadow-md"
                     label="City/Province"
                     placeholder="City/Province"
                     allowDeselect={false}
@@ -214,6 +215,7 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
                   <Select
                     classNames={{ input: style.inputTextInput }}
                     label="District"
+                    className="shadow-md"
                     placeholder="District"
                     allowDeselect={false}
                     searchable
@@ -244,6 +246,7 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
                   <Select
                     classNames={{ input: style.inputTextInput }}
                     label="Ward"
+                    className="shadow-md"
                     placeholder="Ward"
                     allowDeselect={false}
                     searchable
@@ -273,6 +276,7 @@ function ModalManageUser({ user, onClose, setIsUpdated, isUpdated }: Props) {
                 <TextInput
                   {...form.getInputProps('address')}
                   classNames={{ input: style.inputTextInput }}
+                  className="shadow-md"
                   label="Address"
                   placeholder="Address"
                   rightSection={<IconPencil></IconPencil>}
