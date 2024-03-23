@@ -19,7 +19,7 @@ import { yupResolver } from 'mantine-form-yup-resolver'
 import * as yup from 'yup'
 import { IconUser, IconMail, IconPhone } from '@tabler/icons-react'
 import styles from './Register.module.scss'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { GoogleButton } from '../Login/GoogleButton'
 import {
   useFetchProvincesQuery,
@@ -42,27 +42,26 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
 }
 
 export default function Register() {
+  const location = useLocation()
   const [isLoading, setIsLoading] = useState(false)
   const { data: provinces = [] } = useFetchProvincesQuery()
   const [provinceCode, setProvinceCode] = useState('')
 
-  const { data: fetchedDistricts = [], isUninitialized: notInit } =
-    useFetchDistrictsQuery(provinceCode, {
-      skip: !provinceCode,
-    })
+  const { data: fetchedDistricts = [] } = useFetchDistrictsQuery(provinceCode, {
+    skip: !provinceCode,
+  })
   const [districts, setDistricts] = useState<District[]>([])
   const [districtCode, setDistrictCode] = useState<string | null>('')
 
-  const { data: fetchedWards = [], isUninitialized } = useFetchWardsQuery(
-    districtCode,
-    {
-      skip: !districtCode,
-    },
-  )
+  const { data: fetchedWards = [] } = useFetchWardsQuery(districtCode, {
+    skip: !districtCode,
+  })
   const [wards, setWards] = useState<Ward[]>([])
   const [wardCode, setWardCode] = useState<string | null>('')
 
-  const [sellerAccount, setSellerAccount] = useState(false)
+  const [sellerAccount, setSellerAccount] = useState(
+    location && location.state ? location.state : false,
+  )
   const navigate = useNavigate()
 
   const listSchema = yup.object().shape({
@@ -149,20 +148,20 @@ export default function Register() {
   }
 
   useEffect(() => {
-    if (isUninitialized || !districtCode) {
-      setWards([])
-    } else {
-      setWards(fetchedWards)
+    if (JSON.stringify(districts) !== JSON.stringify(fetchedDistricts)) {
+      setDistricts((_prev) => fetchedDistricts)
     }
-  }, [districtCode, isUninitialized, fetchedWards])
+  }, [fetchedDistricts])
 
   useEffect(() => {
-    if (notInit || !provinceCode) {
-      setDistricts([])
-    } else {
-      setDistricts(fetchedDistricts)
+    if (JSON.stringify(wards) !== JSON.stringify(fetchedWards)) {
+      setWards((_prev) => fetchedWards)
     }
-  }, [provinceCode, notInit, fetchedDistricts])
+  }, [fetchedWards])
+
+  useEffect(() => {
+    setWards((_prev) => [])
+  }, [provinceCode])
 
   return (
     <>
@@ -323,6 +322,7 @@ export default function Register() {
           )}
 
           <Checkbox
+            checked={sellerAccount}
             mt="md"
             label="Seller Account"
             onClick={() => {
@@ -332,7 +332,7 @@ export default function Register() {
                 wardCode: null,
                 address: null,
               })
-              setSellerAccount((prev) => !prev)
+              setSellerAccount((prev: boolean) => !prev)
             }}
           />
         </Stack>

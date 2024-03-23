@@ -1,12 +1,53 @@
 .textInput {
-  &::placeholder {
+  cursor: pointer;
+    color: #396652;  // for category,... + value or others' placeholder
+  &::placeholder {   
     color: black;
   }
 }
 
 .customTextInput {
+  font: bold;
   cursor: pointer;
+  color: #396652;
   &::placeholder {
+    font: bold;
+    color: black;
+  }
+}
+
+.boldTextInput {
+  font: bold;
+  cursor: pointer;
+  color: #396652;  // for province,... + value or area,... placeholder
+  &::placeholder {
+      font: bold;
+      color: #396652;
+    }
+}
+
+.boldCustomTextInput {
+  cursor: pointer;
+  font: bold;
+  color: #396652;
+&::placeholder {
+    font: bold;
+    color: #396652;
+  }
+}
+
+.customRangeInput{
+cursor: pointer;
+  &::placeholder {
+   
+      font: bold;
+      color: #396652;
+    }
+}
+.defaultRangeInput {
+cursor: pointer;
+  &::placeholder {
+    cursor: pointer;
     color: black;
   }
 }

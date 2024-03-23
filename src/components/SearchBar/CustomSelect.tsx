@@ -13,6 +13,7 @@ import {
 
 import { IconChevronDown, IconChevronUp, IconCheck } from '@tabler/icons-react'
 import styles from './CustomerSelect.module.scss'
+// import { primary } from '../../constants/color.constant'
 
 interface KVObj {
   key: string
@@ -108,6 +109,49 @@ export default function CustomSelect({
     setQuery('')
   }
 
+  const handleChooseStyle = (
+    placeHolder: string,
+    inputValue?: any,
+    rangeValue?: any,
+  ) => {
+    let style
+    if (
+      ((placeHolder === 'Bed' ||
+        placeHolder === 'Bath' ||
+        placeHolder === 'Area') &&
+        inputValue) ||
+      rangeValue
+    ) {
+      style = styles.customRangeInput
+    } else {
+      style = styles.defaultRangeInput
+    }
+
+    if (
+      (placeHolder === 'For Rent/Sale' || placeHolder === 'Category') &&
+      (inputValue || rangeValue)
+    ) {
+      style = styles.boldCustomTextInput
+    } else {
+      style = styles.customTextInput
+    }
+
+    if (
+      ((placeHolder === 'Province' ||
+        placeHolder === 'District' ||
+        placeHolder === 'Ward') &&
+        inputValue) ||
+      rangeValue
+    ) {
+      style = styles.boldTextInput
+      return style
+    } else {
+      style = styles.textInput
+    }
+
+    return style
+  }
+
   useEffect(() => {
     if (selectedKey) {
       setInputValue(selectedKey)
@@ -122,11 +166,13 @@ export default function CustomSelect({
     <>
       <div className="">
         <TextInput
+          className={inputValue || rangeValue ? `font-bold  ` : ''}
           size="md"
-          variant={customStyle ? 'unstyled' : 'default'}
+          // variant={customStyle ? 'unstyled' : 'default'} // to choose whether to have a border or not
+          variant="unstyled"
           readOnly={customStyle ? true : false}
           classNames={{
-            input: customStyle ? styles.customTextInput : styles.textInput,
+            input: handleChooseStyle(placeHolder, inputValue, rangeValue),
           }}
           leftSection={IconElement}
           rightSection={
@@ -263,7 +309,10 @@ export default function CustomSelect({
                     </Box>
                   ))
                 ) : (
-                  <Text color="dimmed">Nothing found</Text>
+                  <Text color="dimmed">
+                    Please Choose{' '}
+                    {placeHolder === 'District' ? 'Province' : 'District'}
+                  </Text>
                 )}
               </Box>
             </ScrollArea.Autosize>

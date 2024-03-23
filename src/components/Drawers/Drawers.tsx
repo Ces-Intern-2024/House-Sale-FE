@@ -24,10 +24,14 @@ export default function Drawers() {
             <img src={logo} className={styles.logo} />
           </Link>
         </div>
-        <MenuBar isOfDrawers={true} closeDrawer={close} userAuthority={userAuthority!}/>
+        <MenuBar
+          isOfDrawers={true}
+          closeDrawer={close}
+          userAuthority={userAuthority!}
+        />
       </Drawer>
 
-      <Button onClick={open} className={styles.toggleBtn}>
+      <Button onClick={open} classNames={{ root: styles.toggleBtn }}>
         <FaAlignJustify className={styles.iconAlign} />
       </Button>
     </>

@@ -45,7 +45,10 @@ export default function TextSearchBar() {
     }
   }, [dispatch])
   const leftSection = (
-    <Button onClick={handleSearch} className="px-3 bg-transparent hover:bg-transparent" >
+    <Button
+      onClick={handleSearch}
+      className="px-3 bg-transparent hover:bg-transparent"
+    >
       <IconSearch className={styles.icon} size={30} />
     </Button>
   )
@@ -61,7 +64,7 @@ export default function TextSearchBar() {
       classNames={{
         input: styles.selectInput,
         option: 'hover:bg-blur',
-        wrapper: styles.wrapperInput,
+        wrapper: styles.selectOption,
       }}
       comboboxProps={{ zIndex: 2 }}
       placeholder="Feature"
