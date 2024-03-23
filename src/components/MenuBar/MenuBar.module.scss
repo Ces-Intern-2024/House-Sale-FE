@@ -28,7 +28,7 @@
 }
 
 .navLink:active::after {
-  background-color: orange;
+  background-color: #ffa500;
   transform: scaleX(1);
   transform-origin: bottom left;
 }
@@ -37,17 +37,25 @@
   @apply text-base font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
 }
 
-.outer {
-  @apply bg-[#396652] items-center justify-center py-2 lg:flex xs:hidden hidden mt-3;
-}
-
 .icon {
   @apply w-[25px] px-1;
 }
 
+.outer {
+  @apply bg-[#396652] items-center justify-center py-2 lg:flex xs:hidden hidden mt-3;
+}
+
+.outerOfListing{
+@apply bg-[#396652] items-center justify-center gap-x-9 py-2 lg:flex xs:hidden hidden;
+} 
+
 .outerOfDrawers {
-  @apply bg-[#396652] px-5 h-[70vh]
-  justify-start items-start  py-2 lg:hidden xs:flex mobile:flex  flex-col gap-y-1;
+  @apply bg-[#396652] 
+  justify-start items-start py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-1;
+}
+
+.outerOfDrawersListing {
+  @apply bg-[#396652] h-[70vh] px-7 justify-start items-start py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-1;
 }
 
 .dropdown {

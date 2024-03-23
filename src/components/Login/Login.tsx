@@ -11,7 +11,7 @@ import {
   Divider,
 } from '@mantine/core'
 import style from './Login.module.scss'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { GoogleButton } from './GoogleButton'
 import axios from 'axios'
 import { setUser } from '../../redux/reducers/userSlice'
@@ -20,6 +20,7 @@ import { useAppDispatch } from '../../redux/hooks'
 import appConfig from '../../configs/app.config'
 import { useGoogleLogin } from '@react-oauth/google'
 import { Roles } from '../../types/role'
+import Swal from 'sweetalert2'
 
 const LOGIN_URL = '/user/login'
 interface Props {
@@ -36,6 +37,16 @@ export function Login() {
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
   const [userGoogle, setUserGoogle] = useState<string | null>(null)
+  const location = useLocation()
+
+  if (location.state && location.state.message) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Upgrade to seller successfully! ',
+      text: location.state.message,
+    })
+    window.history.replaceState({}, '') // to make sure the message is not shown again
+  }
 
   const login = useGoogleLogin({
     onSuccess: (response) => {

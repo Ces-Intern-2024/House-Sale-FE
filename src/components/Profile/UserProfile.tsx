@@ -73,19 +73,15 @@ export default function SellerProfile() {
   const { data: provinces = [] } = useFetchProvincesQuery()
   const [provinceCode, setProvinceCode] = useState('')
 
-  const { data: fetchedDistricts = [], isUninitialized: notInit } =
-    useFetchDistrictsQuery(provinceCode, {
-      skip: !provinceCode,
-    })
+  const { data: fetchedDistricts = [] } = useFetchDistrictsQuery(provinceCode, {
+    skip: !provinceCode,
+  })
   const [districts, setDistricts] = useState<District[]>([])
   const [districtCode, setDistrictCode] = useState<string | null>('')
 
-  const { data: fetchedWards = [], isUninitialized } = useFetchWardsQuery(
-    districtCode,
-    {
-      skip: !districtCode,
-    },
-  )
+  const { data: fetchedWards = [] } = useFetchWardsQuery(districtCode, {
+    skip: !districtCode,
+  })
   const [wards, setWards] = useState<Ward[]>([])
   const [wardCode, setWardCode] = useState<string | null>('')
 
@@ -228,20 +224,20 @@ export default function SellerProfile() {
   }, [isUpdated])
 
   useEffect(() => {
-    if (isUninitialized || !districtCode) {
-      setWards([])
-    } else {
-      setWards(fetchedWards)
+    if (JSON.stringify(districts) !== JSON.stringify(fetchedDistricts)) {
+      setDistricts((_prev) => fetchedDistricts)
     }
-  }, [districtCode, isUninitialized, fetchedWards])
+  }, [fetchedDistricts])
 
   useEffect(() => {
-    if (notInit || !provinceCode) {
-      setDistricts([])
-    } else {
-      setDistricts(fetchedDistricts)
+    if (JSON.stringify(wards) !== JSON.stringify(fetchedWards)) {
+      setWards((_prev) => fetchedWards)
     }
-  }, [provinceCode, notInit, fetchedDistricts])
+  }, [fetchedWards])
+
+  useEffect(() => {
+    setWards((_prev) => [])
+  }, [provinceCode])
 
   return (
     <>
