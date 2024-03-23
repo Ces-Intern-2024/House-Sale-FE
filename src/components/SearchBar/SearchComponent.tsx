@@ -351,14 +351,14 @@ export default function SearchComponent() {
           numberOfToiletTo: bathNum ? bathNum[1] : '',
         }
       }
-      if (priceRange) {
+      if (priceRange[0] !== 0 || priceRange[1] !== maxPrice) {
         searchValues = {
           ...searchValues,
           priceFrom: priceRange ? priceRange[0].toString() : '',
           priceTo: priceRange ? priceRange[1].toString() : '',
         }
       }
-      if (sortBy) {
+      if (sortBy !== 'ASC') {
         searchValues = {
           ...searchValues,
           orderBy: sortBy.startsWith('P') ? 'price' : 'createdAt',
@@ -375,6 +375,16 @@ export default function SearchComponent() {
       } else {
         searchValues = { ...searchValues, page: activePage }
       }
+
+      if (
+        !resetActivePage &&
+        activePage === 1 &&
+        searchValues &&
+        'page' in searchValues
+      ) {
+        delete searchValues.page
+      }
+
       setSearchParams((_prev) => searchValues)
     }
   }, [
@@ -392,6 +402,8 @@ export default function SearchComponent() {
   ])
 
   useEffect(() => {
+    setFeatureNum((_prev) => searchParams.get('featureId')!)
+    setCategoryNum((_prev) => searchParams.get('categoryId')!)
     handleSubmitSearch()
     handleCheckNumOfFilter()
   }, [searchParams, setSearchParams])
@@ -438,8 +450,8 @@ export default function SearchComponent() {
         open={openCategory}
         setOpen={setOpenCategory}
       />
-      <Divider mt="sm" mb="md" />
-      <div className=" flex flex-col gap-y-6">
+      <Divider my="sm" />
+      <div className=" flex flex-col ">
         <CustomSelect
           selectValue={provinceCode}
           dataList={provinceFlatMap}
@@ -449,6 +461,7 @@ export default function SearchComponent() {
           open={openProvince}
           setOpen={setOpenProvince}
         />
+        <Divider my="sm" />
         <CustomSelect
           selectValue={districtCode}
           dataList={districtFlatMap}
@@ -458,6 +471,7 @@ export default function SearchComponent() {
           open={openDistrict}
           setOpen={setOpenDistrict}
         />
+        <Divider my="sm" />
         <CustomSelect
           selectValue={wardCode}
           dataList={wardFlatMap}
@@ -469,7 +483,7 @@ export default function SearchComponent() {
         />
       </div>
 
-      <Divider mb="md" mt="lg" />
+      <Divider my="sm" />
 
       <CustomSelect
         rangeValue={bedNum!}
@@ -510,7 +524,6 @@ export default function SearchComponent() {
         open={openAreaNum}
         setOpen={setOpenAreaNum}
       />
-      <Divider my="sm" />
 
       <Divider mb="lg" mt="sm" />
       <div className={styles.priceRangeBlock}>
@@ -538,7 +551,7 @@ export default function SearchComponent() {
         disabled={isSmallScreen ? false : true}
         leftSection={<IconAdjustmentsHorizontal />}
         variant="outline"
-        className=" lg:w-[150px] hover:text-primary mobile:w-full h-[50px] rounded-none border-primary text-primary"
+        className={` ${isSmallScreen ? 'cursor-pointer' : 'cursor-default'} lg:w-[150px] bg-transparent  hover:text-primary mobile:w-full h-[50px] rounded-none border-primary text-primary`}
         onClick={open}
       >
         Filter
@@ -546,7 +559,8 @@ export default function SearchComponent() {
       </Button>
 
       <Button
-        className="w-[100px] h-[50px] hover:bg-transparent text-primary font-bold px-0 rounded-none
+        disabled={numOfFilters > 0 ? false : true}
+        className="w-[100px] h-[50px] bg-transparent hover:bg-transparent text-primary font-bold px-0 rounded-none
          hover:text-clearFilters mobile:hidden lg:block"
         onClick={handleResetFilter}
       >
@@ -658,10 +672,13 @@ export default function SearchComponent() {
                 className=" w-[150px] hover:bg-transparent h-[50px] rounded-none border-primary text-primary"
               >
                 Filter
-                {numOfFilters > 0 && <h1 className="ml-1">({numOfFilters})</h1>}
+                {numOfFilters > 0 && (
+                  <span className="ml-1">({numOfFilters})</span>
+                )}
               </Button>
               <Button
-                className="w-[100px] hover:bg-transparent hover:text-clearFilters  h-[50px] font-bold px-0 rounded-none text-primary"
+                disabled={numOfFilters > 0 ? false : true}
+                className="w-[100px] bg-transparent hover:bg-transparent hover:text-clearFilters  h-[50px] font-bold px-0 rounded-none text-primary"
                 onClick={handleResetFilter}
               >
                 Clear Filters

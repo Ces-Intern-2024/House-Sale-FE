@@ -3,11 +3,11 @@
 }
 
 .iconAlign {
-  @apply h-7.5 w-5;
+  @apply h-7.5 w-5 ;
 }
 
 .toggleBtn {
-  @apply lg:hidden xs:block block bg-transparent;
+  @apply lg:hidden xs:block block bg-primary hover:bg-primary;
 }
 
 .drawersContent {
