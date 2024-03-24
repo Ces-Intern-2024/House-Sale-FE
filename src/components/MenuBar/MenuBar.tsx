@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Menu, Avatar } from '@mantine/core'
+import { Menu, Avatar, Accordion, ScrollArea } from '@mantine/core'
 import styles from './MenuBar.module.scss'
 import { useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -92,6 +92,7 @@ export default function MenuBar({
         onClose={setOpenUpgradeSeller}
       />
       <ChangePassword isOpened={opened} onClose={close} />
+
       <div
         className={
           isOfDrawers ? styles.outerOfDrawersListing : styles.outerOfListing
@@ -131,124 +132,209 @@ export default function MenuBar({
               )
             }
           })}
-
-          <div>
-            <Menu
-              trigger="click"
-              openDelay={OPEN_DELAY}
-              closeDelay={CLOSE_DELAY}
-            >
-              <Menu.Target>
-                <div className="flex items-center cursor-pointer">
-                  {user.userId ? (
-                    <>
-                      <Menu
-                        trigger="hover"
-                        openDelay={OPEN_DELAY}
-                        closeDelay={CLOSE_DELAY}
-                        width={170}
-                        position={isOfDrawers ? 'right-end' : 'bottom'}
-                        withArrow
-                        transitionProps={{
-                          transition: 'pop',
-                          duration: 300,
-                          timingFunction: 'ease-in-out',
-                          exitDuration: 100,
-                        }}
+          {isOfDrawers ? (
+            <ScrollArea.Autosize mah="100%" maw="100%" type="never">
+              <div className="flex items-center cursor-pointer">
+                {user.userId ? (
+                  <>
+                    <Accordion
+                      variant="unstyled"
+                      className="w-full ml-2"
+                      classNames={{
+                        content: 'px-0',
+                        chevron: 'text-white',
+                        label: 'p-0',
+                        panel: 'text-black',
+                      }}
+                    >
+                      <Accordion.Item
+                        value="photos"
+                        className="hover:bg-transparent"
                       >
-                        <Menu.Target>
-                          <NavLink to="#" className={styles.navLink}>
+                        <Accordion.Control className="w-[220px] px-5 ">
+                          <NavLink to="#">
                             <div className=" flex flex-col justify-center gap-y-1 flex-wrap">
                               <div className="flex items-center">
                                 <Avatar size={28} color="white" />
-                                <span className="text-base text-white font-bold ml-1 hover:text-orange-100">
+                                <div className={styles.nameTag}>
                                   {user.fullName
                                     ? user.fullName.toUpperCase()
                                     : 'USER'}
-                                </span>
+                                </div>
                               </div>
                               <span
                                 className={`h-[3px] bg-[#ffa500] ${activeLink === '#' ? 'opacity-100' : 'opacity-0'}`}
                               ></span>
                             </div>
                           </NavLink>
-                        </Menu.Target>
-                        <Menu.Dropdown className=" flex-col justify-center">
-                          {Number(user.roleId) === Roles.Seller && (
-                            <>
-                              <NavLink to="/seller" className={styles.dropdown}>
-                                <Menu.Item className={styles.dropdown}>
+                        </Accordion.Control>
+                        <Accordion.Panel className=" px-2 mt-2 bg-[#2c513f] rounded-lg shadow-xl">
+                          <div className=" flex flex-col justify-center">
+                            {Number(user.roleId) === Roles.Seller && (
+                              <>
+                                <NavLink
+                                  to="/seller"
+                                  className={styles.commonNav}
+                                >
                                   Dashboard
-                                </Menu.Item>
-                              </NavLink>
+                                </NavLink>
 
-                              <NavLink
-                                to="/profile"
-                                className={styles.dropdown}
-                              >
-                                <Menu.Item className={styles.dropdown}>
+                                <NavLink
+                                  to="/profile"
+                                  className={styles.commonNav}
+                                >
                                   Profile
-                                </Menu.Item>
-                              </NavLink>
-                            </>
-                          )}
-                          {Number(user.roleId) === Roles.Admin && (
-                            <NavLink to="/admin">
-                              <Menu.Item className={styles.dropdown}>
+                                </NavLink>
+                              </>
+                            )}
+                            {Number(user.roleId) === Roles.Admin && (
+                              <NavLink to="/admin" className={styles.commonNav}>
                                 Dashboard
-                              </Menu.Item>
-                            </NavLink>
-                          )}
+                              </NavLink>
+                            )}
 
-                          <span
-                            onClick={() => {
-                              open()
-                            }}
-                          >
-                            <Menu.Item className={styles.dropdown}>
-                              Change Password
-                            </Menu.Item>
-                          </span>
-
-                          <span onClick={handleLogout}>
-                            <Menu.Item
-                              className={styles.dropdown}
-                              onClick={closeDrawer}
+                            <span
+                              onClick={() => {
+                                open()
+                              }}
+                              className={styles.commonNav}
                             >
-                              Log Out{' '}
+                              Change Password
+                            </span>
+
+                            <span
+                              onClick={() => {
+                                closeDrawer
+                                handleLogout()
+                              }}
+                              className={styles.commonNav}
+                            >
+                              Log Out
+                            </span>
+                          </div>
+                        </Accordion.Panel>
+                      </Accordion.Item>
+                    </Accordion>
+                  </>
+                ) : (
+                  <NavLink
+                    to="/login"
+                    onClick={closeDrawer}
+                    className={styles.navLink}
+                  >
+                    <div className=" flex flex-col items-start justify-center">
+                      <span className={styles.navText}>LOG IN</span>
+                      <span
+                        className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/login' ? 'opacity-100' : 'opacity-0'}`}
+                      ></span>
+                    </div>
+                  </NavLink>
+                )}
+              </div>
+            </ScrollArea.Autosize>
+          ) : (
+            <div className="flex items-center cursor-pointer">
+              {user.userId ? (
+                <>
+                  <Menu
+                    trigger="hover"
+                    openDelay={OPEN_DELAY}
+                    closeDelay={CLOSE_DELAY}
+                    width={170}
+                    position={isOfDrawers ? 'right-end' : 'bottom'}
+                    withArrow
+                    transitionProps={{
+                      transition: 'pop',
+                      duration: 300,
+                      timingFunction: 'ease-in-out',
+                      exitDuration: 100,
+                    }}
+                  >
+                    <Menu.Target>
+                      <NavLink to="#" className={styles.navLink}>
+                        <div className=" flex flex-col justify-center gap-y-1 flex-wrap">
+                          <div className="flex items-center">
+                            <Avatar size={28} color="white" />
+                            <span className="text-base text-white font-bold ml-1 hover:text-orange-100">
+                              {user.fullName
+                                ? user.fullName.toUpperCase()
+                                : 'USER'}
+                            </span>
+                          </div>
+                          <span
+                            className={`h-[3px] bg-[#ffa500] ${activeLink === '#' ? 'opacity-100' : 'opacity-0'}`}
+                          ></span>
+                        </div>
+                      </NavLink>
+                    </Menu.Target>
+                    <Menu.Dropdown className=" flex-col justify-center">
+                      {Number(user.roleId) === Roles.Seller && (
+                        <>
+                          <NavLink to="/seller" className={styles.dropdown}>
+                            <Menu.Item className={styles.dropdown}>
+                              Dashboard
                             </Menu.Item>
-                          </span>
-                        </Menu.Dropdown>
-                      </Menu>
-                    </>
-                  ) : (
-                    <NavLink
-                      to="/login"
-                      className={styles.navLink}
-                      onClick={closeDrawer}
-                    >
-                      <div className=" flex flex-col justify-center">
-                        <span className={styles.navText}>LOG IN</span>
-                        <span
-                          className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/login' ? 'opacity-100' : 'opacity-0'}`}
-                        ></span>
-                      </div>
-                    </NavLink>
-                  )}
-                </div>
-              </Menu.Target>
-            </Menu>
-          </div>
+                          </NavLink>
+
+                          <NavLink to="/profile" className={styles.dropdown}>
+                            <Menu.Item className={styles.dropdown}>
+                              Profile
+                            </Menu.Item>
+                          </NavLink>
+                        </>
+                      )}
+                      {Number(user.roleId) === Roles.Admin && (
+                        <NavLink to="/admin">
+                          <Menu.Item className={styles.dropdown}>
+                            Dashboard
+                          </Menu.Item>
+                        </NavLink>
+                      )}
+
+                      <span
+                        onClick={() => {
+                          open()
+                        }}
+                      >
+                        <Menu.Item className={styles.dropdown}>
+                          Change Password
+                        </Menu.Item>
+                      </span>
+
+                      <span onClick={handleLogout}>
+                        <Menu.Item
+                          className={styles.dropdown}
+                          onClick={closeDrawer}
+                        >
+                          Log Out{' '}
+                        </Menu.Item>
+                      </span>
+                    </Menu.Dropdown>
+                  </Menu>
+                </>
+              ) : (
+                <NavLink
+                  to="/login"
+                  className={styles.navLink}
+                  onClick={closeDrawer}
+                >
+                  <div className=" flex flex-col justify-center">
+                    <span className={styles.navText}>LOG IN</span>
+                    <span
+                      className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/login' ? 'opacity-100' : 'opacity-0'}`}
+                    ></span>
+                  </div>
+                </NavLink>
+              )}
+            </div>
+          )}
         </div>
-        <div
-          className=" cursor-pointer h-[50px] p-2  lg:m-0 mobile:ml-5 outline outline-2 rounded-xl outline-[#FFFDD0]  hover:bg-[#FFFDD022] flex items-center"
-          onClick={handleNavigateToPublishing}
-        >
+
+        <div className={styles.postingBtn} onClick={handleNavigateToPublishing}>
           <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
             <Menu.Target>
               <span className="text-[#FFFDD0] text-[16px] flex flex-col items-center font-extrabold">
-                <span>PROPERTY</span>
-                <span>LISTING</span>
+                <span>POSTING</span>
               </span>
             </Menu.Target>
           </Menu>

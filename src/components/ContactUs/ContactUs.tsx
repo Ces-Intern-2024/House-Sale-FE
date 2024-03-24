@@ -135,7 +135,7 @@ const ContactUs = ({ property }: ContactUsProps) => {
               <TextInput
                 size="md"
                 radius="xl"
-                placeholder="Phone"
+                placeholder="Phone Number"
                 className={style.ContactInput}
                 leftSection={<FaPhoneAlt size={16} color="green" />}
                 {...form.getInputProps('phone')}

@@ -14,11 +14,11 @@ import {
   IconDashboard,
   IconGraph,
   IconLogout,
-  IconTransform,
+  IconExchange,
+  IconBuildingSkyscraper,
+  IconUserStar,
+  IconCreditCard,
 } from '@tabler/icons-react'
-import { TbBuildingSkyscraper } from "react-icons/tb";
-import { FaRegUser } from "react-icons/fa";
-import { CiCreditCard1 } from 'react-icons/ci'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { setIsSmallScreen } from '../../../redux/reducers/resizeSlice'
@@ -33,20 +33,42 @@ export default function AdminLayout() {
   const [isSmallNav, setIsSmallNav] = useState(false)
   const SMALL_SCREEN_WIDTH = 70
   const LARGE_SCREEN_WIDTH = 180
-  const ICON_SIZE = 24
+  const ICON_SIZE = 30
   const APPSHELL_HEIGHT = 80
   const dispatch = useAppDispatch()
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
   const { pathname } = useLocation()
   const paths = [
-    { title: 'Management', href: '#' },
-    pathname === '/seller' ? { title: 'Dashboard', href: '/seller' } : null,
-    pathname === '/profile' ? { title: 'Profile', href: '/profile' } : null,
-    pathname === '/report' ? { title: 'Report', href: '/report' } : null,
+    { title: 'Admin', href: '#' },
+    pathname === '/admin' ? { title: 'Dashboard', href: '/admin' } : null,
+    pathname === '/admin-property'
+      ? { title: 'Property', href: '/admin-property' }
+      : null,
+    pathname === '/admin-user' ? { title: 'User', href: '/admin-user' } : null,
+    pathname === '/admin-transaction'
+      ? { title: 'Transaction', href: '/admin-transaction' }
+      : null,
+    pathname === '/admin-conversion-rate'
+      ? { title: 'Conversion Rate', href: '/admin-conversion-rate' }
+      : null,
+    pathname === '/report' ? { title: 'Report', href: '/admin-report' } : null,
   ]
     .filter(Boolean)
     .map((path, index) => (
-      <Anchor href={path?.href} key={index}>
+      <Anchor
+        href={path?.href}
+        key={index}
+        className={
+          location.pathname === path?.href || path?.title === 'Admin'
+            ? 'text-gray-700 hover:no-underline cursor-default'
+            : 'text-gray-700'
+        }
+        onClick={(e) => {
+          if (location.pathname === path?.href || path?.title === 'Admin') {
+            e.preventDefault()
+          }
+        }}
+      >
         {path?.title}
       </Anchor>
     ))
@@ -135,7 +157,10 @@ export default function AdminLayout() {
               }}
             >
               <div className={styles.navItem}>
-                <TbBuildingSkyscraper className={styles.navIcon} size={ICON_SIZE} />
+                <IconBuildingSkyscraper
+                  className={styles.navIcon}
+                  size={ICON_SIZE}
+                />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>Property</h3>
                 )}
@@ -152,7 +177,7 @@ export default function AdminLayout() {
               }}
             >
               <div className={styles.navItem}>
-                <FaRegUser className={styles.navIcon} size={ICON_SIZE} />
+                <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>User</h3>
                 )}
@@ -169,7 +194,7 @@ export default function AdminLayout() {
               }}
             >
               <div className={styles.navItem}>
-                <CiCreditCard1 className={styles.navIcon} size={ICON_SIZE} />
+                <IconCreditCard className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>Transaction</h3>
                 )}
@@ -186,7 +211,7 @@ export default function AdminLayout() {
               }}
             >
               <div className={styles.navItem}>
-                <IconTransform className={styles.navIcon} size={ICON_SIZE} />
+                <IconExchange className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>Conversion Rate</h3>
                 )}

@@ -5,8 +5,8 @@ import Map from '../../components/Map/Map'
 import ContactUs from '../../components/ContactUs/ContactUs'
 import DetailsProperty from '../../components/DetailsProperty/DetailsProperty'
 import style from './DetailPage.module.scss'
-import { Breadcrumbs } from '@mantine/core'
-import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import { Anchor, Breadcrumbs } from '@mantine/core'
+import { useNavigate, useParams } from 'react-router-dom'
 import { getPropertyById } from '../../service/PropertyService'
 import { Properties } from '@/types/properties'
 import Swal from 'sweetalert2'
@@ -20,23 +20,26 @@ export default function DetailPage() {
     { title: 'Home', href: '/home' },
     {
       title: property?.feature.featureId === 1 ? 'For Sale' : 'For Rent',
-      href: property?.feature.featureId === 1 ? '/for-sale' : '/for-rent',
+      href: `/search?featureId=${property?.feature.featureId}`,
     },
-    { title: property?.category.name, href: '/search' },
+    {
+      title: property?.category.name,
+      href: `/search?featureId=${property?.feature.featureId}&categoryId=${property?.category.categoryId}`,
+    },
     { title: property?.name, href: '#' },
   ].map((path, index) => (
-    <NavLink
-      className=" text-blue-500"
-      to={path.href}
-      state={
-        path.title === 'For Sale' || path.title === 'For Rent'
-          ? { featureId: path.title === 'For Sale' ? 1 : 2 }
-          : { categoryId: property?.category.categoryId }
-      }
+    <Anchor
+      className={` ${index === 3 ? 'text-gray-700 hover:no-underline cursor-default' : 'text-blue-500'}`}
+      href={path.href}
       key={index}
+      onClick={(e) => {
+        if (location.pathname === path?.href) {
+          e.preventDefault()
+        }
+      }}
     >
       {path.title}
-    </NavLink>
+    </Anchor>
   ))
 
   const handleGetProperty = async () => {
@@ -66,6 +69,7 @@ export default function DetailPage() {
       const data = await searchProperty(
         {
           featureId: property?.feature.featureId,
+          categoryId: property?.category.categoryId,
           orderBy: 'createdAt',
           sortBy: 'desc',
         },
@@ -103,7 +107,9 @@ export default function DetailPage() {
             <ContactUs property={property!} />
           </div>
         </div>
-        <MultiCarousel properties={propertiesRelevant} title="RELEVANT" />
+        {propertiesRelevant.length > 0 && (
+          <MultiCarousel properties={propertiesRelevant} title="RELEVANT" />
+        )}
       </div>
     </>
   )

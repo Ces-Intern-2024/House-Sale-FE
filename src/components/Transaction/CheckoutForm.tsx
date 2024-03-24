@@ -86,8 +86,18 @@ export default function CheckoutForm({
 
       <form id="payment-form" onSubmit={handleSubmit}>
         <PaymentElement id="payment-element" onChange={() => setMessage('')} />
-        <button disabled={isProcessing || !stripe || !elements} id="submit">
-          <Button mt={25} className=" bg-[#665dff]" loading={isProcessing}>
+        <button
+          className="border-none bg-transparent"
+          disabled={isProcessing || !stripe || !elements}
+          id="submit"
+        >
+          <Button
+            disabled={isProcessing || !stripe || !elements}
+            id="submit"
+            mt={25}
+            className=" bg-[#665dff]"
+            loading={isProcessing}
+          >
             {isProcessing ? 'Processing ... ' : `Pay $${total}`}
           </Button>
         </button>

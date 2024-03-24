@@ -253,7 +253,7 @@ export default function SellerProfile() {
         <div className={styles.outer}>
           <div className={styles.imgOuter}>
             <div className={styles.imgInner}>
-              {!file && userInfo?.avatar && (
+              {!file && userInfo?.avatar && userInfo?.avatar.length > 4 && (
                 <IconSquareRoundedXFilled
                   className={styles.clearAvatar}
                   onClick={handleClearAvatar}
@@ -331,7 +331,7 @@ export default function SellerProfile() {
                   w="100%"
                   label="Email"
                   placeholder="Email"
-                  readOnly
+                  disabled
                   value={userInfo?.email}
                 />
 

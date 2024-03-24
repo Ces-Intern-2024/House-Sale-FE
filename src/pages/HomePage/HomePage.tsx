@@ -13,6 +13,7 @@ import SlideShow from '../../components/Slideshow/SlideShow'
 import MultiCarousel from '../../components/MultiCarousel/MultiCarousel'
 import style from './HomePage.module.scss'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
+import ScrollToTop from '../../components/ScrollToTop/ScrollToTop'
 
 const HomePage = () => {
   const salesList: Properties[] = useAppSelector(
@@ -68,6 +69,7 @@ const HomePage = () => {
 
         <BannerWelcome />
       </Container>
+      <ScrollToTop />
     </div>
   )
 }

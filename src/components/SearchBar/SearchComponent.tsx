@@ -104,14 +104,18 @@ export default function SearchComponent() {
   const [openBathNum, setOpenBathNum] = useState(false)
 
   const categories = useAppSelector((state) => state.category.categoriesList)
-  const [categoryNum, setCategoryNum] = useState<string>(
-    searchParams.get('categoryId') ?? '',
+  const [categoryNum, setCategoryNum] = useState<string[]>(
+    searchParams.get('categoryId')
+      ? decodeURIComponent(searchParams.get('categoryId')!).split(',')
+      : [],
   )
   const [openCategory, setOpenCategory] = useState(false)
 
   const features = useAppSelector((state) => state.feature.featuresList)
-  const [featureNum, setFeatureNum] = useState<string>(
-    searchParams.get('featureId') ?? '',
+  const [featureNum, setFeatureNum] = useState<string[]>(
+    searchParams.get('featureId')
+      ? decodeURIComponent(searchParams.get('featureId')!).split(',')
+      : [],
   )
   const [openFeature, setOpenFeature] = useState(false)
 
@@ -195,8 +199,18 @@ export default function SearchComponent() {
     if (searchParams.get('numberOfToiletTo'))
       setNumOfFilters((prev) => prev + 1)
     if (searchParams.get('landAreaTo')) setNumOfFilters((prev) => prev + 1)
-    if (searchParams.get('categoryId')) setNumOfFilters((prev) => prev + 1)
-    if (searchParams.get('featureId')) setNumOfFilters((prev) => prev + 1)
+    if (searchParams.get('categoryId'))
+      setNumOfFilters(
+        (prev) =>
+          prev +
+          decodeURIComponent(searchParams.get('categoryId')!).split(',').length,
+      )
+    if (searchParams.get('featureId'))
+      setNumOfFilters(
+        (prev) =>
+          prev +
+          decodeURIComponent(searchParams.get('featureId')!).split(',').length,
+      )
     if (priceRange[0] !== 0 || priceRange[1] !== maxPrice)
       setNumOfFilters((prev) => prev + 1)
   }
@@ -208,8 +222,8 @@ export default function SearchComponent() {
     setBedNum((_prev) => null)
     setBathNum((_prev) => null)
     setAreaNum((_prev) => null)
-    setCategoryNum((_prev) => '')
-    setFeatureNum((_prev) => '')
+    setCategoryNum((_prev) => [])
+    setFeatureNum((_prev) => [])
     setPriceRange((_prev) => [0, maxPrice])
     setSortBy((_prev) => 'ASC')
   }
@@ -229,10 +243,10 @@ export default function SearchComponent() {
       districtCode: searchParams.get('districtCode') ?? null,
       wardCode: searchParams.get('wardCode') ?? null,
       featureId: searchParams.get('featureId')
-        ? Number(searchParams.get('featureId'))
+        ? searchParams.get('featureId')
         : null,
       categoryId: searchParams.get('categoryId')
-        ? Number(searchParams.get('categoryId'))
+        ? searchParams.get('categoryId')
         : null,
       landAreaFrom: searchParams.get('landAreaFrom')
         ? Number(searchParams.get('landAreaFrom'))
@@ -313,9 +327,10 @@ export default function SearchComponent() {
 
     let searchValues = {}
     if (priceRange[1] !== 0) {
-      if (featureNum) searchValues = { ...searchValues, featureId: featureNum }
-      if (categoryNum)
-        searchValues = { ...searchValues, categoryId: categoryNum }
+      if (featureNum && featureNum.length > 0)
+        searchValues = { ...searchValues, featureId: featureNum.join(',') }
+      if (categoryNum && categoryNum.length > 0)
+        searchValues = { ...searchValues, categoryId: categoryNum.join(',') }
       if (provinceCode)
         searchValues = { ...searchValues, provinceCode: provinceCode }
       if (districtCode)
@@ -402,8 +417,16 @@ export default function SearchComponent() {
   ])
 
   useEffect(() => {
-    setFeatureNum((_prev) => searchParams.get('featureId')!)
-    setCategoryNum((_prev) => searchParams.get('categoryId')!)
+    setFeatureNum((_prev) =>
+      searchParams.get('featureId')
+        ? searchParams.get('featureId')!.split(',')
+        : [],
+    )
+    setCategoryNum((_prev) =>
+      searchParams.get('categoryId')
+        ? searchParams.get('categoryId')!.split(',')
+        : [],
+    )
     handleSubmitSearch()
     handleCheckNumOfFilter()
   }, [searchParams, setSearchParams])
@@ -427,25 +450,25 @@ export default function SearchComponent() {
 
       <CustomSelect
         dataList={featureFlatMap}
-        selectValue={featureNum}
-        setSelectValue={setFeatureNum}
+        checkBoxValue={featureNum}
+        setCheckBoxValue={setFeatureNum}
         icon={<IconTexture></IconTexture>}
         placeHolder="For Rent/Sale"
         customStyle={true}
-        radio={true}
+        radio={false}
         isRadioRange={false}
         open={openFeature}
         setOpen={setOpenFeature}
       />
       <Divider my="sm" />
       <CustomSelect
-        selectValue={categoryNum}
-        setSelectValue={setCategoryNum}
+        checkBoxValue={categoryNum}
+        setCheckBoxValue={setCategoryNum}
         dataList={categoryFlatMap}
         icon={<IconHome></IconHome>}
         placeHolder="Category"
         customStyle={true}
-        radio={true}
+        radio={false}
         isRadioRange={false}
         open={openCategory}
         setOpen={setOpenCategory}

@@ -161,7 +161,7 @@ export default function UpgradeSeller({
                 radius="md"
                 leftSection={<IconPhone size={16} color="green" />}
                 label="Phone"
-                placeholder="0222777222"
+                placeholder="Enter your phone number"
                 {...form.getInputProps('phone')}
               />
               <div className="grid grid-cols-2 gap-x-2 gap-y-4 ">
@@ -171,7 +171,7 @@ export default function UpgradeSeller({
                   withAsterisk
                   checkIconPosition="right"
                   label="City/Province"
-                  placeholder="Danang"
+                  placeholder="City/Province"
                   data={provinces.flatMap((prov: any) => [
                     {
                       value: prov.provinceCode,
@@ -202,7 +202,7 @@ export default function UpgradeSeller({
                   withAsterisk
                   checkIconPosition="right"
                   label="District"
-                  placeholder="Thanh Khe"
+                  placeholder="District"
                   data={districts.flatMap((dist: any) => [
                     {
                       value: dist.districtCode,
@@ -232,7 +232,7 @@ export default function UpgradeSeller({
                   classNames={{ label: styles.label }}
                   checkIconPosition="right"
                   label="Ward"
-                  placeholder="Chinh Gian"
+                  placeholder="Ward"
                   data={wards.flatMap((ward: any) => [
                     {
                       value: ward.wardCode,
@@ -259,7 +259,7 @@ export default function UpgradeSeller({
                   size="md"
                   classNames={{ label: styles.label }}
                   label="Street"
-                  placeholder="Bach Dang Street"
+                  placeholder="Street"
                   defaultValue=""
                   {...form.getInputProps('street')}
                 />

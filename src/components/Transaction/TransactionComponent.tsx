@@ -79,10 +79,12 @@ export default function TransactionComponent() {
               },
             ]}
           />
-          {value === 'Exchange Policy' && <ExchangePolicy />}
+          {value === 'Exchange Policy' && (
+            <ExchangePolicy conversionRate={param.state.conversionRate} />
+          )}
           {value === 'Proceed To Payment' && (
             <div className="col-span-6 flex flex-col p-5">
-              {clientSecret && stripePromise && (
+              {clientSecret && stripePromise && param.state && (
                 <div className="w-full px-3">
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
                     <CheckoutForm

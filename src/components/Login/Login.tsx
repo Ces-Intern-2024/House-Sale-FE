@@ -38,14 +38,16 @@ export function Login() {
   const [error, setError] = useState<string | null>(null)
   const [userGoogle, setUserGoogle] = useState<string | null>(null)
   const location = useLocation()
+  const [flag, setFlag] = useState(false)
 
-  if (location.state && location.state.message) {
+  if (location.state && location.state.message && !flag) {
     Swal.fire({
       icon: 'success',
       title: 'Upgrade to seller successfully! ',
       text: location.state.message,
     })
     window.history.replaceState({}, '') // to make sure the message is not shown again
+    setFlag((_prev) => true)
   }
 
   const login = useGoogleLogin({

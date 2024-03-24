@@ -1,6 +1,11 @@
 import React from 'react'
 
-export default function ExchangePolicy() {
+interface ExchangePolicyProps {
+  conversionRate?: string
+}
+export default function ExchangePolicy({
+  conversionRate,
+}: ExchangePolicyProps) {
   return (
     <>
       <div className=" mt-3 font-sans leading-loose px-10">
@@ -15,10 +20,11 @@ export default function ExchangePolicy() {
           This Exchange Policy outlines the terms and conditions for purchasing,
           using, and returning credits used for publishing posts on our website.
         </p>
-        <h1 className=" font-bold">1. Purchasing Credits:</h1>
+        <h2 className="m-0 ">1. Purchasing Credits:</h2>
 
         <li>
-          Each credit purchased is equal to <strong>$20 USD</strong>.
+          Each credit purchased is equal to{' '}
+          <strong>${conversionRate} USD</strong>.
         </li>
         <li>
           Credits are non-refundable and cannot be exchanged for cash or other
@@ -29,7 +35,7 @@ export default function ExchangePolicy() {
           your balance.
         </li>
 
-        <h1 className=" font-bold">2. Using Credits</h1>
+        <h2 className="m-0">2. Using Credits</h2>
 
         <li>Credits are used to publish posts on our website.</li>
         <li>
@@ -38,7 +44,7 @@ export default function ExchangePolicy() {
         </li>
         <li>Credits cannot be used for any other purpose on this website.</li>
 
-        <h1 className=" font-bold">3. Unused Credits</h1>
+        <h2 className="m-0">3. Unused Credits</h2>
 
         <li>Unused credits remain in your account balance indefinitely.</li>
         <li>
@@ -46,7 +52,7 @@ export default function ExchangePolicy() {
           your credits.
         </li>
 
-        <h1 className=" font-bold">4. Returns and Refunds</h1>
+        <h2 className="m-0">4. Returns and Refunds</h2>
 
         <li>
           We do not offer refunds or exchanges for unused credits due to their
@@ -58,7 +64,7 @@ export default function ExchangePolicy() {
           customer support team for assistance.
         </li>
 
-        <h1 className=" font-bold">5. Policy Updates</h1>
+        <h2 className="m-0">5. Policy Updates</h2>
 
         <li>
           We reserve the right to update this Exchange Policy at any time.
@@ -68,10 +74,10 @@ export default function ExchangePolicy() {
           immediately.
         </li>
 
-        <h2 className="font-bold">
+        <h3 className="m-0">
           For further inquiries or assistance, please contact our customer
           support team.
-        </h2>
+        </h3>
       </div>
     </>
   )
