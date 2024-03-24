@@ -127,11 +127,16 @@ export default function Register() {
   const handleRegister = async (values: any) => {
     try {
       setIsLoading(true)
-      await register({ ...values, street: values.address }, sellerAccount)
+      const res = await register(
+        { ...values, street: values.address },
+        sellerAccount,
+      )
       Swal.fire({
         title: 'Register Successfully!',
+        text: res.message,
         icon: 'success',
         confirmButtonText: 'OK',
+        timer: 5000,
       })
       navigate('/login')
     } catch (err: any) {
@@ -218,7 +223,7 @@ export default function Register() {
                 radius="md"
                 leftSection={<IconPhone size={16} color="green" />}
                 label="Phone"
-                placeholder="0222777222"
+                placeholder="Phone Number"
                 {...form.getInputProps('phone')}
               />
             </>
@@ -230,7 +235,7 @@ export default function Register() {
                 withAsterisk
                 checkIconPosition="right"
                 label="City/Province"
-                placeholder="Danang"
+                placeholder="City/Province"
                 data={provinces.flatMap((prov: any) => [
                   {
                     value: prov.provinceCode,
@@ -260,7 +265,7 @@ export default function Register() {
                 withAsterisk
                 checkIconPosition="right"
                 label="District"
-                placeholder="Thanh Khe"
+                placeholder="District"
                 data={districts.flatMap((dist: any) => [
                   {
                     value: dist.districtCode,
@@ -289,7 +294,7 @@ export default function Register() {
                 classNames={{ label: styles.label }}
                 checkIconPosition="right"
                 label="Ward"
-                placeholder="Chinh Gian"
+                placeholder="Ward"
                 data={wards.flatMap((ward: any) => [
                   {
                     value: ward.wardCode,
@@ -314,7 +319,7 @@ export default function Register() {
                 withAsterisk
                 classNames={{ label: styles.label }}
                 label="Address"
-                placeholder="727 Main Street"
+                placeholder="Address"
                 defaultValue=""
                 {...form.getInputProps('address')}
               />

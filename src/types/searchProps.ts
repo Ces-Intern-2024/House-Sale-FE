@@ -1,7 +1,7 @@
 export interface SearchProps {
     keyword?: string | null
-    featureId?: number | null
-    categoryId?: number | null
+    featureId?: number | null | string
+    categoryId?: number | null | string
     provinceCode?: string | null
     districtCode?: string | null
     wardCode?: string | null

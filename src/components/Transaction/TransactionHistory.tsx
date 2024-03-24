@@ -36,6 +36,7 @@ export default function TransactionHistory({
         dateTo ?? null,
       )
       const combinedHistory = [...data.data, ...rentServiceHistory]
+
       setHistories(sortTransactionsByDate(combinedHistory))
     } catch (error) {
       setHistories([])
@@ -70,7 +71,7 @@ export default function TransactionHistory({
     <>
       <div className=" flex justify-between items-center font-sans">
         <div className="flex items-center gap-x-2">
-          <span className={style.titleText}>Transaction history</span>
+          <span className={style.titleText}>Transaction History</span>
           <span className={style.titleIcon}>
             <IoIosNotifications />
           </span>
@@ -89,12 +90,11 @@ export default function TransactionHistory({
           >
             {(styles) => (
               <div
-                style={styles}
                 className="absolute top-10 -left-[300px] flex flex-col justify-end items-center z-10 
-              rounded-xl p-3 w-[327px] bg-white border border-blur"
+              rounded-xl p-3 w-[327px] shadow-2xl bg-white border-2 border-blur "
               >
                 <DatePicker
-                  className=" text-center"
+                  className=" text-center "
                   // allowSingleDateInRange
                   hideOutsideDates
                   bg="#F5F9FC"
@@ -136,11 +136,13 @@ export default function TransactionHistory({
           {histories.length > 0 ? (
             histories.map((history, index) => (
               <div key={index} className={style.row}>
-                <div className={style.date}>
+                <div className=" w-[30%] text-start">
                   {convertISOToVNDateTimeString(history.createdAt)}
                 </div>
-                <div className={style.content}>{history.description}</div>
-                <div className={style.quantity}>
+                <div className=" flex w-[55%] justify-start text-start m-0 p-0">
+                  {history.description}
+                </div>
+                <div className="w-[15%] flex justify-end items-center">
                   <span className={style.symbol}>
                     {history.description.includes('property') ? '-' : '+'}
                   </span>

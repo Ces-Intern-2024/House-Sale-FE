@@ -15,8 +15,8 @@ import {
   IconUserStar,
   IconGraph,
   IconLogout,
+  IconCreditCard,
 } from '@tabler/icons-react'
-import { CiCreditCard1 } from "react-icons/ci";
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
 import { setIsSmallScreen } from '../../../redux/reducers/resizeSlice'
@@ -31,7 +31,7 @@ export default function SellerLayout() {
   const [isSmallNav, setIsSmallNav] = useState(false)
   const SMALL_SCREEN_WIDTH = 70
   const LARGE_SCREEN_WIDTH = 180
-  const ICON_SIZE = 24
+  const ICON_SIZE = 30
   const APPSHELL_HEIGHT = 80
   const dispatch = useAppDispatch()
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)
@@ -39,11 +39,14 @@ export default function SellerLayout() {
   const { pathname } = useLocation()
 
   const paths = [
-    { title: 'Management', href: '#' },
+    { title: 'Seller', href: '#' },
     pathname === '/seller' || pathname === '/transaction'
       ? { title: 'Dashboard', href: '/seller' }
       : null,
     pathname === '/profile' ? { title: 'Profile', href: '/profile' } : null,
+    pathname === '/transaction-history'
+      ? { title: 'Transaction History', href: '/transaction-history' }
+      : null,
     pathname === '/report' ? { title: 'Report', href: '/report' } : null,
     pathname === '/transaction'
       ? { title: 'Transaction', href: '/transaction' }
@@ -51,7 +54,20 @@ export default function SellerLayout() {
   ]
     .filter(Boolean)
     .map((path, index) => (
-      <Anchor href={path?.href} key={index}>
+      <Anchor
+        href={path?.href}
+        key={index}
+        className={
+          location.pathname === path?.href || path?.title === 'Seller'
+            ? 'text-gray-700 hover:no-underline cursor-default'
+            : 'text-gray-700'
+        }
+        onClick={(e) => {
+          if (location.pathname === path?.href || path?.title === 'Seller') {
+            e.preventDefault()
+          }
+        }}
+      >
         {path?.title}
       </Anchor>
     ))
@@ -175,9 +191,12 @@ export default function SellerLayout() {
                   }}
                 >
                   <div className={styles.navItem}>
-                    <CiCreditCard1  className={styles.navIcon} size={ICON_SIZE} />
+                    <IconCreditCard
+                      className={styles.navIcon}
+                      size={ICON_SIZE}
+                    />
                     {(!isSmallNav || isSmallScreen) && (
-                      <h3 className={styles.navText}>Transaction</h3>
+                      <h3 className={styles.navText}>Transaction History</h3>
                     )}
                   </div>
                 </NavLink>

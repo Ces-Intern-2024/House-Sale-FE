@@ -19,7 +19,7 @@
 }
 
 .titleIcon {
-    @apply text-primary text-24;
+    @apply text-primary text-24 flex items-center;
 }
 
 .detailNoti {
@@ -27,11 +27,11 @@
 }
 
 .row {
-    @apply border-b-[1px] flex flex-row items-start justify-between;
+    @apply border-b-[1px] flex flex-row gap-x-5 items-start justify-between;
 }
 
 .content {
-    @apply w-75;
+    @apply w-80 flex justify-start;
 }
 
 .quantity {
@@ -47,7 +47,7 @@
 }
 
 .icon {
-    @apply ml-1 text-orangeBtn;
+    @apply ml-1 flex items-center text-orangeBtn;
 }
 
 .creditCurrent {
@@ -55,7 +55,7 @@
 }
 
 .creditCurrentRow {
-    @apply flex flex-row items-center gap-3 justify-center;
+    @apply flex  items-center gap-3 justify-center;
 }
 
 .creditAmount {
@@ -63,7 +63,7 @@
 }
 
 .creditIcon {
-    @apply text-30 text-orangeBtn;
+    @apply text-30 flex items-center text-orangeBtn;
 }
 
 .creditBtn {

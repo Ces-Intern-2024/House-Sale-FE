@@ -4,7 +4,7 @@
   overflow: hidden;
   display: flex;
   align-items: center;
-  margin-left: 27px;
+  margin-left: 28px;
   height: 50px;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .navText {
-  @apply text-base font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
+  @apply text-base py-0 my-0 font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
 }
 
 .icon {
@@ -55,7 +55,7 @@
 }
 
 .outerOfDrawersListing {
-  @apply bg-[#396652] h-[70vh] px-7 justify-start items-start py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-1;
+  @apply bg-[#396652] h-[70vh] overflow-y-scroll px-7 justify-start items-start py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-1;
 }
 
 .dropdown {
@@ -64,4 +64,50 @@
 
 .btnProfile {
   @apply hover:bg-transparent;
+}
+
+.navLinkCollapse {
+  @apply text-white font-bold;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  height: 50px;
+}
+
+.navLinkCollapse::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 3px;
+  top: 39.5px;
+  left: 0;
+  background-color: transparent;
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  transition: transform 0.3s ease-in-out;
+}
+
+.navLinkCollapse:hover::after {
+  background-color: orange;
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.navLinkCollapse:active::after {
+  background-color: #ffa500;
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.commonNav{
+  @apply h-[35px] hover:bg-[#518B76] flex items-center px-5 text-white font-semibold rounded-md 
+}
+
+.nameTag{
+  @apply text-base max-w-[100px] line-clamp-1 overflow-ellipsis text-white font-bold ml-1 hover:text-orange-100
+}
+
+.postingBtn{
+  @apply cursor-pointer h-[50px] mb-6 mt-2 p-2 lg:m-0 mobile:ml-5 outline outline-2 rounded-2xl outline-[#FFFDD0] hover:bg-[#FFFDD022] flex items-center
 }

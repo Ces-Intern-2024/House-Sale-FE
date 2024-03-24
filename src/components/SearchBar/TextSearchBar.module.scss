@@ -19,12 +19,9 @@
 }
 
 .selectOption {
-  @apply text-[16px] text-black p-0 border-l-blur border-l-2;
+  @apply text-[16px] text-black px-0;
 }
 
 .selectInput {
-  @apply text-primary px-0 pl-5 mobile:text-[16px] lg:text-lg font-semibold border-l-2 border-l-black;
-}
-
-.wrapperInput{
+  @apply text-primary px-0 pl-3  rounded-none border-l-blur xs:border-l-[3.5px] mobile:border-l-[2.5px] mobile:text-[16px] lg:text-lg font-semibold;
 }

@@ -6,8 +6,8 @@ import {
 
 export const navigationConfigs: NavigationTree[] = [
   {
-    key: 'for-rent',
-    path: '/for-rent',
+    key: '2',
+    path: '/search',
     title: 'FOR RENT',
     icon: '',
     type: NAV_ITEM_TYPE_COLLAPSE,
@@ -15,11 +15,20 @@ export const navigationConfigs: NavigationTree[] = [
     subMenu: [],
   },
   {
-    key: 'for-sale',
-    path: '/for-sale',
+    key: '1',
+    path: '/search',
     title: 'FOR SALE',
     icon: '',
     type: NAV_ITEM_TYPE_COLLAPSE,
+    authority: [],
+    subMenu: [],
+  },
+   {
+    key: 'feedback',
+    path: '/feedback',
+    title: 'FEEDBACK',
+    icon: '',
+    type: NAV_ITEM_TYPE_ITEM,
     authority: [],
     subMenu: [],
   },
@@ -32,13 +41,5 @@ export const navigationConfigs: NavigationTree[] = [
     authority: [],
     subMenu: [],
   },
-  {
-    key: 'feedback',
-    path: '/feedback',
-    title: 'FEEDBACK',
-    icon: '',
-    type: NAV_ITEM_TYPE_ITEM,
-    authority: [],
-    subMenu: [],
-  },
+ 
 ]
