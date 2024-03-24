@@ -188,7 +188,7 @@ export default function Feedback() {
                 radius="md"
                 leftSection={<IconPhone size={16} color="green" />}
                 label="Phone"
-                placeholder="0222777222"
+                placeholder="Phone Number"
                 value={userPhone}
                 {...form.getInputProps('userPhone')}
                 onChange={(event) => {

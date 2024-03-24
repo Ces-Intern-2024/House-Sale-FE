@@ -16,7 +16,7 @@ import {
 } from '../../utils/commonFunctions'
 import { FaSearch } from 'react-icons/fa'
 import { DatePickerInput } from '@mantine/dates'
-import { IconCalendar } from '@tabler/icons-react'
+import { IconCalendar, IconHistory } from '@tabler/icons-react'
 import { primary } from '../../constants/color.constant'
 
 interface TableTransactionProps {
@@ -148,6 +148,16 @@ export default function TableTransaction({ isSeller }: TableTransactionProps) {
             clearable={true}
             allowSingleDateInRange={true}
             leftSection={<IconCalendar color={primary} stroke={1.5} />}
+            rightSection={
+              <IconHistory
+                color={primary}
+                stroke={1.5}
+                className=" cursor-pointer"
+                onClick={() =>
+                  setDateValues([getSevenDaysBeforeToday(), new Date()])
+                }
+              />
+            }
             size="md"
             classNames={{
               day: style.day,

@@ -1,5 +1,5 @@
 .container {
-  @apply bg-white rounded-[5px] min-h-125 p-5 px-10;
+  @apply bg-white  min-h-125 my-7.5 rounded-2xl p-5 px-10;
 }
 
 .outer {
@@ -7,11 +7,11 @@
 }
 
 .heading {
-  @apply xs:text-30  mobile:text-[22px] font-semibold;
+  @apply xs:text-30 m-0 p-0  mobile:text-[22px] font-semibold;
 }
 
 .title {
-  @apply font-bold text-30 mb-3;
+  @apply font-bold text-30 m-0 mb-3;
 }
 
 .imgOuter {

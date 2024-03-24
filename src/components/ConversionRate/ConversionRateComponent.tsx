@@ -157,6 +157,7 @@ export default function ConversionRateComponent() {
                 }
               />
               <MdDelete
+                display={'none'}
                 className={`${style.actionIcon} ${style.deleteIcon}`}
                 onClick={() => handleDeleteConversionRate(cr.conversionRateId)}
               />
@@ -183,6 +184,7 @@ export default function ConversionRateComponent() {
           <div className="mt-5 flex justify-between items-end">
             <div className={style.searchContainer}>
               <TextInput
+                disabled={true}
                 leftSection={<FaSearch color={primary} size={20} />}
                 placeholder="Enter from currency..."
                 size="md"
@@ -194,7 +196,7 @@ export default function ConversionRateComponent() {
                 onKeyDown={getHotkeyHandler([['Enter', handleKeyDown]])}
               />
             </div>
-            <Button onClick={open} className={style.addBtn} size="md">
+            <Button onClick={open} size="md" disabled={true}>
               <span className={style.iconBtn}>
                 <FaPlus />
               </span>
@@ -233,7 +235,7 @@ export default function ConversionRateComponent() {
       </div>
       <Modal opened={opened} onClose={close} centered>
         <div className="flex flex-col justify-center gap-y-5 mb-3">
-          <h1 className=" font-bold text-[24px] text-center text-primary">
+          <h1 className=" font-bold text-[24px] my-0 text-center text-primary">
             {selectedConversionRate
               ? 'Edit Conversion Rate'
               : 'Add New Conversion Rate'}
