@@ -64,7 +64,9 @@ export default function TextSearchBar() {
       classNames={{
         input: styles.selectInput,
         option: 'hover:bg-blur',
+        dropdown: isSmallScreen ? 'mt-0 w-[100%]' : 'mt-2 w-[100%]',
         wrapper: styles.selectOption,
+        section: 'mr-2',
       }}
       comboboxProps={{ zIndex: 2 }}
       placeholder="Feature"
@@ -83,12 +85,12 @@ export default function TextSearchBar() {
   return (
     <>
       <TextInput
-        radius="md"
-        rightSectionWidth={isSmallScreen ? 120 : 150}
+        radius={isSmallScreen ? 'md' : 'lg'}
+        rightSectionWidth={isSmallScreen ? 105 : 140}
         onChange={(event) => setSearchValue(event.currentTarget.value)}
         onKeyDown={handleKeyDown}
         className=" cursor-pointer rounded-none text-primary"
-        size={isSmallScreen ? 'md' : 'lg'}
+        size={isSmallScreen ? 'md' : 'xl'}
         leftSection={leftSection}
         rightSection={rightSection}
         placeholder="Search here..."

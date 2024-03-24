@@ -1,12 +1,11 @@
 import React from 'react'
 import styles from './MenuBar.module.scss'
-import { Menu } from '@mantine/core'
+import { Accordion, Menu } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import { NavigationTree } from '../../types/navigation'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useSearchParams } from 'react-router-dom'
 import { useAppSelector } from '../../redux/hooks'
 import { Category } from '../../types'
-// import { formatRoutePath } from '../../utils/commonFunctions'
 
 interface CollapseMenuItemProps {
   nav: NavigationTree
@@ -18,65 +17,114 @@ export default function CollapseMenuItem({
   nav,
   isOfDrawers,
   closeDrawer,
-  activeLink,
 }: CollapseMenuItemProps) {
   const OPEN_DELAY = 50
   const CLOSE_DELAY = 50
   const categories: Category[] = useAppSelector(
     (state) => state.category.categoriesList,
   )
+  const [searchParams] = useSearchParams()
 
   return (
     <>
-      <Menu
-        trigger="hover"
-        openDelay={OPEN_DELAY}
-        closeDelay={CLOSE_DELAY}
-        width={170}
-        position={isOfDrawers ? 'right-start' : 'bottom'}
-        withArrow
-        transitionProps={{
-          transition: 'pop',
-          duration: 300,
-          timingFunction: 'ease-in-out',
-          exitDuration: 100,
-        }}
-      >
-        <Menu.Target>
-          <NavLink
-            to={`/search?featureId=${nav.key === 'for-sale' ? '1' : '2'}`}
-            className={styles.navLink}
-            onClick={closeDrawer}
-          >
-            <div className=" flex flex-col justify-center">
-              <h1 className={styles.navText}>
-                {nav.title}
-                <IconChevronDown className={styles.icon} />
-              </h1>
-              <span
-                className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink.includes(nav.path) ? 'opacity-100' : 'opacity-0'}`}
-              ></span>
-            </div>
-          </NavLink>
-        </Menu.Target>
-        <Menu.Dropdown>
-          {categories.map((category) => (
-            <NavLink
-              key={category.categoryId}
-              to={`/search?featureId=${nav.key === 'for-sale' ? '1' : '2'}&categoryId=${category.categoryId.toString()}`}
-            >
-              <Menu.Item
-                className={styles.dropdown}
-                onClick={() => {
-                  closeDrawer
-                }}
+      {isOfDrawers ? (
+        <Accordion
+          variant="unstyled"
+          className="w-full ml-2"
+          classNames={{
+            content: 'px-0',
+            chevron: 'text-white',
+            label: 'p-0',
+            panel: 'text-black',
+          }}
+        >
+          <Accordion.Item value="photos" className="hover:bg-transparent">
+            <Accordion.Control className="w-[220px] px-5 ">
+              <NavLink
+                to={`/search?featureId=${nav.key}`}
+                key={nav.key}
+                onClick={closeDrawer}
+                className={styles.navLinkCollapse}
               >
-                {category.name}
-              </Menu.Item>
+                <div className=" flex flex-col justify-center">
+                  <h1 className={styles.navText}>{nav.title}</h1>
+                </div>
+              </NavLink>
+            </Accordion.Control>
+            <Accordion.Panel className=" px-2 mt-2 bg-[#2c513f] rounded-lg shadow-xl">
+              <div className=" flex flex-col justify-center">
+                {categories.map((category) => (
+                  <NavLink
+                    className=" h-[35px]  px-5 rounded-md hover:bg-[#518B76] flex items-center"
+                    key={category.categoryId}
+                    to={`/search?featureId=${nav.key}&categoryId=${category.categoryId.toString()}`}
+                  >
+                    <span
+                      className="font-semibold text-white"
+                      onClick={() => {
+                        closeDrawer
+                      }}
+                    >
+                      {category.name}
+                    </span>
+                  </NavLink>
+                ))}
+              </div>
+            </Accordion.Panel>
+          </Accordion.Item>
+        </Accordion>
+      ) : (
+        <Menu
+          trigger="hover"
+          openDelay={OPEN_DELAY}
+          closeDelay={CLOSE_DELAY}
+          width={170}
+          position={isOfDrawers ? 'right-start' : 'bottom'}
+          withArrow
+          transitionProps={{
+            transition: 'pop',
+            duration: 300,
+            timingFunction: 'ease-in-out',
+            exitDuration: 100,
+          }}
+        >
+          <Menu.Target>
+            <NavLink
+              to={`/search?featureId=${nav.key}`}
+              key={nav.key}
+              className={styles.navLink}
+              onClick={closeDrawer}
+            >
+              <div className=" flex flex-col justify-center">
+                <h1 className={styles.navText}>
+                  {nav.title}
+                  <IconChevronDown className={styles.icon} />
+                </h1>
+                <span
+                  className={`h-[3px] mt-2 bg-[#ffa500] ${searchParams.get('featureId') && searchParams.get('featureId') === nav.key ? 'opacity-100' : 'opacity-0'}`}
+                ></span>
+              </div>
             </NavLink>
-          ))}
-        </Menu.Dropdown>
-      </Menu>
+          </Menu.Target>
+          <Menu.Dropdown>
+            {categories.map((category) => (
+              <NavLink
+                key={category.categoryId}
+                to={`/search?featureId=${nav.key}&categoryId=${category.categoryId.toString()}`}
+              >
+                <Menu.Item
+                  className={styles.dropdown}
+                  onClick={() => {
+                    closeDrawer
+                  }}
+                >
+                  {category.name}
+                </Menu.Item>
+              </NavLink>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
+      )}
     </>
   )
 }

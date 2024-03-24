@@ -17,15 +17,15 @@
 }
 
 .navItem {
-  @apply flex items-center gap-3 px-3 text-darkSlateBlue;
+  @apply flex items-center justify-start h-[55px] gap-3 px-3 text-darkSlateBlue ;
 }
 
 .navIcon {
-  @apply text-darkSlateBlue;
+  @apply m-0 text-darkSlateBlue;
 }
 
 .navText {
-  @apply my-3 font-bold mobile:visible;
+  @apply my-3 text-lg w-[110px] font-bold mobile:visible;
 }
 
 .navItemActive {

@@ -13,7 +13,6 @@ import {
 
 import { IconChevronDown, IconChevronUp, IconCheck } from '@tabler/icons-react'
 import styles from './CustomerSelect.module.scss'
-// import { primary } from '../../constants/color.constant'
 
 interface KVObj {
   key: string
@@ -23,6 +22,7 @@ interface RadioKVObj {
   key: string
   value: string[]
 }
+
 interface SearchBarProps {
   dataList: (KVObj | RadioKVObj)[]
   selectValue?: string
@@ -109,47 +109,26 @@ export default function CustomSelect({
     setQuery('')
   }
 
-  const handleChooseStyle = (
-    placeHolder: string,
-    inputValue?: any,
-    rangeValue?: any,
-  ) => {
-    let style
+  const handleChooseStyle = (placeHolder: string, value?: any) => {
     if (
-      ((placeHolder === 'Bed' ||
-        placeHolder === 'Bath' ||
-        placeHolder === 'Area') &&
-        inputValue) ||
-      rangeValue
-    ) {
-      style = styles.customRangeInput
-    } else {
-      style = styles.defaultRangeInput
-    }
-
-    if (
-      (placeHolder === 'For Rent/Sale' || placeHolder === 'Category') &&
-      (inputValue || rangeValue)
-    ) {
-      style = styles.boldCustomTextInput
-    } else {
-      style = styles.customTextInput
-    }
-
-    if (
-      ((placeHolder === 'Province' ||
+      (placeHolder === 'Province' ||
         placeHolder === 'District' ||
         placeHolder === 'Ward') &&
-        inputValue) ||
-      rangeValue
+      value &&
+      value.length > 0
     ) {
-      style = styles.boldTextInput
-      return style
-    } else {
-      style = styles.textInput
-    }
-
-    return style
+      return styles.noCursor
+    } else if (
+      (placeHolder === 'Province' ||
+        placeHolder === 'District' ||
+        placeHolder === 'Ward') &&
+      !value
+    ) {
+      return styles.noCursorInput
+    } else
+      return value && value.length > 0
+        ? styles.customTextInput
+        : styles.textInput
   }
 
   useEffect(() => {
@@ -166,13 +145,21 @@ export default function CustomSelect({
     <>
       <div className="">
         <TextInput
-          className={inputValue || rangeValue ? `font-bold  ` : ''}
+          className={
+            selectValue ||
+            rangeValue ||
+            (checkBoxValue && checkBoxValue.length > 0)
+              ? `font-extrabold`
+              : ''
+          }
           size="md"
-          // variant={customStyle ? 'unstyled' : 'default'} // to choose whether to have a border or not
           variant="unstyled"
           readOnly={customStyle ? true : false}
           classNames={{
-            input: handleChooseStyle(placeHolder, inputValue, rangeValue),
+            input: handleChooseStyle(
+              placeHolder,
+              selectValue || rangeValue || checkBoxValue,
+            ),
           }}
           leftSection={IconElement}
           rightSection={
@@ -190,7 +177,7 @@ export default function CustomSelect({
               ></IconChevronDown>
             )
           }
-          value={inputValue}
+          value={inputValue ?? ''}
           onClick={() => (customStyle ? setOpen(!open) : setOpen(true))}
           onChange={(event) => {
             setOpen(true)
@@ -286,9 +273,9 @@ export default function CustomSelect({
               mah={200}
               type="always"
               scrollbars="y"
-              className={!customStyle ? 'border rounded-md' : ''}
+              className={!customStyle ? 'border border-blur rounded-md' : ''}
             >
-              <Box px="xs" py={5}>
+              <Box px="xs" py={5} className=" border-2 border-blur">
                 {items.length > 0 ? (
                   items.map((item, index) => (
                     <Box
@@ -297,6 +284,9 @@ export default function CustomSelect({
                       onClick={() =>
                         handleItemClick(item.key, item.props.value)
                       }
+                      onFocus={() => {
+                        handleItemClick(item.key, item.props.value)
+                      }}
                     >
                       <Text className=" flex items-center">{item}</Text>
                       {selectedKey === item.key && (
