@@ -47,11 +47,13 @@ export default function MenuBar({
   const [openUpgradeSeller, setOpenUpgradeSeller] = useState(false)
   const { authenticated, roleId } = useAuth()
   const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
+  const [maintenanceMessage, setMaintenanceMessage] = useState('')
 
   const handleGetMaintenanceMode = async () => {
     try {
       const res = await getMaintenanceModeForSeller()
       setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      setMaintenanceMessage((_prev) => res.metaData.description)
       return res.metaData.isMaintenance
     } catch (error) {
       console.error(error)
@@ -354,6 +356,7 @@ export default function MenuBar({
       <UnderMaintenance
         setStatus={setIsUnderMaintenance}
         status={isUnderMaintenance}
+        maintenanceMessage={maintenanceMessage}
       />
     </>
   )

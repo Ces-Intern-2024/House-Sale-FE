@@ -63,10 +63,14 @@ import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 interface TablePropertyProps {
   setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>
   shouldUpdate: boolean
+  userBalance?: number
+  setOpened: (value: boolean) => void
 }
 const TableProperty = ({
   setShouldUpdate,
   shouldUpdate,
+  userBalance,
+  setOpened,
 }: TablePropertyProps) => {
   const [flag, setFlag] = useState(false)
   const [opened, { open, close }] = useDisclosure(false)
@@ -100,11 +104,13 @@ const TableProperty = ({
   const [hasChangedForm, setHasChangedForm] = useState(false)
   const dispatch = useAppDispatch()
   const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
+  const [maintenanceMessage, setMaintenanceMessage] = useState('')
 
   const handleGetMaintenanceMode = async () => {
     try {
       const res = await getMaintenanceModeForSeller()
       setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      setMaintenanceMessage((_prev) => res.metaData.description)
       return res.metaData.isMaintenance
     } catch (error) {
       console.error(error)
@@ -139,8 +145,29 @@ const TableProperty = ({
     open()
   }
   const handlePropertyAdd = async () => {
+    // to check whether user's balance is enough
+    if (Number(userBalance) === 0) {
+      Swal.fire({
+        title: 'Insufficient balance',
+        text: 'Please top up your balance.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: confirmBtn,
+        cancelButtonColor: cancelBtn,
+        confirmButtonText: 'Top up balance',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setOpened(true)
+        }
+      })
+      return
+    }
+
+    // to check if maintenance mode is on
     const maintenanceStatus = await handleGetMaintenanceMode()
     if (maintenanceStatus) return
+
+    // if maintenance mode is off, then add new property
     setSelectedProperty(null)
     setTitleModal('Add New Property')
     setActionModal(ADD_PROP)
@@ -897,6 +924,7 @@ const TableProperty = ({
       <UnderMaintenance
         setStatus={setIsUnderMaintenance}
         status={isUnderMaintenance}
+        maintenanceMessage={maintenanceMessage}
       />
     </>
   )

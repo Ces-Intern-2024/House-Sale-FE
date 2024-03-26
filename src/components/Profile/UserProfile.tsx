@@ -54,6 +54,7 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
 }
 
 export default function SellerProfile() {
+  const [maintenanceMessage, setMaintenanceMessage] = useState('')
   const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const dispatch = useAppDispatch()
@@ -133,6 +134,7 @@ export default function SellerProfile() {
     try {
       const res = await getMaintenanceModeForSeller()
       setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      setMaintenanceMessage(res.metaData.description)
       return res.metaData.isMaintenance
     } catch (error) {
       console.error(error)
@@ -511,6 +513,7 @@ export default function SellerProfile() {
         <UnderMaintenance
           setStatus={setIsUnderMaintenance}
           status={isUnderMaintenance}
+          maintenanceMessage={maintenanceMessage}
         />
       </div>
     </>

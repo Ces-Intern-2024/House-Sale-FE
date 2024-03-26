@@ -10,6 +10,8 @@ import { getConversionRateList } from '../../service/TransactionService'
 import { useNavigate } from 'react-router-dom'
 import { MAX_CREDIT, MIN_CREDIT } from '../../constants/credit.constant'
 import { ConversionRate } from '../../types/conversionRate'
+import { getProfile } from '../../service/ProfileService'
+import { User } from '../../types/user'
 
 export default function SellerPage() {
   const navigate = useNavigate()
@@ -19,7 +21,11 @@ export default function SellerPage() {
   const [creditAmount, setCreditAmount] = useState<number | string>(0)
   const [creditAmountError, setCreditAmountError] = useState('')
   const [shouldShowCheckoutForm, setShouldShowCheckoutForm] = useState(false)
-
+  const [userProfile, setUserProfile] = useState<User>()
+  const getUserProfile = async () => {
+    const res = await getProfile()
+    setUserProfile(res)
+  }
   const handleGetConversionRate = async () => {
     const data = await getConversionRateList()
     const usdRate = data.find(
@@ -52,6 +58,11 @@ export default function SellerPage() {
   useEffect(() => {
     handleGetConversionRate()
   }, [])
+
+  useEffect(() => {
+    getUserProfile()
+  }, [shouldUpdate])
+
   return (
     <>
       <div>
@@ -60,7 +71,7 @@ export default function SellerPage() {
             <div className="  lg:col-span-5 mobile:col-span-12 bg-white shadow-xl rounded-[16px] pb-4 pt-2 px-5 flex flex-col items-center justify-center">
               <CreditComponent
                 setOpened={setOpened}
-                shouldUpdate={shouldUpdate}
+                userProfile={userProfile}
               />
             </div>
             <div className="  lg:col-span-7 mobile:col-span-12 bg-white shadow-xl rounded-[16px] pb-4 pt-2 px-5">
@@ -71,6 +82,8 @@ export default function SellerPage() {
         <TableProperty
           setShouldUpdate={setShouldUpdate}
           shouldUpdate={shouldUpdate}
+          userBalance={userProfile?.balance}
+          setOpened={setOpened}
         />
       </div>
 
