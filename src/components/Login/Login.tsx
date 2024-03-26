@@ -39,6 +39,7 @@ export function Login() {
   const [userGoogle, setUserGoogle] = useState<string | null>(null)
   const location = useLocation()
   const [flag, setFlag] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   if (location.state && location.state.message && !flag) {
     Swal.fire({
@@ -116,6 +117,7 @@ export function Login() {
   const handleLogin = async (value: Props) => {
     setError('')
     try {
+      setIsLoading(true)
       const res = await axios.post(
         LOGIN_URL,
         { email: value.email, password: value.password },
@@ -156,6 +158,7 @@ export function Login() {
           }
         }
       }
+      setIsLoading(false)
     } catch (error: any) {
       setError(error.response.data.error.message)
     }
@@ -208,6 +211,7 @@ export function Login() {
         </Stack>
 
         <Button
+          loading={isLoading}
           size="md"
           type="submit"
           radius="xl"
