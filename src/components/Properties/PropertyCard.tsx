@@ -8,11 +8,12 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
 import Swal from 'sweetalert2'
 import { Link } from 'react-router-dom'
-import { Button } from '@mantine/core'
+import { Button, Tooltip } from '@mantine/core'
 import { formatMoneyToUSD } from '../../utils/commonFunctions'
 import area from '../../assets/images/area.png'
 import bedroom from '../../assets/images/bed.png'
 import floor from '../../assets/images/stair.png'
+import { AVAILABLE } from '../../constants/statusProperty.constant'
 
 interface Props {
   data: PropertiesType
@@ -45,6 +46,30 @@ const Properties = ({ data }: Props) => {
   }
   return (
     <div className={style.propertyContainer}>
+      <div
+        className={
+          data.status === AVAILABLE ? 'hidden' : style.propertyDisabled
+        }
+      ></div>
+      {wishList &&
+        data.status !== AVAILABLE &&
+        wishList.find(
+          (property: PropertiesType) => property.propertyId === data.propertyId,
+        ) && (
+          <Tooltip label="Remove from wishlist">
+            <Button
+              loading={isLoading}
+              className={
+                data.status === AVAILABLE
+                  ? style.heartIsAdded
+                  : style.removeWishlist
+              }
+              onClick={() => handleAddToWishlist(data.propertyId)}
+            >
+              <FaHeart size={26} />
+            </Button>
+          </Tooltip>
+        )}
       <div className={style.propertyContent}>
         <div
           className={`${style.propertyFeatured} ${data.feature.featureId === 1 ? 'bg-labelBlue' : 'bg-emerald-700'}`}
@@ -66,22 +91,26 @@ const Properties = ({ data }: Props) => {
         </div>
         <div className="w-full">
           <div className={style.propertyName}>
-            <Link
-              to={`/details/${data.propertyId}`}
-              key={data.propertyId}
-              className={style.propertyNameLink}
-            >
-              {data.name}
-            </Link>
+            <Tooltip label={data.name}>
+              <Link
+                to={`/details/${data.propertyId}`}
+                key={data.propertyId}
+                className={style.propertyNameLink}
+              >
+                {data.name}
+              </Link>
+            </Tooltip>
           </div>
           <div className={style.propertyLocation}>
             <div className="flex truncate">
               <span>
                 <FaLocationDot className={style.propertyIcon} size={20} />
               </span>
-              <span className={style.propertyDetailLocation}>
-                {data.location.address}
-              </span>
+              <Tooltip label={data.location.address}>
+                <span className={style.propertyDetailLocation}>
+                  {data.location.address}
+                </span>
+              </Tooltip>
             </div>
             {/* This comment has been kept as a temporary if there are any errors.
             {user !== null ? (
@@ -125,21 +154,27 @@ const Properties = ({ data }: Props) => {
                 (property: PropertiesType) =>
                   property.propertyId === data.propertyId,
               ) ? (
-                <Button
-                  loading={isLoading}
-                  className={style.heartIsAdded}
-                  onClick={() => handleAddToWishlist(data.propertyId)}
-                >
-                  <FaHeart size={20} />
-                </Button>
+                <Tooltip label="Remove from wishlist">
+                  <Button
+                    loading={isLoading}
+                    className={
+                      data.status === AVAILABLE ? style.heartIsAdded : 'hidden'
+                    }
+                    onClick={() => handleAddToWishlist(data.propertyId)}
+                  >
+                    <FaHeart size={20} />
+                  </Button>
+                </Tooltip>
               ) : (
-                <Button
-                  loading={isLoading}
-                  className={style.heartIsAdded}
-                  onClick={() => handleAddToWishlist(data.propertyId)}
-                >
-                  <FaRegHeart size={20} />
-                </Button>
+                <Tooltip label="Add to wishlist">
+                  <Button
+                    loading={isLoading}
+                    className={style.heartIsAdded}
+                    onClick={() => handleAddToWishlist(data.propertyId)}
+                  >
+                    <FaRegHeart size={20} />
+                  </Button>
+                </Tooltip>
               )}
             </span>
           </div>
@@ -147,10 +182,24 @@ const Properties = ({ data }: Props) => {
           {data.feature.name === 'Rent' ? (
             <div className={`${style.propertyPrice} bg-emerald-600`}>
               {formatMoneyToUSD(data.price)} {data.currencyCode}/month
+              <div
+                className={
+                  data.status === AVAILABLE ? 'hidden' : style.propertyStatus
+                }
+              >
+                UNAVAILABLE
+              </div>
             </div>
           ) : (
             <div className={`${style.propertyPrice} bg-lightBlue`}>
               {formatMoneyToUSD(data.price)} {data.currencyCode}
+              <div
+                className={
+                  data.status === AVAILABLE ? 'hidden' : style.propertyStatus
+                }
+              >
+                UNAVAILABLE
+              </div>
             </div>
           )}
           <div className={style.propertyDescription}>

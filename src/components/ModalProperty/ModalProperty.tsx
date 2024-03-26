@@ -57,6 +57,7 @@ interface Props {
   isUpdated?: (value: boolean) => void
   setShouldUpdate?: React.Dispatch<React.SetStateAction<boolean>>
   action?: string
+  setHasChangedForm?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ModalProperty = ({
@@ -64,6 +65,7 @@ const ModalProperty = ({
   onClose,
   setShouldUpdate,
   action,
+  setHasChangedForm,
 }: Props) => {
   const editor = useEditor({
     extensions: [
@@ -354,11 +356,15 @@ const ModalProperty = ({
     getAllPackageService()
   }, [])
 
+  const handleOnChangeForm = () => {
+    setHasChangedForm!(true)
+  }
   return (
     <form
       onSubmit={form.onSubmit((values) => {
         handleSubmit(values)
       })}
+      onChange={() => handleOnChangeForm()}
     >
       <div>
         <div className={style.rowModal}>
@@ -753,7 +759,7 @@ const ModalProperty = ({
                 <RichTextEditor.Highlight />
                 <RichTextEditor.Code />
               </RichTextEditor.ControlsGroup>
-              
+
               <RichTextEditor.ControlsGroup>
                 <RichTextEditor.H1 />
                 <RichTextEditor.H2 />

@@ -95,8 +95,21 @@ const TableProperty = ({
   const [titleModal, setTitleModal] = useState('')
   const [actionModal, setActionModal] = useState('')
   const [actionRental, setActionRental] = useState('')
+  const [hasChangedForm, setHasChangedForm] = useState(false)
   const dispatch = useAppDispatch()
 
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (hasChangedForm) {
+        event.preventDefault()
+        event.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+    }
+  }, [hasChangedForm])
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     setTitleModal('View Detail Property')
@@ -107,13 +120,14 @@ const TableProperty = ({
     setSelectedProperty(property)
     setTitleModal('Edit Property')
     setActionModal(EDIT_PROP)
+    setHasChangedForm(false)
     open()
   }
   const handlePropertyAdd = () => {
     setSelectedProperty(null)
     setTitleModal('Add New Property')
     setActionModal(ADD_PROP)
-
+    setHasChangedForm(false)
     open()
   }
   const handleDelete = async (property: Properties) => {
@@ -814,7 +828,11 @@ const TableProperty = ({
       <Modal
         opened={opened}
         onClose={() => {
-          close()
+          if (hasChangedForm) {
+            if (window.confirm('Your changes will not be saved')) return close()
+          } else {
+            close()
+          }
           setSelectedProperty(null)
         }}
         size={1280}
@@ -831,8 +849,10 @@ const TableProperty = ({
           onClose={close}
           setShouldUpdate={setShouldUpdate}
           action={actionModal}
+          setHasChangedForm={setHasChangedForm}
         />
       </Modal>
+
       <Modal
         opened={openedPackageservice}
         onClose={() => {
