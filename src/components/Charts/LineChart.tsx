@@ -29,9 +29,9 @@ const LineChart = () => {
       text: 'My stock chart',
     },
     subtitle: {
-      text: 'millisecondsfasldfaldflskafjklfj',
+      text: 'milliseconds',
     },
-    // this comment can be used in the future. 
+    // this comment can be used in the future.
     // _navigator: {
     //   enabled: false,
     // },
