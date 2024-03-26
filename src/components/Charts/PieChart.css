@@ -1,0 +1,10 @@
+@import url('https://code.highcharts.com/css/highcharts.css');
+
+.highcharts-root {
+  @apply bg-transparent
+}
+.highcharts-container {
+  /* this comment can be used in the future. 
+  @apply h-100 !important; 
+  */
+}
