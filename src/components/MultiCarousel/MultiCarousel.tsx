@@ -48,7 +48,7 @@ export default function MultiCarousel({
           <Carousel
             arrows={true}
             responsive={responsive}
-            autoPlay={true}
+            // autoPlay={true}
             infinite={true}
             customLeftArrow={
               <IconChevronLeft color="black" className={styles.leftArrow} />
