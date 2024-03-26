@@ -40,6 +40,8 @@ import { useAppDispatch } from '../../redux/hooks'
 import { setUser } from '../../redux/reducers/userSlice'
 import { Ward } from '../../types/ward'
 import { District } from '../../types/district'
+import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
+import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 
 const optionsFilter: OptionsFilter = ({ options, search }) => {
   const splittedSearch = search.toLowerCase().trim().split(' ')
@@ -52,6 +54,7 @@ const optionsFilter: OptionsFilter = ({ options, search }) => {
 }
 
 export default function SellerProfile() {
+  const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
   const [file, setFile] = useState<File | null>(null)
   const dispatch = useAppDispatch()
 
@@ -60,7 +63,7 @@ export default function SellerProfile() {
   const [addressEditing, setAddressEditing] = useState(false)
   const [locationEditing, setLocationEditing] = useState(false)
 
-  const [opened, { open, close }] = useDisclosure(false)
+  const [_opened, { close }] = useDisclosure(false)
 
   const [userInfo, setUserInfo] = useState<User>()
 
@@ -126,7 +129,19 @@ export default function SellerProfile() {
     validate: yupResolver(listSchema),
   })
 
+  const handleGetMaintenanceMode = async () => {
+    try {
+      const res = await getMaintenanceModeForSeller()
+      setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      return res.metaData.isMaintenance
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const handleUploadAvatar = async () => {
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
     if (file) {
       const formData = new FormData()
       formData.append('file', file)
@@ -158,7 +173,9 @@ export default function SellerProfile() {
     setLoading(false)
   }
 
-  const handleClearAvatar = () => {
+  const handleClearAvatar = async () => {
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
     Swal.fire({
       title: 'Do you want to delete profile image?',
       showDenyButton: true,
@@ -198,6 +215,9 @@ export default function SellerProfile() {
   }
 
   const handleUpdateProfile = async (values: any) => {
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
+
     const updateInfo = { ...values }
     if (values.phone === userInfo?.phone) delete updateInfo.phone
     try {
@@ -244,7 +264,7 @@ export default function SellerProfile() {
       <div className={styles.container}>
         <div className=" flex justify-between">
           <h1 className={styles.heading}>My Profile</h1>
-          <Button variant="outline" onClick={open}>
+          <Button variant="outline" onClick={() => handleGetMaintenanceMode()}>
             Change Password
           </Button>
         </div>
@@ -487,7 +507,11 @@ export default function SellerProfile() {
           </div>
         </div>
 
-        <ChangePassword isOpened={opened} onClose={close} />
+        <ChangePassword isOpened={isUnderMaintenance} onClose={close} />
+        <UnderMaintenance
+          setStatus={setIsUnderMaintenance}
+          status={isUnderMaintenance}
+        />
       </div>
     </>
   )

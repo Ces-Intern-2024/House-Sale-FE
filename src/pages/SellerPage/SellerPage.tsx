@@ -42,7 +42,10 @@ export default function SellerPage() {
     setCreditAmountError('')
     setShouldShowCheckoutForm(true)
     navigate('/transaction', {
-      state: { creditAmount: creditAmount, conversionRate: conversionRate },
+      state: {
+        creditAmount: creditAmount,
+        conversionRate: conversionRate,
+      },
     })
   }
 
@@ -70,6 +73,7 @@ export default function SellerPage() {
           shouldUpdate={shouldUpdate}
         />
       </div>
+
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}

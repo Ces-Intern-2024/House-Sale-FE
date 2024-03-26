@@ -4,6 +4,8 @@ import { User } from '../../types/user'
 import { getProfile } from '../../service/ProfileService'
 import { Button } from '@mantine/core'
 import { GiCrownCoin } from 'react-icons/gi'
+import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
+import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 
 interface CreditComponentProps {
   setOpened: (value: boolean) => void
@@ -14,9 +16,23 @@ export default function CreditComponent({
   shouldUpdate,
 }: CreditComponentProps) {
   const [userProfile, setUserProfile] = useState<User>()
+  const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
   const getUserProfile = async () => {
     const res = await getProfile()
     setUserProfile(res)
+  }
+
+  const handleGetMaintenanceMode = async () => {
+    try {
+      const res = await getMaintenanceModeForSeller()
+      setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      // if system is not under maintenance then open modal
+      if (res.metaData.isMaintenance === false) {
+        setOpened(true)
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
   useEffect(() => {
     getUserProfile()
@@ -33,7 +49,7 @@ export default function CreditComponent({
             </span>
           )}
           <span className={style.creditIcon}>
-            <GiCrownCoin/>
+            <GiCrownCoin />
           </span>
         </div>
       </div>
@@ -41,11 +57,17 @@ export default function CreditComponent({
         <Button
           classNames={{ root: style.rootButton }}
           fullWidth
-          onClick={() => setOpened(true)}
+          onClick={() => {
+            handleGetMaintenanceMode()
+          }}
         >
           Buy Credit
         </Button>
       </div>
+      <UnderMaintenance
+        setStatus={setIsUnderMaintenance}
+        status={isUnderMaintenance}
+      />
     </>
   )
 }

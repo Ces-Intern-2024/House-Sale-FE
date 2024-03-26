@@ -106,8 +106,8 @@ export default function TableTransaction({ isSeller }: TableTransactionProps) {
         <Table.Tr key={transaction.transactionId} className="text-base h-16">
           <Table.Td>{transaction.transactionId}</Table.Td>
           {!isSeller && <Table.Td>{transaction.userId}</Table.Td>}
-          <Table.Td>{transaction.amount}</Table.Td>
-          <Table.Td>{transaction.balance}</Table.Td>
+          <Table.Td>{Number(transaction.amountInCredits)}</Table.Td>
+          <Table.Td>{Number(transaction.balanceInCredits)}</Table.Td>
           <Table.Td>{transaction.description}</Table.Td>
           <Table.Td>
             {convertISOToVNDateTimeString(transaction.createdAt)}

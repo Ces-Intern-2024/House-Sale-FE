@@ -3,6 +3,7 @@ import useAuth from '../../hooks/useAuth'
 import { useLocation } from 'react-router-dom'
 import '@mantine/core/styles.css'
 import { Roles } from '../../types/role'
+import LoadingPage from '../LoadingPage/LoadingPage'
 
 const layouts = {
   LAYOUT_COMMON: lazy(() => import('./CommonLayout/CommonLayout')),
@@ -49,7 +50,7 @@ const Layouts = () => {
   }, [roleId, authenticated, pathname])
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingPage></LoadingPage>}>
       <AppLayout />
     </Suspense>
   )
