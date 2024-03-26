@@ -57,6 +57,8 @@ import {
 } from '../../constants/actions.constant'
 import ModalPackageService from '../ModalPackageService/ModalPackageService'
 import useInterval from 'use-interval'
+import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
+import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 
 interface TablePropertyProps {
   setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>
@@ -97,6 +99,17 @@ const TableProperty = ({
   const [actionRental, setActionRental] = useState('')
   const [hasChangedForm, setHasChangedForm] = useState(false)
   const dispatch = useAppDispatch()
+  const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
+
+  const handleGetMaintenanceMode = async () => {
+    try {
+      const res = await getMaintenanceModeForSeller()
+      setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      return res.metaData.isMaintenance
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -116,14 +129,18 @@ const TableProperty = ({
     setActionModal(VIEW_PROP)
     open()
   }
-  const handlePropertyEdit = (property: Properties) => {
+  const handlePropertyEdit = async (property: Properties) => {
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
     setSelectedProperty(property)
     setTitleModal('Edit Property')
     setActionModal(EDIT_PROP)
     setHasChangedForm(false)
     open()
   }
-  const handlePropertyAdd = () => {
+  const handlePropertyAdd = async () => {
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
     setSelectedProperty(null)
     setTitleModal('Add New Property')
     setActionModal(ADD_PROP)
@@ -131,6 +148,8 @@ const TableProperty = ({
     open()
   }
   const handleDelete = async (property: Properties) => {
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
     Swal.fire({
       text: `Are you sure to delete property ID: ${property.propertyId} ?`,
       icon: 'question',
@@ -279,6 +298,8 @@ const TableProperty = ({
     setActivePage(page)
   }
   const handleUpdateStatus = async (event: boolean, property: Properties) => {
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
     if (event) {
       if (
         property.savedRemainingRentalTime <= 0 &&
@@ -388,10 +409,12 @@ const TableProperty = ({
     }
   }
 
-  const handleDeleteAllSelectedRows = () => {
+  const handleDeleteAllSelectedRows = async () => {
     if (selectedRows.length === 0) {
       return
     }
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus) return
     const parseSelectedRowsToString = String(selectedRows)
     Swal.fire({
       text: `Are you sure to delete these properties ID: ${JSON.stringify(parseSelectedRowsToString)}`,
@@ -871,6 +894,10 @@ const TableProperty = ({
           actionRental={actionRental}
         />
       </Modal>
+      <UnderMaintenance
+        setStatus={setIsUnderMaintenance}
+        status={isUnderMaintenance}
+      />
     </>
   )
 }

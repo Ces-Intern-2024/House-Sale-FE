@@ -146,7 +146,9 @@ export default function TransactionHistory({
                   <span className={style.symbol}>
                     {history.description.includes('property') ? '-' : '+'}
                   </span>
-                  <span className={style.money}>{Number(history.amount)}</span>
+                  <span className={style.money}>
+                    {Number(history.amountInCredits)}
+                  </span>
                   <span className={style.icon}>
                     <GiCrownCoin />
                   </span>

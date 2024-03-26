@@ -40,22 +40,24 @@ export default function DetailsImageList({
       <div>
         <h1 className={styles.title}>{name}</h1>
         <div className={styles.imgContainer}>
-          <img
-            src={images ? images[0].imageUrl : ''}
-            alt={images ? images[0].imageId.toString() : ''}
-            loading="lazy"
-            className={styles.img}
-            onClick={() => {
-              setChosenImg(0)
-              setOpened(true)
-            }}
-          />
-          <div className={styles.bottomDiv}>
-            <div className={styles.priceDiv}>
-              {formatMoneyToUSD(price!)}
-              {feature === 'Rent' ? ' /month' : ''}
+          <div className="relative">
+            <img
+              src={images ? images[0].imageUrl : ''}
+              alt={images ? images[0].imageId.toString() : ''}
+              loading="lazy"
+              className={styles.img}
+              onClick={() => {
+                setChosenImg(0)
+                setOpened(true)
+              }}
+            />
+            <div className={styles.bottomDiv}>
+              <div className={styles.priceDiv}>
+                {formatMoneyToUSD(price!)}
+                {feature === 'Rent' ? ' /month' : ''}
+              </div>
+              <div className={styles.statusDiv}>{status}</div>
             </div>
-            <div className={styles.statusDiv}>{status}</div>
           </div>
 
           {images && (

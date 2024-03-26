@@ -14,6 +14,8 @@ import area from '../../assets/images/area.png'
 import bedroom from '../../assets/images/bed.png'
 import floor from '../../assets/images/stair.png'
 import { AVAILABLE } from '../../constants/statusProperty.constant'
+import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
+import { CODE_RESPONSE_503 } from '../../constants/codeResponse.constant'
 
 interface Props {
   data: PropertiesType
@@ -27,19 +29,27 @@ const Properties = ({ data }: Props) => {
     (state) => state.property.listFavorites,
   )
   const dispatch = useAppDispatch()
+  const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
 
   const handleAddToWishlist = async (propertyId: number) => {
-    try {
-      setIsLoading(true)
-      await axiosInstance.post(`/favorites-list`, { propertyId })
-      await dispatch(getAllWishList())
-    } catch (error: any) {
+    if (!loggedIn) {
       Swal.fire({
         icon: 'warning',
         title: 'You need to login first!',
         showConfirmButton: false,
         timer: 1400,
       })
+      return
+    }
+
+    try {
+      setIsLoading(true)
+      await axiosInstance.post(`/favorites-list`, { propertyId })
+      await dispatch(getAllWishList())
+    } catch (error: any) {
+      if (error.response.status === CODE_RESPONSE_503) {
+        setIsUnderMaintenance((_prev) => true)
+      }
     } finally {
       setIsLoading(false)
     }
@@ -219,6 +229,10 @@ const Properties = ({ data }: Props) => {
           </div>
         </div>
       </div>
+      <UnderMaintenance
+        status={isUnderMaintenance}
+        setStatus={setIsUnderMaintenance}
+      />
     </div>
   )
 }

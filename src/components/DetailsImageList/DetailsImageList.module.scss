@@ -11,7 +11,7 @@
 }
 
 .imgContainer {
-  @apply grid gap-1 h-[85vh] mobile:h-[70vh] m-0 p-0  relative shadow-xl
+  @apply grid gap-1 h-[85vh] mobile:h-[70vh] m-0 p-0 shadow-xl
   xl:grid-cols-2 xl:grid-rows-1 
   lg:grid-cols-1 lg:grid-rows-2 
   md:grid-cols-1 md:grid-rows-2 xs:grid-cols-1 
@@ -20,7 +20,7 @@
 }
 
 .img {
-  @apply w-full h-full object-fill relative;
+  @apply w-full h-full object-fill;
 }
 
 .bottomDiv {

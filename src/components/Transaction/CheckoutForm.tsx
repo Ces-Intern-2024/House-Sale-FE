@@ -30,7 +30,9 @@ export default function CheckoutForm({
 
   const handleProceedToPayment = async () => {
     await proceedToPayment(
+      total,
       total / Number(conversionRate),
+      Number(conversionRate),
       `You purchased ${total / Number(conversionRate)} credits for $${total}.`,
     )
   }

@@ -58,7 +58,11 @@ const AllRoutes = () => {
               key={route.key}
               path={route.path}
               element={
-                <AppRoute routeKey={route.key} component={route.component} />
+                userAuthority ? (
+                  <Navigate to="/home" />
+                ) : (
+                  <AppRoute routeKey={route.key} component={route.component} />
+                )
               }
             />
           ))}

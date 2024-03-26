@@ -17,7 +17,7 @@ export async function getTransactionRentService(
     },
   )
 
-  const res = await axiosInstance.get(`/transaction/rent-service${queryString}
+  const res = await axiosInstance.get(`/seller/transaction/rent-service${queryString}
 ${queryString.length === 0 ? `?limit=1000` : `&limit=1000`}`)
 
   return res.data.metaData.data

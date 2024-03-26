@@ -22,6 +22,8 @@ import { getAllCategories } from '../../redux/reducers/categorySlice'
 import useAuth from '../../hooks/useAuth'
 import Swal from 'sweetalert2'
 import UpgradeSeller from '../UpgradeSeller/UpgradeSeller'
+import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
+import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
 
 interface MenuBarProps {
   isOfDrawers: boolean
@@ -44,6 +46,17 @@ export default function MenuBar({
   const [opened, { open, close }] = useDisclosure(false)
   const [openUpgradeSeller, setOpenUpgradeSeller] = useState(false)
   const { authenticated, roleId } = useAuth()
+  const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
+
+  const handleGetMaintenanceMode = async () => {
+    try {
+      const res = await getMaintenanceModeForSeller()
+      setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      return res.metaData.isMaintenance
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const handleNavigateToPublishing = () => {
     if (!authenticated) {
@@ -194,8 +207,9 @@ export default function MenuBar({
                             )}
 
                             <span
-                              onClick={() => {
-                                open()
+                              onClick={async () => {
+                                const status = await handleGetMaintenanceMode()
+                                if (status === false) open()
                               }}
                               className={styles.commonNav}
                             >
@@ -292,8 +306,9 @@ export default function MenuBar({
                       )}
 
                       <span
-                        onClick={() => {
-                          open()
+                        onClick={async () => {
+                          const status = await handleGetMaintenanceMode()
+                          if (status === false) open()
                         }}
                       >
                         <Menu.Item className={styles.dropdown}>
@@ -331,15 +346,15 @@ export default function MenuBar({
         </div>
 
         <div className={styles.postingBtn} onClick={handleNavigateToPublishing}>
-          <Menu trigger="click" openDelay={OPEN_DELAY} closeDelay={CLOSE_DELAY}>
-            <Menu.Target>
-              <span className="text-[#FFFDD0] text-[16px] flex flex-col items-center font-extrabold">
-                <span>POSTING</span>
-              </span>
-            </Menu.Target>
-          </Menu>
+          <span className="text-postingBtn text-[16px] flex flex-col items-center font-extrabold">
+            POSTING
+          </span>
         </div>
       </div>
+      <UnderMaintenance
+        setStatus={setIsUnderMaintenance}
+        status={isUnderMaintenance}
+      />
     </>
   )
 }

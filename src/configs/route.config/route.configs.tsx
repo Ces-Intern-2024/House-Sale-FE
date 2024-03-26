@@ -145,6 +145,14 @@ export const protectedRoutes = [
     ),
     authority: [Roles.Admin],
   },
+  {
+    key: 'admin-maintenance',
+    path: '/admin-maintenance',
+    component: lazy(
+      () => import('../../components/Maintenance/MaintenanceComponent'),
+    ),
+    authority: [Roles.Admin],
+  },
 ]
 
 export const authRoutes = [
