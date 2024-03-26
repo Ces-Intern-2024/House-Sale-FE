@@ -15,7 +15,7 @@ import bedroom from '../../assets/images/bed.png'
 import floor from '../../assets/images/stair.png'
 import { AVAILABLE } from '../../constants/statusProperty.constant'
 import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
-import { CODE_RESPONSE_503 } from '../../constants/codeResponse.constant'
+import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 
 interface Props {
   data: PropertiesType
@@ -30,6 +30,18 @@ const Properties = ({ data }: Props) => {
   )
   const dispatch = useAppDispatch()
   const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
+  const [maintenanceMessage, setMaintenanceMessage] = useState('')
+
+  const handleGetMaintenanceMode = async () => {
+    try {
+      const res = await getMaintenanceModeForSeller()
+      setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      setMaintenanceMessage((_prev) => res.metaData.description)
+      return res.metaData.isMaintenance
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const handleAddToWishlist = async (propertyId: number) => {
     if (!loggedIn) {
@@ -42,14 +54,15 @@ const Properties = ({ data }: Props) => {
       return
     }
 
+    const maintenanceStatus = await handleGetMaintenanceMode()
+    if (maintenanceStatus === true) return
+
     try {
       setIsLoading(true)
       await axiosInstance.post(`/favorites-list`, { propertyId })
       await dispatch(getAllWishList())
     } catch (error: any) {
-      if (error.response.status === CODE_RESPONSE_503) {
-        setIsUnderMaintenance((_prev) => true)
-      }
+      console.error(error)
     } finally {
       setIsLoading(false)
     }
@@ -232,6 +245,7 @@ const Properties = ({ data }: Props) => {
       <UnderMaintenance
         status={isUnderMaintenance}
         setStatus={setIsUnderMaintenance}
+        maintenanceMessage={maintenanceMessage}
       />
     </div>
   )

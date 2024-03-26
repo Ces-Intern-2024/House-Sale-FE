@@ -15,15 +15,14 @@ import { cancelBtn, confirmBtn } from '../../constants/color.constant'
 
 export default function MaintenanceComponent() {
   const [checked, setChecked] = useState<boolean | undefined>()
-  const [message, setMessage] = useState(
-    'The page you are looking for is under maintenance and will be back soon.',
-  )
+  const [message, setMessage] = useState('')
   const [visible, setVisible] = useState(false)
 
   const handleGetMaintenanceMode = async () => {
     try {
       const res = await getMaintenanceMode()
       setChecked((_prev) => res.metaData.isMaintenance)
+      setMessage((_prev) => res.metaData.description)
     } catch (error) {
       console.error(error)
     }
@@ -41,7 +40,7 @@ export default function MaintenanceComponent() {
   }
   useEffect(() => {
     handleGetMaintenanceMode()
-  }, [])
+  }, [checked])
 
   const handleToggle = () => {
     Swal.fire({
