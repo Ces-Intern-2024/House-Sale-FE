@@ -86,9 +86,11 @@ const Credit = ({ shouldUpdate }: CreditProps) => {
                     <span className={style.symbol}>
                       {history.description ? '-' : '+'}
                     </span>
-                    <span className={style.money}>{history.amount}</span>
+                    <span className={style.money}>
+                      {history.amountInCredits}
+                    </span>
                     <span className={style.icon}>
-                      <GiCrownCoin  />
+                      <GiCrownCoin />
                     </span>
                   </div>
                 </div>

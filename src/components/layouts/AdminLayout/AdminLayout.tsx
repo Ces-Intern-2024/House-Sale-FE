@@ -18,6 +18,7 @@ import {
   IconBuildingSkyscraper,
   IconUserStar,
   IconCreditCard,
+  IconSettingsPause,
 } from '@tabler/icons-react'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
@@ -52,6 +53,9 @@ export default function AdminLayout() {
       ? { title: 'Conversion Rate', href: '/admin-conversion-rate' }
       : null,
     pathname === '/report' ? { title: 'Report', href: '/admin-report' } : null,
+    pathname === '/admin-maintenance'
+      ? { title: 'Maintenance', href: '/admin-maintenance' }
+      : null,
   ]
     .filter(Boolean)
     .map((path, index) => (
@@ -232,6 +236,26 @@ export default function AdminLayout() {
                 <IconGraph className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>Report</h3>
+                )}
+              </div>
+            </NavLink>
+            <NavLink
+              to="/admin-maintenance"
+              className={({ isActive }) =>
+                isActive ? styles.navItemActive : ''
+              }
+              onClick={() => {
+                handleSetActiveLink('/')
+                if (opened) toggle()
+              }}
+            >
+              <div className={styles.navItem}>
+                <IconSettingsPause
+                  className={styles.navIcon}
+                  size={ICON_SIZE}
+                />
+                {(!isSmallNav || isSmallScreen) && (
+                  <h3 className={styles.navText}>Maintenance</h3>
                 )}
               </div>
             </NavLink>

@@ -42,6 +42,7 @@ module.exports = {
         grey: '#7e7e7e',
         labelBlue: '#20448D',
         lightBlue: '#3662BA',
+        postingBtn: '#FFFDD0',
       },
       fontFamily: {
         lobster: ['Lobster', 'sans-serif'],

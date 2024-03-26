@@ -7,8 +7,8 @@ export async function getConversionRateList() {
     return res.data.metaData
 }
 
-export async function proceedToPayment(amount: number, description?: string) {
-    const res = await axiosInstance.post('/transaction/deposit', {amount, description})
+export async function proceedToPayment(amountInDollars: number, amountInCredits:number, exchangeRate: number, description?: string) {
+    const res = await axiosInstance.post('/seller/transaction/deposit', {amountInDollars, amountInCredits,exchangeRate, description})
 
     return res.data
 }
@@ -25,7 +25,6 @@ export async function getTransactionHistory(
   }) 
   
 
-const res = await axiosInstance.get(`/transaction/deposit${queryString}`)
-    
+const res = await axiosInstance.get(`/seller/transaction/deposit${queryString}`) 
     return res.data.metaData
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, PasswordInput, Stack, Modal } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import Swal from 'sweetalert2'
@@ -7,6 +7,7 @@ import { yupResolver } from 'mantine-form-yup-resolver'
 import * as yup from 'yup'
 import { changePassword } from '../../service/ProfileService'
 import styles from './ChangePassword.module.scss'
+import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
 
 interface ChangePasswordProps {
   isOpened: boolean
@@ -24,6 +25,7 @@ export default function ChangePassword({
 }: ChangePasswordProps) {
   const [visible, { toggle }] = useDisclosure(false)
   const [visibleCurrentPw, handlers] = useDisclosure(false)
+  const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
 
   const passwordSchema = yup.object().shape({
     currentPassword: yup
@@ -160,6 +162,10 @@ export default function ChangePassword({
           </Stack>
         </form>
       </Modal>
+      <UnderMaintenance
+        setStatus={setIsUnderMaintenance}
+        status={isUnderMaintenance}
+      />
     </>
   )
 }
