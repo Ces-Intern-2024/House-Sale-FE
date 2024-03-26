@@ -4,8 +4,13 @@ import React from 'react'
 interface UnderMaintenanceProps {
   status: boolean
   setStatus: React.Dispatch<React.SetStateAction<boolean>>
+  maintenanceMessage?: string
 }
-const UnderMaintenance = ({ status, setStatus }: UnderMaintenanceProps) => {
+const UnderMaintenance = ({
+  status,
+  setStatus,
+  maintenanceMessage,
+}: UnderMaintenanceProps) => {
   return (
     <Modal
       className=" bg-zinc-900"
@@ -30,8 +35,9 @@ const UnderMaintenance = ({ status, setStatus }: UnderMaintenanceProps) => {
           <h1 className="text-3xl m-0 p-0 font-bold text-center">
             We will be back shortly!
           </h1>
-          <p className="text-xl text-center ">
-            This service is under maintenance. Please try again later.
+          <p className="text-xl text-center px-5">
+            {maintenanceMessage ??
+              'This service is under maintenance. Please try again later.'}
           </p>
         </div>
       </div>

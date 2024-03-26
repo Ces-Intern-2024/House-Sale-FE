@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import style from './Transaction.module.scss'
 import { User } from '../../types/user'
-import { getProfile } from '../../service/ProfileService'
 import { Button } from '@mantine/core'
 import { GiCrownCoin } from 'react-icons/gi'
 import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
@@ -9,23 +8,20 @@ import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 
 interface CreditComponentProps {
   setOpened: (value: boolean) => void
-  shouldUpdate: boolean
+  userProfile?: User
 }
 export default function CreditComponent({
   setOpened,
-  shouldUpdate,
+  userProfile,
 }: CreditComponentProps) {
-  const [userProfile, setUserProfile] = useState<User>()
   const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
-  const getUserProfile = async () => {
-    const res = await getProfile()
-    setUserProfile(res)
-  }
+  const [maintenanceMessage, setMaintenanceMessage] = useState('')
 
   const handleGetMaintenanceMode = async () => {
     try {
       const res = await getMaintenanceModeForSeller()
       setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      setMaintenanceMessage((_prev) => res.metaData.description)
       // if system is not under maintenance then open modal
       if (res.metaData.isMaintenance === false) {
         setOpened(true)
@@ -34,9 +30,6 @@ export default function CreditComponent({
       console.error(error)
     }
   }
-  useEffect(() => {
-    getUserProfile()
-  }, [shouldUpdate])
 
   return (
     <>
@@ -67,6 +60,7 @@ export default function CreditComponent({
       <UnderMaintenance
         setStatus={setIsUnderMaintenance}
         status={isUnderMaintenance}
+        maintenanceMessage={maintenanceMessage}
       />
     </>
   )

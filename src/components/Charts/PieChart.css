@@ -8,3 +8,7 @@
   @apply h-100 !important; 
   */
 }
+
+.highcharts-background{
+  fill: #FFF;
+}

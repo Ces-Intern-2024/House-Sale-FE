@@ -5,6 +5,7 @@ import ExportData from 'highcharts/modules/export-data'
 import Accessibility from 'highcharts/modules/accessibility'
 import Exporting from 'highcharts/modules/exporting'
 import './PieChart.css'
+import { countPropertiesCreated } from '../../service/AdminService'
 ExportData(Highcharts)
 Exporting(Highcharts)
 Accessibility(Highcharts)
@@ -12,13 +13,24 @@ Accessibility(Highcharts)
 const LineChart = () => {
   const [data, setData] = useState([{ d1: 0, d2: 0 }])
   const fetchingData = async () => {
-    const dataF = await fetch(
+    const _dataF = await fetch(
       'https://demo-live-data.highcharts.com/aapl-c.json',
     ).then((response) => response.json())
-    setData(dataF)
+  }
+  const getAmountOfPropertyCreated = async () => {
+    const res = await countPropertiesCreated(
+      '2024-01-20',
+      new Date().toJSON().slice(0, 10),
+    )
+    const arr = res.data.metaData.data.map((a: any) => [
+      Date.parse(a.dateReport),
+      a.count,
+    ])
+    setData(arr)
   }
   useEffect(() => {
     fetchingData()
+    getAmountOfPropertyCreated()
   }, [])
 
   const options = {
@@ -29,9 +41,9 @@ const LineChart = () => {
       text: 'My stock chart',
     },
     subtitle: {
-      text: 'millisecondsfasldfaldflskafjklfj',
+      text: 'milliseconds',
     },
-    // this comment can be used in the future. 
+    // this comment can be used in the future.
     // _navigator: {
     //   enabled: false,
     // },
