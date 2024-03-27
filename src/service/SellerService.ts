@@ -69,3 +69,21 @@ export const updatePropertyForSeller = async (propertyId:number, value:any) =>{
   const res = await axiosInstance.patch(`/seller/properties/${propertyId}`,value)
   return res
 }
+
+export async function getPropertiesCountedByFeature(){
+  const res = await axiosInstance.get("/seller/report/count-properties-by-feature")
+  return res.data
+}
+
+export async function getPropertiesCountedByCategory(){
+  const res = await axiosInstance.get("/seller/report/count-properties-by-category")
+  return res.data
+}
+
+export const getPropertiesCountedByDate = async (fromDateRange : string, toDateRange :string) => {
+  const res = await axiosInstance.get(`/seller/report/count-properties-created-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+
+
