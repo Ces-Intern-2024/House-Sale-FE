@@ -2,12 +2,12 @@ import PieChart from '../../components/Charts/PieChart'
 import LineChart from '../../components/Charts/LineChart'
 import React, { useEffect, useState } from 'react'
 import {
-  countPropertiesCreated,
   getPropertiesCountedByCategory,
+  getPropertiesCountedByDate,
   getPropertiesCountedByFeature,
-} from '../../service/AdminService'
+} from '../../service/SellerService'
 
-function AdminDashboardPage() {
+function SellerReportPage() {
   const [propertiesCountedByFeature, setPropertiesCountedByFeature] = useState<
     []
   >([])
@@ -19,7 +19,7 @@ function AdminDashboardPage() {
     const formattedData = data.metaData.flatMap((property: any) => [
       {
         name: property.name,
-        y: property.count,
+        y: Number(property.count),
         inNumber: property.count,
       },
     ])
@@ -31,21 +31,21 @@ function AdminDashboardPage() {
     const formattedData = data.metaData.flatMap((property: any) => [
       {
         name: property.name,
-        y: property.count,
+        y: Number(property.count),
         inNumber: property.count,
       },
     ])
     setPropertiesCountedByCategory((_prev) => formattedData)
   }
 
-  const getAmountOfPropertyCreated = async () => {
-    const res = await countPropertiesCreated(
+  const handleGetPropertiesCountedByDate = async () => {
+    const res = await getPropertiesCountedByDate(
       '2024-01-20',
       new Date().toJSON().slice(0, 10),
     )
-    const formattedData = res.data.metaData.data.map((a: any) => [
-      Date.parse(a.dateReport),
-      a.count,
+    const formattedData = res.metaData.data.map((el: any) => [
+      Date.parse(el.dateReport),
+      el.count,
     ])
     setPropertiesCountedByDate((_prev) => formattedData)
   }
@@ -53,7 +53,7 @@ function AdminDashboardPage() {
   useEffect(() => {
     handleGetPropertiesCountedByFeature()
     handleGetPropertiesCountedByCategory()
-    getAmountOfPropertyCreated()
+    handleGetPropertiesCountedByDate()
   }, [])
   return (
     <div>
@@ -61,11 +61,15 @@ function AdminDashboardPage() {
         <div>
           <h1>Total Properties</h1>
           <div className="flex justify-between mt-5">
-            <div className="dat">
-              <PieChart data={propertiesCountedByFeature} />
-            </div>
+            <PieChart
+              title="Properties By Feature"
+              data={propertiesCountedByFeature}
+            />
 
-            <PieChart data={propertiesCountedByCategory} />
+            <PieChart
+              title="Properties By Category"
+              data={propertiesCountedByCategory}
+            />
           </div>
         </div>
         <div>
@@ -83,4 +87,4 @@ function AdminDashboardPage() {
   )
 }
 
-export default AdminDashboardPage
+export default SellerReportPage

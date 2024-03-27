@@ -27,6 +27,8 @@ const HomePage = () => {
     (state) => state.property.listFavorites,
   )
 
+  const signedIn = useAppSelector((state) => state.session.signedIn)
+
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -38,7 +40,9 @@ const HomePage = () => {
   }, [dispatch])
 
   useEffect(() => {
-    dispatch(getAllWishList())
+    if (signedIn) {
+      dispatch(getAllWishList())
+    }
   }, [dispatch])
 
   return (

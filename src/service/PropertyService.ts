@@ -7,6 +7,7 @@ import {
 } from '../constants/codeResponse.constant'
 import axios from 'axios'
 
+
 export const addToWishListService = async (property: Properties) => {
   try {
     const res = await axiosInstance.post(
@@ -33,7 +34,7 @@ export const addToWishListService = async (property: Properties) => {
 }
 
 export const getAllWishListService = async () => {
-  try {
+  try {  
     const res = await axiosInstance.get(`/favorites-list`)
     if (res.data) {
       return res.data.metaData.favoritesList

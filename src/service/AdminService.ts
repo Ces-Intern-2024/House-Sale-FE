@@ -123,3 +123,19 @@ export const resetPasswordForAdmin = async (userId: number) => {
  const res = await axiosInstance.post(`/admin/manage-user/${userId}/reset-password`)
  return res
 }
+
+
+export async function getPropertiesCountedByFeature(){
+  const res = await axiosInstance.get("/admin/report/count-properties-by-feature")
+  return res.data
+}
+
+export async function getPropertiesCountedByCategory(){
+  const res = await axiosInstance.get("/admin/report/count-properties-by-category")
+  return res.data
+}
+
+export const countPropertiesCreated = async (fromDateRange : string, toDateRange :string) => {
+  const res = await axiosInstance.get(`/admin/report/count-properties-created-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res
+}
