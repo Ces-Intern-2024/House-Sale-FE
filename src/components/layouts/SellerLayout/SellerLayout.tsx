@@ -47,7 +47,9 @@ export default function SellerLayout() {
     pathname === '/transaction-history'
       ? { title: 'Transaction History', href: '/transaction-history' }
       : null,
-    pathname === '/report' ? { title: 'Report', href: '/report' } : null,
+    pathname === '/seller-report'
+      ? { title: 'Report', href: '/seller-report' }
+      : null,
     pathname === '/transaction'
       ? { title: 'Transaction', href: '/transaction' }
       : null,
@@ -202,12 +204,12 @@ export default function SellerLayout() {
                 </NavLink>
 
                 <NavLink
-                  to="/report"
+                  to="/seller-report"
                   className={({ isActive }) =>
                     isActive ? styles.navItemActive : ''
                   }
                   onClick={() => {
-                    handleSetActiveLink('/report')
+                    handleSetActiveLink('/seller-report')
                     if (opened) toggle()
                   }}
                 >
