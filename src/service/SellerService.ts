@@ -85,5 +85,27 @@ export const getPropertiesCountedByDate = async (fromDateRange : string, toDateR
   return res.data
 }
 
+export async function getTotalAmountDepositedByDate(fromDateRange : string, toDateRange :string){
+  const res = await axiosInstance.get(`/seller/report/total-amount-deposited-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+export const getContactsCountedByDate = async (fromDateRange : string, toDateRange :string) => {
+  const res = await axiosInstance.get(`/seller/report/count-contacts-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+export async function getTotalCreditsUsedByDate(fromDateRange : string, toDateRange :string){
+  const res = await axiosInstance.get(`/seller/report/total-credits-used-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+export async function getTotalAmountDeposited(){
+  const res = await axiosInstance.get("/seller/report/total-amount-deposited")
+  return res.data
+}
+
+
+
 
 
