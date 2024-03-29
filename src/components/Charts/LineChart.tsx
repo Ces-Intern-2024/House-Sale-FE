@@ -13,8 +13,10 @@ Accessibility(Highcharts)
 interface LineChartProps {
   data: []
   title?: string
+  seriesName?: string
+  yAxisLabel?: string
 }
-const LineChart = ({ data, title }: LineChartProps) => {
+const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
   const options = {
     exporting: {
       enabled: true,
@@ -29,21 +31,34 @@ const LineChart = ({ data, title }: LineChartProps) => {
     // _navigator: {
     //   enabled: false,
     // },
+
+    yAxis: {
+      opposite: false,
+      title: {
+        text: yAxisLabel,
+      },
+    },
     series: [
       {
-        name: 'Name of line chart',
+        name: seriesName,
         data: data,
-        tooltip: {
-          valueDecimals: 2,
-        },
       },
     ],
     plotOptions: {
-      line: {
+      chart: {
         dataLabels: {
           enabled: true,
+          dataLabels: {
+            enabled: true,
+          },
         },
       },
+    },
+    tooltip: {
+      shared: true,
+      crosshairs: true,
+      pointFormat:
+        '<span style="color:{series.color}">{series.name}</span>: <b style="color:black">{point.y}</b><br/>',
     },
   }
 
