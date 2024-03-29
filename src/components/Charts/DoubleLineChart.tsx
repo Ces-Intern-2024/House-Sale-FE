@@ -15,8 +15,19 @@ interface DoubleLineChartProps {
   data2: []
   title?: string
 }
+
 const DoubleLineChart = ({ data1, data2, title }: DoubleLineChartProps) => {
   const options = {
+    credits: {
+      enabled: false,
+    },
+    chart: {
+      type: 'spline',
+      zoomType: 'x',
+      panning: true,
+      panKey: 'shift',
+    },
+
     exporting: {
       enabled: true,
       type: 'spline',
@@ -26,93 +37,75 @@ const DoubleLineChart = ({ data1, data2, title }: DoubleLineChartProps) => {
     },
 
     xAxis: {
-      opposite: false,
-      gridLineColor: 'red',
+      type: 'datetime',
       labels: {
-        style: {
-          color: 'black',
+        formatter: function (
+          this: Highcharts.AxisLabelsFormatterContextObject,
+        ): string {
+          return Highcharts.dateFormat('%b %e', Number(this.value))
         },
       },
-      plotLines: [
-        {
-          color: 'red',
-          width: 100,
-          value: 10,
-          zIndex: 1000,
-        },
-      ],
-      visible: true,
+      tickInterval: 24 * 3600 * 1000,
+      opposite: false,
     },
     yAxis: {
       opposite: false,
       title: {
         text: 'Credits - Dollars',
       },
-      plotLines: [
-        {
-          value: 0,
-          width: 2,
-          color: 'white',
-        },
-      ],
     },
     legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle',
+      itemStyle: {
+        fontSize: '14px',
+      },
     },
     series: [
       {
         name: 'Credits',
         marker: {
-          radius: 8,
-          lineWidth: 2,
-          lineColor: 'skyblue',
-          fillColor: 'white',
           symbol: 'diamond',
+          radius: 6,
         },
         data: data1,
       },
       {
         name: 'Dollars',
         marker: {
-          symbol: 'diamond',
+          symbol: 'triangle',
+          radius: 6,
         },
         data: data2,
       },
     ],
     plotOptions: {
       spline: {
-        showInLegend: true,
         dataLabels: {
           enabled: true,
-          useHTML: true,
-        },
-      },
-      columnrange: {
-        dataLabels: {
-          enabled: true,
-          useHTML: true,
+          formatter(this: Highcharts.PointLabelObject) {
+            if (this.y === 0) {
+              return ''
+            } else {
+              return String(this.y)
+            }
+          },
         },
       },
     },
+
     tooltip: {
       shared: true,
       crosshairs: true,
-      style: {
-        backgroundColor: 'white',
-      },
       pointFormat:
         '<span style="color:{series.color}">{series.name}</span>: <b style="color:black">{point.y}</b><br/>',
     },
   }
 
   return (
-    <div className="mt-10 ">
+    <div>
       {data1.length > 0 && data2.length > 0 && (
         <HighchartsReact
           highcharts={Highcharts}
-          constructorType={'stockChart'}
+          // constructorType={'stockChart'}
           options={options}
         />
       )}

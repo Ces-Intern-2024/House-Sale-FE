@@ -20,6 +20,9 @@ interface PieChartProps {
 // some comments in this component are kept for future use
 const PieChart = ({ data, title }: PieChartProps) => {
   const options = {
+    credits: {
+      enabled: false,
+    },
     chart: {
       loading: false,
       animation: true,
@@ -38,10 +41,11 @@ const PieChart = ({ data, title }: PieChartProps) => {
     tooltip: {
       valueSuffix: '%',
       pointFormat:
-        '{series.name}: <b>{point.percentage:.1f}%</b> <br> Total: <b>{point.inNumber}</b>',
+        '<b>{point.name}</b><br>{series.name}: <b>{point.percentage:.1f}%</b> <br> Figure: <b>{point.inNumber}</b>',
+      headerFormat: '',
       style: {
         color: 'black',
-        fontSize: '1.2em',
+        fontSize: '1em',
         textOutline: 'none',
         opacity: 1,
       },

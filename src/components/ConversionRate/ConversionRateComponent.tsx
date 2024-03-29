@@ -16,16 +16,20 @@ import {
   getAllConversionRates,
 } from '../../service/AdminService'
 import { convertISOToVNDateTimeString } from '../../utils/commonFunctions'
-import { FaEdit, FaPlus, FaSearch } from 'react-icons/fa'
+import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
-import { useDisclosure, getHotkeyHandler } from '@mantine/hooks'
+import {
+  useDisclosure,
+  //  getHotkeyHandler
+} from '@mantine/hooks'
 import Swal from 'sweetalert2'
 import { ConversionRate } from '../../types/conversionRate'
-import { primary, confirmBtn, cancelBtn } from '../../constants/color.constant'
+import { confirmBtn, cancelBtn } from '../../constants/color.constant'
 
+// some comments in this component is kept for future use
 export default function ConversionRateComponent() {
   const [isLoading, setIsLoading] = useState(false)
-  const [_searchConversionRate, setSearchConversionRate] = useState('')
+  // const [searchConversionRate, setSearchConversionRate] = useState('')
   const [opened, { open, close }] = useDisclosure(false, {
     onClose: () => setSelectedConversionRate(undefined),
   })
@@ -38,10 +42,10 @@ export default function ConversionRateComponent() {
     useState<ConversionRate>()
   const [shouldUpdate, setShouldUpdate] = useState(false)
 
-  const handleKeyDown = (event: any) => {
-    setSearchConversionRate(event.currentTarget.value)
-    handleGetAllConversionRates()
-  }
+  // const handleKeyDown = (event: any) => {
+  //   setSearchConversionRate(event.currentTarget.value)
+  //   handleGetAllConversionRates()
+  // }
   const handleGetAllConversionRates = async () => {
     try {
       setIsLoading(true)
@@ -181,10 +185,9 @@ export default function ConversionRateComponent() {
               </span>
             </div>
           </div>
-          <div className="mt-5 flex justify-between items-end">
+          {/* <div className="mt-5 flex justify-between items-end">
             <div className={style.searchContainer}>
               <TextInput
-                disabled={true}
                 leftSection={<FaSearch color={primary} size={20} />}
                 placeholder="Enter from currency..."
                 size="md"
@@ -196,13 +199,13 @@ export default function ConversionRateComponent() {
                 onKeyDown={getHotkeyHandler([['Enter', handleKeyDown]])}
               />
             </div>
-            <Button onClick={open} size="md" disabled={true}>
+            <Button onClick={open} size="md">
               <span className={style.iconBtn}>
                 <FaPlus />
               </span>
               Add New Conversion Rate
             </Button>
-          </div>
+          </div> */}
           <div className="mt-8">
             <Box pos="relative">
               <LoadingOverlay

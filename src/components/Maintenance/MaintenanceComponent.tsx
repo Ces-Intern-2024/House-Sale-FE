@@ -101,14 +101,17 @@ export default function MaintenanceComponent() {
               will be unavailable to users:
               <ul className=" flex flex-col gap-y-3">
                 <li>
-                  <strong>Property Favorites:</strong> Users may not be able to
-                  favorite or unfavorite properties.
+                  <strong>Contact Forms:</strong> Users can still be able to
+                  submit contact forms.
                 </li>
                 <li>
                   <strong>Property Search:</strong> Users can still be able to
                   search for properties and see details about them.
                 </li>
-
+                <li>
+                  <strong>Property Favorites:</strong> Users may not be able to
+                  favorite or unfavorite properties.
+                </li>
                 <li>
                   <strong>Property Listings:</strong> New property listings may
                   not be allowed during maintenance.
@@ -116,10 +119,6 @@ export default function MaintenanceComponent() {
                 <li>
                   <strong>User Account Access:</strong> Users may not be able to
                   access their accounts or update their information.
-                </li>
-                <li>
-                  <strong>Contact Forms:</strong> Users may not be able to
-                  submit contact forms.
                 </li>
                 <li>
                   <strong>Public Paths:</strong> Users can still be able to have

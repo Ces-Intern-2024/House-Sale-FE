@@ -5,7 +5,8 @@ import {
   Box,
   LoadingOverlay,
   Pagination,
-  TextInput,
+  Image,
+  SegmentedControl,
 } from '@mantine/core'
 import { getAllTransactions } from '../../service/AdminService'
 import { getTransactionHistory } from '../../service/TransactionService'
@@ -14,34 +15,35 @@ import {
   formatDateToYYYYMMDD,
   getSevenDaysBeforeToday,
 } from '../../utils/commonFunctions'
-import { FaSearch } from 'react-icons/fa'
+// import { FaSearch } from 'react-icons/fa'
 import { DatePickerInput } from '@mantine/dates'
 import { IconCalendar, IconHistory } from '@tabler/icons-react'
 import { primary } from '../../constants/color.constant'
+import TableServiceTransaction from './TableServiceTransaction'
+import { User } from '../../types/user'
+import { RxAvatar } from 'react-icons/rx'
 
 interface TableTransactionProps {
   isSeller: boolean
+  user?: User | null
 }
 
-export default function TableTransaction({ isSeller }: TableTransactionProps) {
+export default function TableTransaction({
+  isSeller,
+  user,
+}: TableTransactionProps) {
   const [activePage, setActivePage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
-  const [_searchEmail, setSearchEmail] = useState('')
   const [dateValues, setDateValues] = useState<[Date | null, Date | null]>([
     getSevenDaysBeforeToday(),
     new Date(),
   ])
 
   const [transactions, setTransactions] = useState<[]>([])
+  const [segmentValue, setSegmentValue] = useState('transactions')
 
-  const handleKeyDown = (event: any) => {
-    if (event.key === 'Enter') {
-      setSearchEmail(event.currentTarget.value)
-      handleGetAllTransactions()
-    }
-  }
   const handleGetAllTransactions = async (
     fromDateRange?: string,
     toDateRange?: string,
@@ -54,6 +56,7 @@ export default function TableTransaction({ isSeller }: TableTransactionProps) {
             fromDateRange ?? null,
             toDateRange ?? null,
             page ?? activePage,
+            user ? String(user?.userId) : null,
           )
         : await getTransactionHistory(
             fromDateRange ?? null,
@@ -106,8 +109,7 @@ export default function TableTransaction({ isSeller }: TableTransactionProps) {
         <Table.Tr key={transaction.transactionId} className="text-base h-16">
           <Table.Td>{transaction.transactionId}</Table.Td>
           {!isSeller && <Table.Td>{transaction.userId}</Table.Td>}
-          <Table.Td>{Number(transaction.amountInCredits)}</Table.Td>
-          <Table.Td>{Number(transaction.balanceInCredits)}</Table.Td>
+          <Table.Td>+ {Number(transaction.amountInCredits)}</Table.Td>
           <Table.Td>{transaction.description}</Table.Td>
           <Table.Td>
             {convertISOToVNDateTimeString(transaction.createdAt)}
@@ -115,103 +117,142 @@ export default function TableTransaction({ isSeller }: TableTransactionProps) {
         </Table.Tr>
       ))
     ) : (
-      <div>There is no transaction yet</div>
+      <h3 className="px-2 ">There is no transaction yet.</h3>
     )
 
   return (
-    <div className={style.tablePropertyContainer}>
-      <div className={style.tablePropertyContent}>
-        <div className={style.tableHeader}>
-          <div className={style.pageTitle}>
-            <span className={style.title}>Transaction List </span>
-            <span className={style.subTitle}>Manage Your Transaction</span>
-          </div>
-        </div>
-        <div
-          className={`mt-0 flex items-end ${isSeller ? 'justify-end' : 'justify-between'}`}
-        >
-          {!isSeller && (
-            <div className={style.searchContainer}>
-              <TextInput
-                leftSection={<FaSearch color={primary} size={20} />}
-                placeholder="Enter email..."
-                size="md"
-                radius={4}
-                classNames={{ input: style.textInput }}
-                onChange={(event) => setSearchEmail(event.target.value)}
-                onKeyDown={handleKeyDown}
+    <>
+      <div className={style.tablePropertyContainer}>
+        <div className={style.tablePropertyContent}>
+          {isSeller && (
+            <div className="mt-5 flex justify-center">
+              <SegmentedControl
+                transitionDuration={200}
+                transitionTimingFunction="linear"
+                styles={{
+                  root: {
+                    paddingTop: '5px',
+                    paddingBottom: '5px',
+                  },
+                  label: {
+                    fontWeight: 'bold',
+                    color: '#396652',
+                    fontSize: '18px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                }}
+                className="text-primary"
+                value={segmentValue}
+                onChange={setSegmentValue}
+                data={[
+                  { label: 'Transaction', value: 'transactions' },
+                  { label: 'Services', value: 'services' },
+                ]}
               />
             </div>
           )}
-
-          <DatePickerInput
-            clearable={true}
-            allowSingleDateInRange={true}
-            leftSection={<IconCalendar color={primary} stroke={1.5} />}
-            rightSection={
-              <IconHistory
-                color={primary}
-                stroke={1.5}
-                className=" cursor-pointer"
-                onClick={() =>
-                  setDateValues([getSevenDaysBeforeToday(), new Date()])
-                }
-              />
-            }
-            size="md"
-            classNames={{
-              day: style.day,
-              weekday: ' text-gray-600 font-bold',
-            }}
-            w={330}
-            type="range"
-            label="Pick date range"
-            placeholder="Pick date range"
-            value={dateValues}
-            onChange={setDateValues}
-          />
-        </div>
-        <div className="mt-8">
-          <Box pos="relative">
-            <LoadingOverlay
-              visible={isLoading}
-              zIndex={10}
-              overlayProps={{ radius: 'sm', blur: 2 }}
-              loaderProps={{ color: 'pink', type: 'bars' }}
-            />
-            <Table
-              bg="white"
-              highlightOnHover
-              withTableBorder
-              verticalSpacing="sm"
-            >
-              <Table.Thead>
-                <Table.Tr className="text-base">
-                  <Table.Th>Transaction ID</Table.Th>
-                  {!isSeller && <Table.Th>User ID</Table.Th>}
-                  <Table.Th>Amount</Table.Th>
-                  <Table.Th>Balance</Table.Th>
-                  <Table.Th>Description</Table.Th>
-                  <Table.Th>Created At</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>{rows}</Table.Tbody>
-            </Table>
-            <div className="flex justify-between my-2 items-baseline">
-              <Pagination
-                total={totalPages}
-                value={activePage}
-                mt="sm"
-                onChange={handleChangeActivePage}
-                classNames={{ control: style.paginationControl }}
-              />
-              <div className="text-lg mr-2 text-primary font-bold">
-                Result: {totalItems}
+          {segmentValue === 'transactions' && (
+            <>
+              <div className={`mt-3 flex items-end justify-between`}>
+                <div className={style.tableHeader}>
+                  <div className={style.pageTitle}>
+                    <span className={style.title}>Transaction List</span>
+                    <span className={style.subTitle}>
+                      Manage Your Transaction
+                    </span>
+                  </div>
+                </div>
+                <DatePickerInput
+                  clearable={true}
+                  allowSingleDateInRange={true}
+                  leftSection={<IconCalendar color={primary} stroke={1.5} />}
+                  rightSection={
+                    <IconHistory
+                      color={primary}
+                      stroke={1.5}
+                      className=" cursor-pointer"
+                      onClick={() =>
+                        setDateValues([getSevenDaysBeforeToday(), new Date()])
+                      }
+                    />
+                  }
+                  size="md"
+                  classNames={{
+                    day: style.day,
+                    weekday: ' text-gray-600 font-bold',
+                  }}
+                  w={330}
+                  type="range"
+                  label="Pick date range"
+                  placeholder="Pick date range"
+                  value={dateValues}
+                  onChange={setDateValues}
+                />
               </div>
-            </div>
-          </Box>
+              {user && (
+                <div className="flex items-center mt-6">
+                  <div className=" w-[50px] h-[50px] flex">
+                    {user?.avatar ? (
+                      <Image radius="xl" alt="User Avatar" src={user?.avatar} />
+                    ) : (
+                      <RxAvatar className=" h-full w-full" />
+                    )}
+                  </div>
+                  <div className="ml-4">
+                    <div className="font-bold">{`Email: ${user?.email}`}</div>
+                    <div>{`ID: ${user?.userId}`}</div>
+                  </div>
+                </div>
+              )}
+
+              <div className="mt-8">
+                <Box pos="relative">
+                  <LoadingOverlay
+                    visible={isLoading}
+                    zIndex={10}
+                    overlayProps={{ radius: 'sm', blur: 2 }}
+                    loaderProps={{ color: 'pink', type: 'bars' }}
+                  />
+                  <Table
+                    bg="white"
+                    highlightOnHover
+                    withTableBorder
+                    verticalSpacing="sm"
+                  >
+                    <Table.Thead>
+                      <Table.Tr className="text-base">
+                        <Table.Th>Transaction ID</Table.Th>
+                        {!isSeller && <Table.Th>User ID</Table.Th>}
+                        <Table.Th>Credits</Table.Th>
+                        <Table.Th>Description</Table.Th>
+                        <Table.Th>Created At</Table.Th>
+                      </Table.Tr>
+                    </Table.Thead>
+                    <Table.Tbody>{rows}</Table.Tbody>
+                  </Table>
+                  <div className="flex justify-between my-2 items-baseline">
+                    <Pagination
+                      total={totalPages}
+                      value={activePage}
+                      mt="sm"
+                      onChange={handleChangeActivePage}
+                      classNames={{ control: style.paginationControl }}
+                    />
+                    <div className="text-lg mr-2 text-primary font-bold">
+                      Result: {totalItems}
+                    </div>
+                  </div>
+                </Box>
+              </div>
+            </>
+          )}
+
+          {segmentValue === 'services' && <TableServiceTransaction />}
         </div>
       </div>
-    </div>
+    </>
   )
 }
