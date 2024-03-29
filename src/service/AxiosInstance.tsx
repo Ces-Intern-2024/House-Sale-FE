@@ -1,9 +1,10 @@
 import axios from 'axios'
 import storage from 'redux-persist/lib/storage'
-import { store } from '../redux/store'
+import { persistor, store } from '../redux/store'
 import { Token } from '../types/token'
-import { signInSuccess } from '../redux/reducers/sessionSlice'
+import { signInSuccess, signOutSuccess } from '../redux/reducers/sessionSlice'
 import { CODE_RESPONSE_401 } from '../constants/codeResponse.constant'
+import { resetUser } from '../redux/reducers/userSlice'
 
 let isRefreshing = false
 let failedQueue: any = []
@@ -49,6 +50,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config
 
     if (
+      error.response &&
       error.response.status === CODE_RESPONSE_401 &&
       !originalRequest._retry
     ) {
@@ -99,6 +101,14 @@ axiosInstance.interceptors.response.use(
           .catch((err) => {
             processQueue(err, null)
             reject(err)
+            persistor
+              .purge()
+              .then(() => persistor.flush())
+              .then(() => {
+                store.dispatch(signOutSuccess())
+                store.dispatch(resetUser())
+              })
+            window.location.href = '/home'
           })
           .finally(() => {
             isRefreshing = false

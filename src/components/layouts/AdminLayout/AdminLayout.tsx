@@ -17,7 +17,6 @@ import {
   IconExchange,
   IconBuildingSkyscraper,
   IconUserStar,
-  IconCreditCard,
   IconSettingsPause,
 } from '@tabler/icons-react'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
@@ -184,23 +183,6 @@ export default function AdminLayout() {
                 <IconUserStar className={styles.navIcon} size={ICON_SIZE} />
                 {(!isSmallNav || isSmallScreen) && (
                   <h3 className={styles.navText}>User</h3>
-                )}
-              </div>
-            </NavLink>
-            <NavLink
-              to="/admin-transaction"
-              className={({ isActive }) =>
-                isActive ? styles.navItemActive : ''
-              }
-              onClick={() => {
-                handleSetActiveLink('/')
-                if (opened) toggle()
-              }}
-            >
-              <div className={styles.navItem}>
-                <IconCreditCard className={styles.navIcon} size={ICON_SIZE} />
-                {(!isSmallNav || isSmallScreen) && (
-                  <h3 className={styles.navText}>Transaction</h3>
                 )}
               </div>
             </NavLink>

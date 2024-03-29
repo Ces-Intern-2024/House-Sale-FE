@@ -16,9 +16,10 @@ export async function proceedToPayment(amountInDollars: number, amountInCredits:
 export async function getTransactionHistory(
   fromDateRange?:string | null, 
   toDateRange?:string | null,
-  page?: number | null
+  page?: number | null,
+  limit?: number | null
   ) { 
-      const queryString = qs.stringify({fromDateRange, toDateRange,page}, {
+      const queryString = qs.stringify({fromDateRange, toDateRange, page, limit}, {
     skipNulls: true,
     addQueryPrefix: true,
     encode: false,

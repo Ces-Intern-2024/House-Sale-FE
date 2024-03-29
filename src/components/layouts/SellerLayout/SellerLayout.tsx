@@ -198,7 +198,7 @@ export default function SellerLayout() {
                       size={ICON_SIZE}
                     />
                     {(!isSmallNav || isSmallScreen) && (
-                      <h3 className={styles.navText}>Transaction History</h3>
+                      <h3 className={styles.navText}>Transaction</h3>
                     )}
                   </div>
                 </NavLink>

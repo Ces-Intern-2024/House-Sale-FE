@@ -81,8 +81,9 @@ export const deletePropertyForAdminService = async (
   return res
 }
 
-export async function getAllTransactions(fromDateRange?:string | null, toDateRange?:string | null, page?:number) { 
-  const queryString = qs.stringify({fromDateRange, toDateRange, page}, {
+export async function getAllTransactions(fromDateRange?:string | null, toDateRange?:string | null, page?:number,
+  userId?:string | null) { 
+  const queryString = qs.stringify({fromDateRange, toDateRange, page, userId}, {
     skipNulls: true,
     addQueryPrefix: true,
     encode: false,
