@@ -32,6 +32,7 @@ import Swal from 'sweetalert2'
 import { useDisclosure } from '@mantine/hooks'
 import ModalManageUser from '../ModalManageUser/ModalManageUser'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
+import { useNavigate } from 'react-router-dom'
 
 function TableUser() {
   const [email, setEmail] = useState('')
@@ -45,6 +46,7 @@ function TableUser() {
   const [opened, { open, close }] = useDisclosure(false)
   const [userSelected, setUserSelected] = useState<User | null>(null)
   const [isUpdated, setIsUpdated] = useState(false)
+  const navigate = useNavigate()
 
   const getAllUser = async () => {
     try {
@@ -341,6 +343,18 @@ function TableUser() {
           <Table.Td>{formatDateNoHours(user.createdAt)}</Table.Td>
           <Table.Td>
             <Button
+              color="cyan"
+              onClick={() =>
+                navigate('/admin-transaction', {
+                  state: { user: user },
+                })
+              }
+            >
+              View
+            </Button>
+          </Table.Td>
+          <Table.Td>
+            <Button
               color="teal"
               onClick={() => handleResetPassword(user.userId)}
             >
@@ -491,6 +505,7 @@ function TableUser() {
                     <Table.Th>Balance</Table.Th>
                     <Table.Th>Role</Table.Th>
                     <Table.Th>Created On</Table.Th>
+                    <Table.Th>Transaction</Table.Th>
                     <Table.Th>Password</Table.Th>
                     <Table.Th>Status</Table.Th>
                     <Table.Th>Action</Table.Th>

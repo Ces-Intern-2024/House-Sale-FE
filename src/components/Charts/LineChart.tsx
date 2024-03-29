@@ -18,6 +18,16 @@ interface LineChartProps {
 }
 const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
   const options = {
+    credits: {
+      enabled: false,
+    },
+    chart: {
+      type: 'spline',
+      zoomType: 'x',
+      panning: true,
+      panKey: 'shift',
+    },
+
     exporting: {
       enabled: true,
     },
@@ -32,6 +42,16 @@ const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
     //   enabled: false,
     // },
 
+    xAxis: {
+      labels: {
+        formatter: function (
+          this: Highcharts.AxisLabelsFormatterContextObject,
+        ): string {
+          return Highcharts.dateFormat('%b %e', Number(this.value))
+        },
+      },
+      tickInterval: 24 * 3600 * 1000,
+    },
     yAxis: {
       opposite: false,
       title: {
@@ -45,11 +65,15 @@ const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
       },
     ],
     plotOptions: {
-      chart: {
+      spline: {
         dataLabels: {
           enabled: true,
-          dataLabels: {
-            enabled: true,
+          formatter(this: Highcharts.PointLabelObject) {
+            if (this.y === 0) {
+              return ''
+            } else {
+              return String(this.y)
+            }
           },
         },
       },
@@ -57,17 +81,29 @@ const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
     tooltip: {
       shared: true,
       crosshairs: true,
-      pointFormat:
-        '<span style="color:{series.color}">{series.name}</span>: <b style="color:black">{point.y}</b><br/>',
+      formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+        return (
+          '<small style="fontSize:12px">' +
+          Highcharts.dateFormat('%A, %e %b %Y', Number(this.x)) +
+          '</small><br/>' +
+          '<span style="color:' +
+          this.series.color +
+          '">' +
+          this.series.name +
+          '</span>: <b style="color:black">' +
+          this.y +
+          '</b><br/>'
+        )
+      },
     },
   }
 
   return (
-    <div className="mt-10 ">
+    <div>
       {data.length > 0 && (
         <HighchartsReact
           highcharts={Highcharts}
-          constructorType={'stockChart'}
+          // constructorType={'stockChart'}
           options={options}
         />
       )}

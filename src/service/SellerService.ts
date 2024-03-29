@@ -7,9 +7,11 @@ import { Properties } from '@/types'
 export async function getTransactionRentService(
   fromDateRange?: string | null,
   toDateRange?: string | null,
+  page?: number | null,
+  limit?: number | null
 ) {
   const queryString = qs.stringify(
-    { fromDateRange, toDateRange },
+    { fromDateRange, toDateRange, page, limit },
     {
       skipNulls: true,
       addQueryPrefix: true,
@@ -17,10 +19,9 @@ export async function getTransactionRentService(
     },
   )
 
-  const res = await axiosInstance.get(`/seller/transaction/rent-service${queryString}
-${queryString.length === 0 ? `?limit=1000` : `&limit=1000`}`)
+  const res = await axiosInstance.get(`/seller/transaction/rent-service${queryString}`)
 
-  return res.data.metaData.data
+  return res.data.metaData
 }
 
 export const getAllPropertiesForSeller = async () => {
@@ -80,28 +81,33 @@ export async function getPropertiesCountedByCategory(){
   return res.data
 }
 
-export const getPropertiesCountedByDate = async (fromDateRange : string, toDateRange :string) => {
+export const getPropertiesCountedByDate = async (fromDateRange : string| null, toDateRange :string) => {
   const res = await axiosInstance.get(`/seller/report/count-properties-created-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
   return res.data
 }
 
-export async function getTotalAmountDepositedByDate(fromDateRange : string, toDateRange :string){
+export async function getTotalAmountDepositedByDate(fromDateRange : string| null, toDateRange :string ){
   const res = await axiosInstance.get(`/seller/report/total-amount-deposited-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
   return res.data
 }
 
-export const getContactsCountedByDate = async (fromDateRange : string, toDateRange :string) => {
+export const getContactsCountedByDate = async (fromDateRange : string| null, toDateRange :string) => {
   const res = await axiosInstance.get(`/seller/report/count-contacts-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
   return res.data
 }
 
-export async function getTotalCreditsUsedByDate(fromDateRange : string, toDateRange :string){
+export async function getTotalCreditsUsedByDate(fromDateRange : string| null, toDateRange :string){
   const res = await axiosInstance.get(`/seller/report/total-credits-used-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
   return res.data
 }
 
 export async function getTotalAmountDeposited(){
   const res = await axiosInstance.get("/seller/report/total-amount-deposited")
+  return res.data
+}
+
+export async function getTotalCreditsUsed(){
+  const res = await axiosInstance.get("/seller/report/total-credits-used")
   return res.data
 }
 

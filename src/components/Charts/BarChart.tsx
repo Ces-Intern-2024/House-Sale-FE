@@ -62,7 +62,7 @@ const BarChart = ({
   }
 
   return (
-    <div className="mt-10 ">
+    <div>
       <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   )

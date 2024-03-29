@@ -5,12 +5,14 @@ export type UserState = {
   roleId: string | null
   email: string | null
   fullName: string | null
+  createdAt: string | null
 }
 const initialState: UserState = {
   userId: null,
   roleId: null,
   email: null,
   fullName: null,
+  createdAt: null
 }
 
 const userSlice = createSlice({
@@ -22,12 +24,14 @@ const userSlice = createSlice({
       state.roleId = action.payload.roleId
       state.email = action.payload.email
       state.fullName = action.payload.fullName
+      state.createdAt = action.payload.createdAt
     },
     resetUser(state) {
       state.userId = null
       state.roleId = null
       state.email = null
       state.fullName = null
+      state.createdAt = null
     },
   },
 })
