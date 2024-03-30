@@ -33,8 +33,16 @@ export const updateStatusPropertyForAdminService = async (
   return res
 }
 
-export const getAllUsersForAdminService = async () => {
-  const res = await axiosInstance.get(`/admin/manage-user`)
+// This comment can be used in future.
+// export const getAllUsersForAdminService = async () => {
+//   const res = await axiosInstance.get(`/admin/manage-user`)
+//   if (res.data) {
+//     return res.data
+//   }
+// }
+
+export const getAllUsersForAdmin = async (roleId: number) => {
+  const res = await axiosInstance.get(`/admin/manage-user?roleId=${roleId}`)
   if (res.data) {
     return res.data
   }
@@ -72,71 +80,144 @@ export const deleteUserForAdminService = async (listUserId: string) => {
   return res
 }
 
-export const deletePropertyForAdminService = async (
-  listPropertyId:string,
-) => {
+export const deletePropertyForAdminService = async (listPropertyId: string) => {
   const res = await axiosInstance.delete(
     `/admin/manage-property?propertyId=${listPropertyId}`,
   )
   return res
 }
 
-export async function getAllTransactions(fromDateRange?:string | null, toDateRange?:string | null, page?:number,
-  userId?:string | null) { 
-  const queryString = qs.stringify({fromDateRange, toDateRange, page, userId}, {
-    skipNulls: true,
-    addQueryPrefix: true,
-    encode: false,
-  }) 
-  
-const res = await axiosInstance.get(`/admin/manage-transaction/deposit${queryString}`)
-    
+export async function getAllTransactions(
+  fromDateRange?: string | null,
+  toDateRange?: string | null,
+  page?: number,
+  userId?: string | null,
+) {
+  const queryString = qs.stringify(
+    { fromDateRange, toDateRange, page, userId },
+    {
+      skipNulls: true,
+      addQueryPrefix: true,
+      encode: false,
+    },
+  )
+
+  const res = await axiosInstance.get(
+    `/admin/manage-transaction/deposit${queryString}`,
+  )
   return res.data.metaData
 }
+// This comment is used to compare with above functions.
+// export async function getAllTransactions(
+//   fromDateRange?: string | null,
+//   toDateRange?: string | null,
+//   page?: number,
+// ) {
+//   const queryString = qs.stringify(
+//     { fromDateRange, toDateRange, page },
+//     {
+//       skipNulls: true,
+//       addQueryPrefix: true,
+//       encode: false,
+//     },
+//   )
 
-export async function getAllConversionRates(){
+//   const res = await axiosInstance.get(
+//     `/admin/manage-transaction/deposit${queryString}`,
+//   )
+
+//   return res.data.metaData
+// }
+
+export async function getAllConversionRates() {
   const res = await axiosInstance.get('/admin/manage-conversion-rate')
   return res.data.metaData
 }
 
-export async function addNewCurrencyRate(currencyFrom:string, currencyTo:string, exchangeRate:number){
-  const res = await axiosInstance.post('/admin/manage-conversion-rate',{currencyFrom,currencyTo,exchangeRate})
+export async function addNewCurrencyRate(
+  currencyFrom: string,
+  currencyTo: string,
+  exchangeRate: number,
+) {
+  const res = await axiosInstance.post('/admin/manage-conversion-rate', {
+    currencyFrom,
+    currencyTo,
+    exchangeRate,
+  })
   return res
 }
 
-export async function editConversionRate(conversionRateId:number, newExchangeRate:number){
-  const res = await axiosInstance.patch(`/admin/manage-conversion-rate/${conversionRateId}`,{newExchangeRate})
+export async function editConversionRate(
+  conversionRateId: number,
+  newExchangeRate: number,
+) {
+  const res = await axiosInstance.patch(
+    `/admin/manage-conversion-rate/${conversionRateId}`,
+    { newExchangeRate },
+  )
   return res
 }
 
-export async function deleteConversionRate(conversionRateId:number){
-  const res = await axiosInstance.delete(`/admin/manage-conversion-rate/${conversionRateId}`)
+export async function deleteConversionRate(conversionRateId: number) {
+  const res = await axiosInstance.delete(
+    `/admin/manage-conversion-rate/${conversionRateId}`,
+  )
   return res
 }
 
-
-export const disablePropertyForAdminService = async (listPropertyId: string) => {
-  const res = await axiosInstance.patch(`/admin/manage-property/disable?propertyId=${listPropertyId}`)
+export const disablePropertyForAdminService = async (
+  listPropertyId: string,
+) => {
+  const res = await axiosInstance.patch(
+    `/admin/manage-property/disable?propertyId=${listPropertyId}`,
+  )
   return res
 }
 
 export const resetPasswordForAdmin = async (userId: number) => {
- const res = await axiosInstance.post(`/admin/manage-user/${userId}/reset-password`)
- return res
+  const res = await axiosInstance.post(
+    `/admin/manage-user/${userId}/reset-password`,
+  )
+  return res
 }
 
-
-export async function getPropertiesCountedByFeature(){
-  const res = await axiosInstance.get("/admin/report/count-properties-by-feature")
+export async function getPropertiesCountedByFeature() {
+  const res = await axiosInstance.get(
+    '/admin/report/count-properties-by-feature',
+  )
   return res.data
 }
 
-export async function getPropertiesCountedByCategory(){
-  const res = await axiosInstance.get("/admin/report/count-properties-by-category")
+export async function getPropertiesCountedByCategory() {
+  const res = await axiosInstance.get(
+    '/admin/report/count-properties-by-category',
+  )
   return res.data
 }
 
-export const countPropertiesCreated = async (fromDateRange : string, toDateRange :string) => {
-  const res = await axiosInstance.get(`/admin/report/count-properties-created-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+export const countPropertiesCreated = async (
+  fromDateRange: string,
+  toDateRange: string,
+) => {
+  const res = await axiosInstance.get(
+    `/admin/report/count-properties-created-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`,
+  )
+  return res
+}
+
+export const AdminDepositForUser = async (
+  userId: number,
+  amountInDollars: number,
+  amountInCredits: number,
+  exchangeRate: number,
+) => {
+  const res = await axiosInstance.post(
+    `/admin/manage-transaction/deposit/${userId}`,
+    {
+      amountInDollars,
+      amountInCredits,
+      exchangeRate,
+    },
+  )
   return res
 }

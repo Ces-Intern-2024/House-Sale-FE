@@ -129,6 +129,7 @@ const TableProperty = ({
       window.removeEventListener('beforeunload', handleBeforeUnload)
     }
   }, [hasChangedForm])
+
   const handlePropertyView = (property: Properties) => {
     setSelectedProperty(property)
     setTitleModal('View Detail Property')
@@ -219,7 +220,7 @@ const TableProperty = ({
       setTotalPages(res?.data.metaData.totalPages)
       setTotalItems(res?.data.metaData.totalItems)
     } catch (error: any) {
-      setError(error.response.data.error.message)
+      setError('')
     }
   }
 
@@ -285,7 +286,7 @@ const TableProperty = ({
       setActivePage(resetPage ? 1 : activePage)
       setResetPage(true)
     } catch (error: any) {
-      setError(error.response.data.error.message)
+      setError('')
     } finally {
       setIsLoading(false)
     }
@@ -879,7 +880,10 @@ const TableProperty = ({
         opened={opened}
         onClose={() => {
           if (hasChangedForm) {
-            if (window.confirm('Your changes will not be saved')) return close()
+            if (window.confirm('Your changes will not be saved')) {
+              setHasChangedForm(false)
+              return close()
+            }
           } else {
             close()
           }
@@ -917,7 +921,6 @@ const TableProperty = ({
           closePackageService={closePackageService}
           selectedProperty={selectedProperty}
           setShouldUpdate={setShouldUpdate}
-          isUpdated={setIsUpdated}
           actionRental={actionRental}
         />
       </Modal>
