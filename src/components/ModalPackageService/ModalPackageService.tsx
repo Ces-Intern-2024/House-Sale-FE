@@ -14,7 +14,6 @@ import { RENEW } from '../../constants/actions.constant'
 interface Props {
   selectedProperty: Properties | null
   setShouldUpdate?: React.Dispatch<React.SetStateAction<boolean>>
-  isUpdated?: (value: boolean) => void
   closePackageService: () => void
   actionRental: string
 }

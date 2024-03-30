@@ -589,6 +589,7 @@ const ModalProperty = ({
             required
             label="Number of floor"
             placeholder="Enter number of floor"
+            allowDecimal={false}
             min={0}
             hideControls
             readOnly={property === null ? false : true}
@@ -602,6 +603,7 @@ const ModalProperty = ({
             required
             label="Number of bedroom"
             placeholder="Enter number of bedroom"
+            allowDecimal={false}
             min={0}
             hideControls
             readOnly={property === null ? false : true}
@@ -615,6 +617,7 @@ const ModalProperty = ({
             required
             label="Number of toilet"
             placeholder="Enter number of toilet"
+            allowDecimal={false}
             min={0}
             hideControls
             readOnly={property === null ? false : true}

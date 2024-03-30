@@ -161,6 +161,8 @@ export function Login() {
       setIsLoading(false)
     } catch (error: any) {
       setError(error.response.data.error.message)
+    } finally {
+      setIsLoading(false)
     }
   }
 

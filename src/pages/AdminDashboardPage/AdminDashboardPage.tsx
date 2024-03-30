@@ -6,6 +6,7 @@ import {
   getPropertiesCountedByCategory,
   getPropertiesCountedByFeature,
 } from '../../service/AdminService'
+import ProgressCard from '../../components/ProgressCard/ProgressCard'
 
 function AdminDashboardPage() {
   const [propertiesCountedByFeature, setPropertiesCountedByFeature] = useState<
@@ -59,6 +60,7 @@ function AdminDashboardPage() {
     <div>
       <div>
         <div>
+          <ProgressCard />
           <h1>Total Properties</h1>
           <div className="flex justify-between mt-5">
             <div className="dat">

@@ -26,17 +26,10 @@
 
 .highcharts-background {
   fill: #FFF;
-  stroke:#FFF !important
- }
-
-.highcharts-button-box {
-  fill: #FFF;
 }
 
-.dat {
-  .highcharts-background {
-    fill: #FFF;
+.dat{
+  .highcharts-background{
+    fill: #333;
   }
- 
 }
-
