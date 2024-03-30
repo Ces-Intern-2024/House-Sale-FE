@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import MultiCarousel from '../../components/MultiCarousel/MultiCarousel'
 import DetailsImageList from '../../components/DetailsImageList/DetailsImageList'
-import Map from '../../components/Map/Map'
 import ContactUs from '../../components/ContactUs/ContactUs'
 import DetailsProperty from '../../components/DetailsProperty/DetailsProperty'
 import style from './DetailPage.module.scss'
@@ -11,6 +10,7 @@ import { getPropertyById } from '../../service/PropertyService'
 import { Properties } from '@/types/properties'
 import Swal from 'sweetalert2'
 import { searchProperty } from '../../service/SearchService'
+import Map from '../../components/Map/Map'
 
 export default function DetailPage() {
   const { id } = useParams()
@@ -102,6 +102,7 @@ export default function DetailPage() {
           <div className={style.containerDesc}>
             <DetailsProperty property={property!} />
             <Map location={property?.fullLocationText} />
+            {/* <GoongMap location={property?.fullLocationText}/> */}
           </div>
           <div className={style.containerContact}>
             <ContactUs property={property!} />
