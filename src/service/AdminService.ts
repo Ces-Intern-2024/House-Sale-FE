@@ -195,14 +195,35 @@ export async function getPropertiesCountedByCategory() {
   return res.data
 }
 
-export const countPropertiesCreated = async (
-  fromDateRange: string,
-  toDateRange: string,
-) => {
-  const res = await axiosInstance.get(
-    `/admin/report/count-properties-created-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`,
-  )
-  return res
+
+export const getPropertiesCountedByDate = async (fromDateRange : string| null, toDateRange :string) => {
+  const res = await axiosInstance.get(`/admin/report/count-properties-created-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+export const getContactsCountedByDate = async (fromDateRange : string| null, toDateRange :string) => {
+  const res = await axiosInstance.get(`/admin/report/count-contacts-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+export async function getTotalAmountDeposited(){
+  const res = await axiosInstance.get("/admin/report/total-amount-deposited")
+  return res.data
+}
+
+export async function getTotalAmountDepositedByDate(fromDateRange : string| null, toDateRange :string ){
+  const res = await axiosInstance.get(`/admin/report/total-amount-deposited-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+export async function getTotalCreditsUsedByDate(fromDateRange : string| null, toDateRange :string){
+  const res = await axiosInstance.get(`/admin/report/total-credits-used-by-date?fromDateRange=${fromDateRange}&toDateRange=${toDateRange}`)
+  return res.data
+}
+
+export async function getTotalAccountsByRole(){
+  const res = await axiosInstance.get("/admin/report/total-accounts-by-role")
+  return res.data
 }
 
 export const AdminDepositForUser = async (
