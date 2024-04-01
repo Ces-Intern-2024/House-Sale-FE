@@ -12,13 +12,9 @@ import {
   getTotalCreditsUsedByDate,
 } from '../../service/SellerService'
 import DoubleLineChart from '../../components/Charts/DoubleLineChart'
-import BalanceViewer from '../../components/ProgressCard/BalanceViewer'
 import {
   IconCalendar,
-  IconCreditCardPay,
-  IconCreditCardRefund,
   IconHistory,
-  // IconCreditCard,
 } from '@tabler/icons-react'
 import { useAppSelector } from '../../redux/hooks'
 import { DatePickerInput } from '@mantine/dates'
@@ -26,7 +22,6 @@ import { primary } from '../../constants/color.constant'
 import style from './SellerReportPage.module.scss'
 import { formatDateToYYYYMMDD } from '../../utils/commonFunctions'
 import { Box, LoadingOverlay, Tooltip } from '@mantine/core'
-
 function SellerReportPage() {
   const [propertiesCountedByFeature, setPropertiesCountedByFeature] = useState<
     []
@@ -44,8 +39,8 @@ function SellerReportPage() {
     totalAmountDepositedByDateInDollar,
     setTotalAmountDepositedByDateInDollar,
   ] = useState<[]>([])
-  const [totalCreditsDeposited, setTotalCreditsDeposited] = useState(0)
-  const [totalCreditsUsed, setTotalCreditsUsed] = useState(0)
+  const [_totalCreditsDeposited, setTotalCreditsDeposited] = useState(0)
+  const [_totalCreditsUsed, setTotalCreditsUsed] = useState(0)
   const user = useAppSelector((state) => state.user)
   const [dateValues, setDateValues] = useState<[Date | null, Date | null]>([
     new Date(String(user.createdAt)),
@@ -188,8 +183,8 @@ function SellerReportPage() {
         />
 
         <div className="outer flex flex-col mt-7 gap-y-14 px-2 font-archivo">
+          {/* This comment can be used in the future.
           <div className="flex flex-col gap-y-2">
-            <h1 className="text-primary m-0">Overview</h1>
             <div className="flex justify-between items-center m-0 gap-x-20">
               <div className="flex m-0 gap-x-10">
                 <BalanceViewer
@@ -206,11 +201,84 @@ function SellerReportPage() {
                   icon={<IconCreditCardPay size={40} />}
                   title="Total Credits Out"
                 />
+              </div> 
+
+              
+            </div>
+          </div> */}
+
+          <div>
+            <div className={style.coverPieChart}>
+              <div className={style.featureChart}>
+                <PieChart
+                  title="Properties By Feature"
+                  data={propertiesCountedByFeature}
+                />
+              </div>
+              <div className={style.categoryChart}>
+                <PieChart
+                  title="Properties By Category"
+                  data={propertiesCountedByCategory}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-10 gap-4 relative">
+            <div className="col-span-7">
+              <div className="flex flex-col gap-y-2">
+                <h2 className="text-primary m-0 ">Property Created By Date</h2>
+                <div className={style.countedByDate}>
+                  <LineChart
+                    data={propertiesCountedByDate}
+                    title="Properties Created By Date"
+                    seriesName="Number of Properties Created"
+                    yAxisLabel="Properties"
+                  />
+                </div>
               </div>
 
-              <div>
+              <div className="flex flex-col gap-y-2 mt-6">
+                <h2 className="text-primary m-0 ">Contacts Received By Date</h2>
+                <div className={style.countedByDate}>
+                  <LineChart
+                    data={contactsCountedByDate}
+                    title="Contacts Received By Date"
+                    seriesName="Number of Contacts Received"
+                    yAxisLabel="Contacts"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-y-2 mt-6">
+                <h2 className="text-primary m-0">
+                  Total Amount Deposited By Date
+                </h2>
+                <div className={style.countedByDate}>
+                  <DoubleLineChart
+                    title="Total Amount Deposited By Date In Credit and Dollar"
+                    data1={totalAmountDepositedByDateInCredit}
+                    data2={totalAmountDepositedByDateInDollar}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-y-2 mt-6">
+                <h2 className="text-primary m-0 ">Credits Used By Date</h2>
+                <div className={style.countedByDate}>
+                  <LineChart
+                    data={totalCreditsUsedByDate}
+                    title="Credits Used By Date"
+                    seriesName="Number of Credits Used"
+                    yAxisLabel="Credits"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="col-span-3 min-h-[1600px] ">
+              <div className="sticky top-[120px]">
                 <DatePickerInput
-                  className="shadow-md"
+                  className="rounded-[14px]"
                   clearable={true}
                   allowSingleDateInRange={true}
                   leftSection={<IconCalendar color={primary} stroke={1.5} />}
@@ -233,77 +301,16 @@ function SellerReportPage() {
                   classNames={{
                     day: style.day,
                     weekday: ' text-gray-600 font-bold',
-                    input: ' outline-[#8ac987] outline',
-                    label: 'text-primary',
+                    label: 'text-primary text-2xl font-semibold',
+                    root: style.rootDatePicker,
                   }}
                   w={360}
                   type="range"
-                  label="Pick date range"
                   placeholder="Pick date range"
                   value={dateValues}
                   onChange={setDateValues}
                 />
               </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-primary  m-0">Total Properties</h1>
-            <div className="flex justify-between gap-x-3">
-              <PieChart
-                title="Properties By Feature"
-                data={propertiesCountedByFeature}
-              />
-
-              <PieChart
-                title="Properties By Category"
-                data={propertiesCountedByCategory}
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-primary m-0 ">Property Created By Date</h1>
-            <div>
-              <LineChart
-                data={propertiesCountedByDate}
-                title="Properties Created By Date"
-                seriesName="Number of Properties Created"
-                yAxisLabel="Properties"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-primary m-0 ">Contacts Received By Date</h1>
-            <div className="m-0 p-0">
-              <LineChart
-                data={contactsCountedByDate}
-                title="Contacts Received By Date"
-                seriesName="Number of Contacts Received"
-                yAxisLabel="Contacts"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-primary m-0">Total Amount Deposited By Date</h1>
-            <DoubleLineChart
-              title="Total Amount Deposited By Date In Credit and Dollar"
-              data1={totalAmountDepositedByDateInCredit}
-              data2={totalAmountDepositedByDateInDollar}
-            />
-          </div>
-
-          <div className="flex flex-col gap-y-2">
-            <h1 className="text-primary m-0 ">Credits Used By Date</h1>
-            <div className="m-0 p-0">
-              <LineChart
-                data={totalCreditsUsedByDate}
-                title="Credits Used By Date"
-                seriesName="Number of Credits Used"
-                yAxisLabel="Credits"
-              />
             </div>
           </div>
         </div>
