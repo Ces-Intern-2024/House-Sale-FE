@@ -25,7 +25,7 @@ export default function BalanceViewer({
           <div className="flex items-center justify-between gap-x-10 ">
             <h2 className="text-[24px]  font-extrabold p-0 m-0">
               {sign}
-              {formatMoneyToUSD(balance)}
+              {formatMoneyToUSD(balance).substring(1)}
             </h2>
             {icon}
           </div>

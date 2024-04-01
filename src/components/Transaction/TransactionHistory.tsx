@@ -56,10 +56,10 @@ export default function TransactionHistory({
           </span>
         </div>
         <Tooltip label="View all transactions">
-          <Link className={style.titleIcon} to="/transaction-history">
+          <Link className={style.titleIcon} to="/seller-transaction">
             <IconDots
               size={22}
-              className="outline outline-primary outline-1 rounded-2xl"
+              className="outline outline-[#61a05e] outline-1 rounded-2xl"
             />
           </Link>
         </Tooltip>

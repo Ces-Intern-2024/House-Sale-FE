@@ -195,7 +195,7 @@ export default function MenuBar({
                                 </NavLink>
 
                                 <NavLink
-                                  to="/profile"
+                                  to="/seller-profile"
                                   className={styles.commonNav}
                                 >
                                   Profile
@@ -292,7 +292,10 @@ export default function MenuBar({
                             </Menu.Item>
                           </NavLink>
 
-                          <NavLink to="/profile" className={styles.dropdown}>
+                          <NavLink
+                            to="/seller-profile"
+                            className={styles.dropdown}
+                          >
                             <Menu.Item className={styles.dropdown}>
                               Profile
                             </Menu.Item>

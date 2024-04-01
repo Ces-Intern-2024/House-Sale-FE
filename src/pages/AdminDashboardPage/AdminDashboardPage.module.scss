@@ -1,0 +1,11 @@
+.day {
+    &[data-in-range] {
+        background-color: #DCE4F5;
+        color: black;
+    }
+
+    &[data-selected] {
+        background-color: #B9C7E2;
+        color: black;
+    }
+}
