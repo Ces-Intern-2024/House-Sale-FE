@@ -63,7 +63,7 @@ export default function SellerPage() {
 
   return (
     <>
-      <div className='pt-2'>
+      <div className="mt-[30px]">
         <TableProperty
           setShouldUpdate={setShouldUpdate}
           shouldUpdate={shouldUpdate}

@@ -16,7 +16,7 @@ import {
   IconGraph,
   IconLogout,
   IconCreditCard,
-  IconBuildingSkyscraper
+  IconBuildingSkyscraper,
 } from '@tabler/icons-react'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
@@ -44,10 +44,14 @@ export default function SellerLayout() {
     pathname === '/seller' || pathname === '/transaction'
       ? { title: 'Dashboard', href: '/seller' }
       : null,
-    pathname === '/profile' ? { title: 'Profile', href: '/profile' } : null,
-    pathname === '/property' ? { title: 'Property', href: '/property' } : null,
-    pathname === '/transaction-history'
-      ? { title: 'Transaction History', href: '/transaction-history' }
+    pathname === '/seller-property'
+      ? { title: 'Property', href: '/seller-property' }
+      : null,
+    pathname === '/seller-profile'
+      ? { title: 'Profile', href: '/seller-profile' }
+      : null,
+    pathname === '/seller-transaction'
+      ? { title: 'Transaction History', href: '/seller-transaction' }
       : null,
     pathname === '/seller-report'
       ? { title: 'Report', href: '/seller-report' }
@@ -168,17 +172,20 @@ export default function SellerLayout() {
                 </NavLink>
 
                 <NavLink
-                  to="/property"
+                  to="/seller-property"
                   className={({ isActive }) =>
                     isActive ? styles.navItemActive : ''
                   }
                   onClick={() => {
-                    handleSetActiveLink('/property')
+                    handleSetActiveLink('/seller-property')
                     if (opened) toggle()
                   }}
                 >
                   <div className={styles.navItem}>
-                    <IconBuildingSkyscraper className={styles.navIcon} size={ICON_SIZE} />
+                    <IconBuildingSkyscraper
+                      className={styles.navIcon}
+                      size={ICON_SIZE}
+                    />
                     {(!isSmallNav || isSmallScreen) && (
                       <h3 className={styles.navText}>Property</h3>
                     )}
@@ -186,12 +193,12 @@ export default function SellerLayout() {
                 </NavLink>
 
                 <NavLink
-                  to="/profile"
+                  to="/seller-profile"
                   className={({ isActive }) =>
                     isActive ? styles.navItemActive : ''
                   }
                   onClick={() => {
-                    handleSetActiveLink('/profile')
+                    handleSetActiveLink('/seller-profile')
                     if (opened) toggle()
                   }}
                 >
@@ -204,12 +211,12 @@ export default function SellerLayout() {
                 </NavLink>
 
                 <NavLink
-                  to="/transaction-history"
+                  to="/seller-transaction"
                   className={({ isActive }) =>
                     isActive ? styles.navItemActive : ''
                   }
                   onClick={() => {
-                    handleSetActiveLink('/transaction-history')
+                    handleSetActiveLink('/seller-transaction')
                     if (opened) toggle()
                   }}
                 >
