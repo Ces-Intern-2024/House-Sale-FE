@@ -42,11 +42,15 @@ const DetailsProperty = ({ property }: DetailsPropertyProps) => {
           <div className={style.tableCol}>
             <div className={style.tableRow}>
               <span className={style.labelText}>Direction:</span>
-              <span className={style.value}>{property?.direction}</span>
+              <span className={style.value}>
+                {property?.direction ? property.direction : ''}
+              </span>
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Land area:</span>
-              <span className={style.value}>{property?.landArea} m²</span>
+              <span className={style.value}>
+                {property?.landArea ? `${property.landArea} m² ` : ''}
+              </span>
             </div>
             <div className={style.tableRow}>
               <span className={style.labelText}>Land of use:</span>
@@ -62,7 +66,9 @@ const DetailsProperty = ({ property }: DetailsPropertyProps) => {
         </div>
         <div className={style.tableRow}>
           <span className={style.location}>Location:</span>
-          <span>{property?.location.address || property?.fullLocationText}</span>
+          <span>
+            {property?.location.address || property?.fullLocationText}
+          </span>
         </div>
       </div>
       <div>

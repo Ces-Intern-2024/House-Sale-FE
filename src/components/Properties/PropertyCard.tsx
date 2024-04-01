@@ -12,7 +12,6 @@ import { Button, Tooltip } from '@mantine/core'
 import { formatMoneyToUSD } from '../../utils/commonFunctions'
 import area from '../../assets/images/area.png'
 import bedroom from '../../assets/images/bed.png'
-import floor from '../../assets/images/stair.png'
 import { AVAILABLE } from '../../constants/statusProperty.constant'
 import UnderMaintenance from '../UnderMaintenance/UnderMaintenance'
 import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
@@ -228,17 +227,13 @@ const Properties = ({ data }: Props) => {
           <div className={style.propertyDescription}>
             <span className={style.propertyDesIcon}>
               <img src={area} className="w-4 h-auto mr-2" />
-              {data.landArea} m²
+              {data.areaOfUse} m²
             </span>
             <span className={style.propertyDesIcon}>
               <img src={bedroom} className="w-5 h-auto mr-2" />
               {data.numberOfBedRoom}
             </span>
-            <span className={style.propertyDesIcon}>
-              <img src={floor} className="w-5 h-auto mr-2" />
-
-              {data.numberOfFloor}
-            </span>
+            
           </div>
         </div>
       </div>
