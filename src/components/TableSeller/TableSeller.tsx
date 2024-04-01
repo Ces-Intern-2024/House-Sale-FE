@@ -33,6 +33,7 @@ import ModalManageUser from '../ModalManageUser/ModalManageUser'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
 import ModalAdminDeposits from '../ModalAdminDeposits/ModalAdminDeposits'
+import { useNavigate } from 'react-router-dom'
 
 function TableSeller() {
   const [email, setEmail] = useState('')
@@ -47,6 +48,7 @@ function TableSeller() {
     useDisclosure(false)
   const [userSelected, setUserSelected] = useState<User | null>(null)
   const [isUpdated, setIsUpdated] = useState(false)
+  const navigate = useNavigate()
 
   const getAllUser = async () => {
     try {
@@ -344,6 +346,18 @@ function TableSeller() {
           <Table.Td>{formatDateNoHours(user.createdAt)}</Table.Td>
           <Table.Td>
             <Button
+              color="cyan"
+              onClick={() =>
+                navigate('/admin-transaction', {
+                  state: { user: user },
+                })
+              }
+            >
+              View
+            </Button>
+          </Table.Td>
+          <Table.Td>
+            <Button
               color="teal"
               onClick={() => handleResetPassword(user.userId)}
             >
@@ -495,35 +509,39 @@ function TableSeller() {
             overlayProps={{ radius: 'sm', blur: 2 }}
             loaderProps={{ color: 'pink', type: 'bars' }}
           />
-          <Table
-            bg="white"
-            highlightOnHover
-            withTableBorder
-            verticalSpacing="sm"
-          >
-            <Table.Thead>
-              <Table.Tr className="text-base">
-                <Table.Th>
-                  <Checkbox
-                    checked={allSelected}
-                    onChange={() => handleSelectAllSelectedRows()}
-                  />
-                </Table.Th>
-                <Table.Th>ID</Table.Th>
-                <Table.Th>Avatar</Table.Th>
-                <Table.Th>Email</Table.Th>
-                <Table.Th>Phone</Table.Th>
-                <Table.Th>Balance</Table.Th>
-                {/* This comment can be used in future. 
+          <Table.ScrollContainer minWidth={500}>
+            <Table
+              bg="white"
+              highlightOnHover
+              withTableBorder
+              verticalSpacing="sm"
+            >
+              <Table.Thead>
+                <Table.Tr className="text-base">
+                  <Table.Th>
+                    <Checkbox
+                      checked={allSelected}
+                      onChange={() => handleSelectAllSelectedRows()}
+                    />
+                  </Table.Th>
+                  <Table.Th>ID</Table.Th>
+                  <Table.Th>Avatar</Table.Th>
+                  <Table.Th>Email</Table.Th>
+                  <Table.Th>Phone</Table.Th>
+                  <Table.Th>Balance</Table.Th>
+                  {/* This comment can be used in future. 
                     <Table.Th>Role</Table.Th> */}
-                <Table.Th>Created On</Table.Th>
-                <Table.Th>Password</Table.Th>
-                <Table.Th>Status</Table.Th>
-                <Table.Th>Action</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-          </Table>
+                  <Table.Th>Created On</Table.Th>
+                  <Table.Th>Transaction</Table.Th>
+                  <Table.Th>Password</Table.Th>
+                  <Table.Th>Status</Table.Th>
+                  <Table.Th>Action</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
+
           <div className="flex justify-between my-2 items-baseline">
             <Pagination
               total={totalPages}

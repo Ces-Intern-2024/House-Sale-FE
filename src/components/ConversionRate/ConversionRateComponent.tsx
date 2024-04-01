@@ -214,24 +214,26 @@ export default function ConversionRateComponent() {
                 overlayProps={{ radius: 'sm', blur: 2 }}
                 loaderProps={{ color: 'pink', type: 'bars' }}
               />
-              <Table
-                bg="white"
-                highlightOnHover
-                withTableBorder
-                verticalSpacing="sm"
-              >
-                <Table.Thead>
-                  <Table.Tr className="text-base">
-                    <Table.Th>Conversion Rate ID</Table.Th>
-                    <Table.Th>From Currency</Table.Th>
-                    <Table.Th>To Currency</Table.Th>
-                    <Table.Th>Exchange Rate</Table.Th>
-                    <Table.Th>Updated At</Table.Th>
-                    <Table.Th>Actions</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>{rows}</Table.Tbody>
-              </Table>
+              <Table.ScrollContainer minWidth={500}>
+                <Table
+                  bg="white"
+                  highlightOnHover
+                  withTableBorder
+                  verticalSpacing="sm"
+                >
+                  <Table.Thead>
+                    <Table.Tr className="text-base">
+                      <Table.Th>Conversion Rate ID</Table.Th>
+                      <Table.Th>From Currency</Table.Th>
+                      <Table.Th>To Currency</Table.Th>
+                      <Table.Th>Exchange Rate</Table.Th>
+                      <Table.Th>Updated At</Table.Th>
+                      <Table.Th>Actions</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>{rows}</Table.Tbody>
+                </Table>
+              </Table.ScrollContainer>
             </Box>
           </div>
         </div>

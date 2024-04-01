@@ -10,10 +10,7 @@ import {
   getTotalCreditsUsedByDate,
 } from '../../service/SellerService'
 import DoubleLineChart from '../../components/Charts/DoubleLineChart'
-import {
-  IconCalendar,
-  IconHistory,
-} from '@tabler/icons-react'
+import { IconCalendar, IconHistory } from '@tabler/icons-react'
 import { useAppSelector } from '../../redux/hooks'
 import { DatePickerInput } from '@mantine/dates'
 import { primary } from '../../constants/color.constant'
@@ -155,7 +152,7 @@ function SellerReportPage() {
   }, [dateValues[1]])
   return (
     <>
-      <Box pos="relative">
+      <Box pos="relative" className="mx-[16px]">
         <LoadingOverlay
           visible={isLoading === true ? true : false}
           zIndex={10}
@@ -166,7 +163,7 @@ function SellerReportPage() {
           }}
         />
 
-        <div className="outer flex flex-col mt-7 gap-y-14 px-2 font-archivo">
+        <div className="outer flex flex-col mt-7 gap-y-14  font-archivo">
           <div>
             <div className={style.coverPieChart}>
               <div className={style.featureChart}>
@@ -269,7 +266,7 @@ function SellerReportPage() {
                   placeholder="Pick date range"
                   value={dateValues}
                   onChange={setDateValues}
-                  />
+                />
               </div>
             </div>
           </div>

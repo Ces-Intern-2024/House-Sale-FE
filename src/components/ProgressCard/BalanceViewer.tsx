@@ -6,15 +6,15 @@ interface BalanceViewerProps {
   icon: JSX.Element
   background: string
   balance: number
-  title: string,
-  isCreditBalance: boolean
+  title: string
+  isCreditBalance?: boolean
 }
 export default function BalanceViewer({
   icon,
   background,
   balance,
   title,
-  isCreditBalance
+  isCreditBalance,
 }: BalanceViewerProps) {
   return (
     <>
@@ -26,9 +26,11 @@ export default function BalanceViewer({
           <div className="flex items-center justify-between gap-x-10 ">
             <div className="text-[24px] flex items-center font-extrabold p-0 m-0 gap-x-3">
               {balance}
-              { isCreditBalance && <span className={style.creditIcon} >
-                <GiCrownCoin />
-              </span> }
+              {isCreditBalance && (
+                <span className={style.creditIcon}>
+                  <GiCrownCoin />
+                </span>
+              )}
             </div>
             {icon}
           </div>

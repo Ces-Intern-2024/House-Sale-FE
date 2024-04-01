@@ -13,7 +13,7 @@ Exporting(Highcharts)
 Accessibility(Highcharts)
 
 interface PieChartProps {
-  data: []
+  data: [] | any
   title?: string
 }
 
@@ -38,6 +38,14 @@ const PieChart = ({ data, title }: PieChartProps) => {
         fontWeight: 'bold',
       },
     },
+    subtitle: {
+      text: 'Total: ' + data.reduce((a: any, b: any) => a + b.inNumber, 0),
+      style: {
+        color: 'black',
+        fontSize: '14px',
+        textOutline: 'none',
+      },
+    },
     tooltip: {
       valueSuffix: '%',
       pointFormat:
@@ -50,6 +58,7 @@ const PieChart = ({ data, title }: PieChartProps) => {
         opacity: 1,
       },
     },
+
     legend: {
       enabled: true,
       layout: 'horizontal',
@@ -60,6 +69,16 @@ const PieChart = ({ data, title }: PieChartProps) => {
         fontWeight: 'bold',
         fontSize: '16px',
       },
+      // labelFormatter: function (
+      //   this: Highcharts.LegendBubbleLegendOptions,
+      // ) {
+      //   if (this.y && this.y > 0) {
+      //     return this.name
+      //   } else {
+      //     return false // Hide legend item
+      //   }
+      // },
+
       // itemWidth: 120,
     },
     // accessibility: {

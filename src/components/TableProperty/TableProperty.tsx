@@ -808,57 +808,58 @@ const TableProperty = ({
                 overlayProps={{ radius: 'sm', blur: 2 }}
                 loaderProps={{ color: 'pink', type: 'bars' }}
               />
-
-              <Table
-                bg="white"
-                highlightOnHover
-                withTableBorder
-                verticalSpacing="sm"
-              >
-                <Table.Thead>
-                  <Table.Tr className={style.titleTable}>
-                    <Table.Th>
-                      <Checkbox
-                        checked={allSelected}
-                        onChange={() => handleSelectAllSelectedRows()}
-                      />
-                    </Table.Th>
-                    <Table.Th>ID</Table.Th>
-                    <Table.Th classNames={{ th: style.thName }}>
-                      Property Name
-                    </Table.Th>
-                    <Table.Th>Featured</Table.Th>
-                    <Table.Th>Category</Table.Th>
-                    <Table.Th classNames={{ th: style.thPrice }}>
-                      <span>Price</span>
-                      <span
-                        className="flex justify-between cursor-pointer"
-                        onClick={() => {
-                          setOrderBy('price')
-                          setSortBy(sortBy.includes('asc') ? 'desc' : 'asc')
-                        }}
-                      >
-                        {sortBy ? (
-                          sortBy === 'desc' ? (
-                            <FaLongArrowAltUp />
+              <Table.ScrollContainer minWidth={500}>
+                <Table
+                  bg="white"
+                  highlightOnHover
+                  withTableBorder
+                  verticalSpacing="sm"
+                >
+                  <Table.Thead>
+                    <Table.Tr className={style.titleTable}>
+                      <Table.Th>
+                        <Checkbox
+                          checked={allSelected}
+                          onChange={() => handleSelectAllSelectedRows()}
+                        />
+                      </Table.Th>
+                      <Table.Th>ID</Table.Th>
+                      <Table.Th classNames={{ th: style.thName }}>
+                        Property Name
+                      </Table.Th>
+                      <Table.Th>Featured</Table.Th>
+                      <Table.Th>Category</Table.Th>
+                      <Table.Th classNames={{ th: style.thPrice }}>
+                        <span>Price</span>
+                        <span
+                          className="flex justify-between cursor-pointer"
+                          onClick={() => {
+                            setOrderBy('price')
+                            setSortBy(sortBy.includes('asc') ? 'desc' : 'asc')
+                          }}
+                        >
+                          {sortBy ? (
+                            sortBy === 'desc' ? (
+                              <FaLongArrowAltUp />
+                            ) : (
+                              <FaLongArrowAltDown />
+                            )
                           ) : (
-                            <FaLongArrowAltDown />
-                          )
-                        ) : (
-                          <PiArrowsDownUp
-                            className="cursor-pointer"
-                            size={20}
-                          />
-                        )}
-                      </span>
-                    </Table.Th>
-                    <Table.Th>Remaining Time</Table.Th>
-                    <Table.Th className="min-w-30">Status</Table.Th>
-                    <Table.Th>Actions</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>{error ? error : rows}</Table.Tbody>
-              </Table>
+                            <PiArrowsDownUp
+                              className="cursor-pointer"
+                              size={20}
+                            />
+                          )}
+                        </span>
+                      </Table.Th>
+                      <Table.Th>Remaining Time</Table.Th>
+                      <Table.Th className="min-w-30">Status</Table.Th>
+                      <Table.Th>Actions</Table.Th>
+                    </Table.Tr>
+                  </Table.Thead>
+                  <Table.Tbody>{error ? error : rows}</Table.Tbody>
+                </Table>
+              </Table.ScrollContainer>
 
               <div className={style.pagination}>
                 <Pagination
