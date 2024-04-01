@@ -33,7 +33,7 @@ const PieChart = ({ data, title }: PieChartProps) => {
       text: title,
       style: {
         color: primary,
-        fontSize: '24px',
+        fontSize: '20px',
         textOutline: 'none',
         fontWeight: 'bold',
       },
@@ -52,9 +52,9 @@ const PieChart = ({ data, title }: PieChartProps) => {
     },
     legend: {
       enabled: true,
-      // layout: 'vertical',
-      // align: 'right',
-      // verticalAlign: 'middle',
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom',
       itemStyle: {
         color: 'orange',
         fontWeight: 'bold',
