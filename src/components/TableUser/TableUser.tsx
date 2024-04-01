@@ -31,15 +31,11 @@ import Swal from 'sweetalert2'
 import { useDisclosure } from '@mantine/hooks'
 import ModalManageUser from '../ModalManageUser/ModalManageUser'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
-import { useNavigate } from 'react-router-dom'
 
-// interface Props {
-//   userlist : User[]
-// }
+
 function TableUser() {
   const [email, setEmail] = useState('')
   const [userList, setUserList] = useState<User[]>([])
-  // const [roleId, setRoleId] = useState<string | null>(null)
   const [activePage, setActivePage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalItems, setTotalItems] = useState(0)
@@ -48,7 +44,6 @@ function TableUser() {
   const [opened, { open, close }] = useDisclosure(false)
   const [userSelected, setUserSelected] = useState<User | null>(null)
   const [isUpdated, setIsUpdated] = useState(false)
-  const navigate = useNavigate()
 
   const getAllUser = async () => {
     try {
@@ -344,18 +339,7 @@ function TableUser() {
                 : 'Undefined'}
           </Table.Td>*/}
           <Table.Td>{formatDateNoHours(user.createdAt)}</Table.Td>
-          <Table.Td>
-            <Button
-              color="cyan"
-              onClick={() =>
-                navigate('/admin-transaction', {
-                  state: { user: user },
-                })
-              }
-            >
-              View
-            </Button>
-          </Table.Td>
+
           <Table.Td>
             <Button
               color="teal"
@@ -417,27 +401,26 @@ function TableUser() {
 
   return (
     <>
+      <div className="mt-8 flex justify-between">
+        <div className={style.searchContainer}>
+          <TextInput
+            placeholder="Enter email..."
+            size="md"
+            radius={4}
+            classNames={{ input: style.textInput }}
+            onChange={(event) => setEmail(event.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <Button
+            className={style.iconSearch}
+            onClick={() => handleSearchUsers()}
+          >
+            <FaSearch size={20} />
+          </Button>
+        </div>
 
-          <div className="mt-8 flex justify-between">
-            <div className={style.searchContainer}>
-              <TextInput
-                placeholder="Enter email..."
-                size="md"
-                radius={4}
-                classNames={{ input: style.textInput }}
-                onChange={(event) => setEmail(event.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-              <Button
-                className={style.iconSearch}
-                onClick={() => handleSearchUsers()}
-              >
-                <FaSearch size={20} />
-              </Button>
-            </div>
-
-            <div className="flex items-end gap-4 justify-end">
-              {/* <Select
+        <div className="flex items-end gap-4 justify-end">
+          {/* <Select
                 classNames={{
                   root: style.rootSelectActions,
                   label: style.labelSelectActions,
@@ -459,72 +442,71 @@ function TableUser() {
                 }}
                 allowDeselect
               /> */}
-              <Button
-                classNames={{
-                  root:
-                    selectedRows.length > 0
-                      ? style.rootButtonDeleteAllAfter
-                      : style.rootButtonDeleteAll,
-                }}
-                onClick={() => handleDeleteAllSelectedRows()}
-              >
-                Delete ({selectedRows.length}) Customers 
-              </Button>
-            </div>
-          </div>
-          <div className="mt-8">
-            <Box pos="relative">
-              <LoadingOverlay
-                visible={isLoading}
-                zIndex={10}
-                overlayProps={{ radius: 'sm', blur: 2 }}
-                loaderProps={{ color: 'pink', type: 'bars' }}
-              />
-              <Table
-                bg="white"
-                highlightOnHover
-                withTableBorder
-                verticalSpacing="sm"
-              >
-                <Table.Thead>
-                  <Table.Tr className="text-base">
-                    <Table.Th>
-                      <Checkbox
-                        checked={allSelected}
-                        onChange={() => handleSelectAllSelectedRows()}
-                      />
-                    </Table.Th>
-                    <Table.Th>ID</Table.Th>
-                    <Table.Th>Avatar</Table.Th>
-                    <Table.Th>Email</Table.Th>
-                    {/* This comment can be used in future.
+          <Button
+            classNames={{
+              root:
+                selectedRows.length > 0
+                  ? style.rootButtonDeleteAllAfter
+                  : style.rootButtonDeleteAll,
+            }}
+            onClick={() => handleDeleteAllSelectedRows()}
+          >
+            Delete ({selectedRows.length}) Customers
+          </Button>
+        </div>
+      </div>
+      <div className="mt-8">
+        <Box pos="relative">
+          <LoadingOverlay
+            visible={isLoading}
+            zIndex={10}
+            overlayProps={{ radius: 'sm', blur: 2 }}
+            loaderProps={{ color: 'pink', type: 'bars' }}
+          />
+          <Table
+            bg="white"
+            highlightOnHover
+            withTableBorder
+            verticalSpacing="sm"
+          >
+            <Table.Thead>
+              <Table.Tr className="text-base">
+                <Table.Th>
+                  <Checkbox
+                    checked={allSelected}
+                    onChange={() => handleSelectAllSelectedRows()}
+                  />
+                </Table.Th>
+                <Table.Th>ID</Table.Th>
+                <Table.Th>Avatar</Table.Th>
+                <Table.Th>Email</Table.Th>
+                {/* This comment can be used in future.
                      <Table.Th>Phone</Table.Th> 
                     <Table.Th>Balance</Table.Th>
                     <Table.Th>Role</Table.Th>
                     */}
-                    <Table.Th>Created On</Table.Th>
-                    <Table.Th>Transaction</Table.Th>
-                    <Table.Th>Password</Table.Th>
-                    <Table.Th>Status</Table.Th>
-                    <Table.Th>Action</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>{rows}</Table.Tbody>
-              </Table>
-              <div className="flex justify-between my-2 items-baseline">
-                <Pagination
-                  total={totalPages}
-                  value={activePage}
-                  mt="sm"
-                  onChange={handleChangeActivePage}
-                  classNames={{ control: style.paginationControl }}
-                />
-                <div className="text-lg mr-2 text-primary font-bold">
-                  Result: {totalItems}
-                </div>
-              </div>
-            </Box>
+                <Table.Th>Created On</Table.Th>
+                <Table.Th>Password</Table.Th>
+                <Table.Th>Status</Table.Th>
+                <Table.Th>Action</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+          <div className="flex justify-between my-2 items-baseline">
+            <Pagination
+              total={totalPages}
+              value={activePage}
+              mt="sm"
+              onChange={handleChangeActivePage}
+              classNames={{ control: style.paginationControl }}
+            />
+            <div className="text-lg mr-2 text-primary font-bold">
+              Result: {totalItems}
+            </div>
           </div>
+        </Box>
+      </div>
 
       <Modal
         opened={opened}

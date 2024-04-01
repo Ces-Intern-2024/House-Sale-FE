@@ -13,7 +13,7 @@ Exporting(Highcharts)
 Accessibility(Highcharts)
 
 interface PieChartProps {
-  data: []
+  data: [] | any
   title?: string
 }
 
@@ -36,6 +36,14 @@ const PieChart = ({ data, title }: PieChartProps) => {
         fontSize: '20px',
         textOutline: 'none',
         fontWeight: 'bold',
+      },
+    },
+    subtitle: {
+      text: 'Total: ' + data.reduce((a: any, b: any) => a + b.inNumber, 0),
+      style: {
+        color: 'black',
+        fontSize: '14px',
+        textOutline: 'none',
       },
     },
     tooltip: {

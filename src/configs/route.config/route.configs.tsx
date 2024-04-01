@@ -78,7 +78,7 @@ export const publicRoutes = [
 export const protectedRoutes = [
   {
     key: 'profile',
-    path: '/profile',
+    path: '/seller-profile',
     component: lazy(() => import('../../components/Profile/UserProfile')),
     authority: [Roles.Seller],
   },
@@ -98,7 +98,7 @@ export const protectedRoutes = [
   },
   {
     key: 'seller-transaction-history',
-    path: '/transaction-history',
+    path: '/seller-transaction',
     component: lazy(
       () =>
         import('../../pages/SellerTransactionHistory/SellerTransactionHistory'),

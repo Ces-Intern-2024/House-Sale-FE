@@ -266,8 +266,12 @@ export default function SearchComponent() {
       numberOfToiletTo: searchParams.get('numberOfToiletTo')
         ? Number(searchParams.get('numberOfToiletTo'))
         : null,
-      priceFrom: priceRange && priceRange[0] !== 0 ? priceRange[0] : null,
-      priceTo: priceRange && priceRange[1] !== maxPrice ? priceRange[1] : null,
+      priceFrom: searchParams.get('priceFrom')
+        ? Number(searchParams.get('priceFrom'))
+        : null,
+      priceTo: searchParams.get('priceTo')
+        ? Number(searchParams.get('priceTo'))
+        : null,
       orderBy: sortBy.startsWith('P') ? 'price' : 'createdAt',
       sortBy: sortBy.startsWith('P') ? sortBy.slice(1, sortBy.length) : sortBy,
       keyword: tempSearchValue ? tempSearchValue : null,
