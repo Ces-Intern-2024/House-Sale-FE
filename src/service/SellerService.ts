@@ -111,7 +111,7 @@ export async function getTotalCreditsUsed(){
   return res.data
 }
 
-
-
-
-
+export async function getTotalContacts(){
+  const res = await axiosInstance.get("/seller/report/total-contacts")
+  return res.data
+}

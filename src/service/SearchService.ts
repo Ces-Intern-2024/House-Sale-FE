@@ -24,6 +24,11 @@ export async function searchProperty(
   return res.data.metaData
 }
 
+export async function getMaxPrice() {
+  const res = await axios.get('/properties/max-price')
+  return res.data
+}
+
 
 
 

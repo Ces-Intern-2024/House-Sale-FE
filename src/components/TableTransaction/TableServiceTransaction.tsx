@@ -28,7 +28,6 @@ export default function TableServiceTransaction() {
     toDateRange?: string,
     page?: number,
   ) => {
-
     try {
       setIsLoading(true)
       const res = await getTransactionRentService(
@@ -134,22 +133,25 @@ export default function TableServiceTransaction() {
             overlayProps={{ radius: 'sm', blur: 2 }}
             loaderProps={{ color: 'pink', type: 'bars' }}
           />
-          <Table
-            bg="white"
-            highlightOnHover
-            withTableBorder
-            verticalSpacing="sm"
-          >
-            <Table.Thead>
-              <Table.Tr className="text-base">
-                <Table.Th>No.</Table.Th>
-                <Table.Th>Credits</Table.Th>
-                <Table.Th>Description</Table.Th>
-                <Table.Th>Created At</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-          </Table>
+          <Table.ScrollContainer minWidth={500}>
+            <Table
+              bg="white"
+              highlightOnHover
+              withTableBorder
+              verticalSpacing="sm"
+            >
+              <Table.Thead>
+                <Table.Tr className="text-base">
+                  <Table.Th>No.</Table.Th>
+                  <Table.Th>Credits</Table.Th>
+                  <Table.Th>Description</Table.Th>
+                  <Table.Th>Created At</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
+
           <div className="flex justify-between my-2 items-baseline">
             <Pagination
               total={totalPages}

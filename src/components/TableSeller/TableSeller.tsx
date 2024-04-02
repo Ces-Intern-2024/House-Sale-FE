@@ -509,36 +509,39 @@ function TableSeller() {
             overlayProps={{ radius: 'sm', blur: 2 }}
             loaderProps={{ color: 'pink', type: 'bars' }}
           />
-          <Table
-            bg="white"
-            highlightOnHover
-            withTableBorder
-            verticalSpacing="sm"
-          >
-            <Table.Thead>
-              <Table.Tr className="text-base">
-                <Table.Th>
-                  <Checkbox
-                    checked={allSelected}
-                    onChange={() => handleSelectAllSelectedRows()}
-                  />
-                </Table.Th>
-                <Table.Th>ID</Table.Th>
-                <Table.Th>Avatar</Table.Th>
-                <Table.Th>Email</Table.Th>
-                <Table.Th>Phone</Table.Th>
-                <Table.Th>Balance</Table.Th>
-                {/* This comment can be used in future. 
+          <Table.ScrollContainer minWidth={500}>
+            <Table
+              bg="white"
+              highlightOnHover
+              withTableBorder
+              verticalSpacing="sm"
+            >
+              <Table.Thead>
+                <Table.Tr className="text-base">
+                  <Table.Th>
+                    <Checkbox
+                      checked={allSelected}
+                      onChange={() => handleSelectAllSelectedRows()}
+                    />
+                  </Table.Th>
+                  <Table.Th>ID</Table.Th>
+                  <Table.Th>Avatar</Table.Th>
+                  <Table.Th>Email</Table.Th>
+                  <Table.Th>Phone</Table.Th>
+                  <Table.Th>Balance</Table.Th>
+                  {/* This comment can be used in future. 
                     <Table.Th>Role</Table.Th> */}
-                <Table.Th>Created On</Table.Th>
-                <Table.Th>Transaction</Table.Th>
-                <Table.Th>Password</Table.Th>
-                <Table.Th>Status</Table.Th>
-                <Table.Th>Action</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
-          </Table>
+                  <Table.Th>Created On</Table.Th>
+                  <Table.Th>Transaction</Table.Th>
+                  <Table.Th>Password</Table.Th>
+                  <Table.Th>Status</Table.Th>
+                  <Table.Th>Action</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>{rows}</Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
+
           <div className="flex justify-between my-2 items-baseline">
             <Pagination
               total={totalPages}

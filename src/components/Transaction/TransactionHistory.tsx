@@ -25,16 +25,16 @@ export default function TransactionHistory({
   const getTransaction = async () => {
     try {
       setVisible(true)
-      const data = await getTransactionHistory(null, null, null, 3)
+      const data = await getTransactionHistory(null, null, null, null)
       const rentServiceHistory = await getTransactionRentService(
         null,
         null,
         null,
-        3,
+        null,
       )
       const combinedHistory = [...data.data, ...rentServiceHistory.data]
 
-      setHistories(sortTransactionsByDate(combinedHistory))
+      setHistories(sortTransactionsByDate(combinedHistory).slice(0, 10))
     } catch (error) {
       setHistories([])
     } finally {
@@ -50,29 +50,34 @@ export default function TransactionHistory({
     <>
       <div className=" flex justify-between items-center font-sans">
         <div className="flex items-center gap-x-2">
-          <span className={style.titleText}>Notifications</span>
+          <span className="md:text-[30px] mobile:text-[24px] font-bold text-primary text-center font-archivo">
+            Notifications
+          </span>
+          <b className="text-primary sm:text-[16px] mobile:text-[11px] italic ">{`(Last 7 Days)`}</b>
           <span className={style.titleIcon}>
             <IoIosNotifications />
           </span>
         </div>
-        <Tooltip label="View all transactions">
-          <Link className={style.titleIcon} to="/seller-transaction">
-            <IconDots
-              size={22}
-              className="outline outline-[#61a05e] outline-1 rounded-2xl"
-            />
-          </Link>
-        </Tooltip>
+        <div className="flex gap-x-5">
+          <Tooltip label="View all transactions">
+            <Link className={style.titleIcon} to="/seller-transaction">
+              <IconDots
+                size={22}
+                className="outline outline-[#61a05e] outline-1 rounded-2xl"
+              />
+            </Link>
+          </Tooltip>
+        </div>
       </div>
 
       <Box pos="relative">
         <LoadingOverlay
           visible={visible}
-          zIndex={10}
+          zIndex={9}
           loaderProps={{ color: 'pink', type: 'bars' }}
           overlayProps={{ radius: 'sm', blur: 0.7 }}
         />
-        <div className=" max-h-[110px] overflow-y-scroll pr-4 flex flex-col gap-y-1">
+        <div className=" max-h-[280px] overflow-y-scroll pr-4 flex flex-col gap-y-1">
           {histories.length > 0 ? (
             histories.map((history, index) => (
               <div key={index} className={style.row}>

@@ -108,7 +108,6 @@ export default function TableTransaction({
       transactions.map((transaction: any) => (
         <Table.Tr key={transaction.transactionId} className="text-base h-16">
           <Table.Td>{transaction.transactionId}</Table.Td>
-          {!isSeller && <Table.Td>{transaction.userId}</Table.Td>}
           <Table.Td>+ {Number(transaction.amountInCredits)}</Table.Td>
           <Table.Td>{transaction.description}</Table.Td>
           <Table.Td>
@@ -216,23 +215,25 @@ export default function TableTransaction({
                     overlayProps={{ radius: 'sm', blur: 2 }}
                     loaderProps={{ color: 'pink', type: 'bars' }}
                   />
-                  <Table
-                    bg="white"
-                    highlightOnHover
-                    withTableBorder
-                    verticalSpacing="sm"
-                  >
-                    <Table.Thead>
-                      <Table.Tr className="text-base">
-                        <Table.Th>Transaction ID</Table.Th>
-                        {!isSeller && <Table.Th>User ID</Table.Th>}
-                        <Table.Th>Credits</Table.Th>
-                        <Table.Th>Description</Table.Th>
-                        <Table.Th>Created At</Table.Th>
-                      </Table.Tr>
-                    </Table.Thead>
-                    <Table.Tbody>{rows}</Table.Tbody>
-                  </Table>
+                  <Table.ScrollContainer minWidth={500}>
+                    <Table
+                      bg="white"
+                      highlightOnHover
+                      withTableBorder
+                      verticalSpacing="sm"
+                    >
+                      <Table.Thead>
+                        <Table.Tr className="text-base">
+                          <Table.Th>Transaction ID</Table.Th>
+                          <Table.Th>Credits</Table.Th>
+                          <Table.Th>Description</Table.Th>
+                          <Table.Th>Created At</Table.Th>
+                        </Table.Tr>
+                      </Table.Thead>
+                      <Table.Tbody>{rows}</Table.Tbody>
+                    </Table>
+                  </Table.ScrollContainer>
+
                   <div className="flex justify-between my-2 items-baseline">
                     <Pagination
                       total={totalPages}

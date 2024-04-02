@@ -85,6 +85,14 @@ export const protectedRoutes = [
   {
     key: 'seller-dashboard',
     path: '/seller',
+    component: lazy(
+      () => import('../../pages/SellerDashboardPage/SellerDashboardPage'),
+    ),
+    authority: [Roles.Seller],
+  },
+  {
+    key: 'seller-property',
+    path: '/seller-property',
     component: lazy(() => import('../../pages/SellerPage/SellerPage')),
     authority: [Roles.Seller],
   },

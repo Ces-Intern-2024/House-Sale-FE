@@ -32,7 +32,7 @@ import {
   IconArrowsSort,
 } from '@tabler/icons-react'
 import CustomSelect from './CustomSelect'
-import { searchProperty } from '../../service/SearchService'
+import { getMaxPrice, searchProperty } from '../../service/SearchService'
 import PropertyCard from '../Properties/PropertyCard'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useDisclosure } from '@mantine/hooks'
@@ -229,12 +229,10 @@ export default function SearchComponent() {
   }
 
   const handleGetMaxPrice = async () => {
-    const data = await searchProperty({ orderBy: 'price', sortBy: 'desc' })
-    if (data.data.length > 0) {
-      setMaxPrice(Number(data.data[0].price))
-      setFlag(true)
-      setPriceRange([0, Number(data.data[0].price)])
-    }
+    const res = await getMaxPrice()
+    setMaxPrice(res.metaData)
+    setFlag(true)
+    setPriceRange([0, res.metaData])
   }
 
   const handleSubmitSearch = async () => {

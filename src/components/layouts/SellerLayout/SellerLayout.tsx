@@ -16,6 +16,7 @@ import {
   IconGraph,
   IconLogout,
   IconCreditCard,
+  IconBuildingSkyscraper,
 } from '@tabler/icons-react'
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks'
@@ -42,6 +43,9 @@ export default function SellerLayout() {
     { title: 'Seller', href: '#' },
     pathname === '/seller' || pathname === '/transaction'
       ? { title: 'Dashboard', href: '/seller' }
+      : null,
+    pathname === '/seller-property'
+      ? { title: 'Property', href: '/seller-property' }
       : null,
     pathname === '/seller-profile'
       ? { title: 'Profile', href: '/seller-profile' }
@@ -163,6 +167,27 @@ export default function SellerLayout() {
                     />
                     {(!isSmallNav || isSmallScreen) && (
                       <h3 className={styles.navText}>Dashboard</h3>
+                    )}
+                  </div>
+                </NavLink>
+
+                <NavLink
+                  to="/seller-property"
+                  className={({ isActive }) =>
+                    isActive ? styles.navItemActive : ''
+                  }
+                  onClick={() => {
+                    handleSetActiveLink('/seller-property')
+                    if (opened) toggle()
+                  }}
+                >
+                  <div className={styles.navItem}>
+                    <IconBuildingSkyscraper
+                      className={styles.navIcon}
+                      size={ICON_SIZE}
+                    />
+                    {(!isSmallNav || isSmallScreen) && (
+                      <h3 className={styles.navText}>Property</h3>
                     )}
                   </div>
                 </NavLink>

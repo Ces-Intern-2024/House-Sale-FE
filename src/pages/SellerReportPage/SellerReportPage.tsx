@@ -168,7 +168,7 @@ function SellerReportPage() {
   }, [dateValues[1]])
   return (
     <>
-      <Box pos="relative">
+      <Box pos="relative" className="mx-[16px]">
         <LoadingOverlay
           visible={isLoading === true ? true : false}
           zIndex={10}
@@ -251,6 +251,8 @@ function SellerReportPage() {
             <div className="col-span-3 min-h-[1600px] ">
               <div className="sticky top-[120px]">
                 <DatePickerInput
+                  maxDate={new Date()}
+                  minDate={new Date('2024-01-15')}
                   className="rounded-[14px]"
                   clearable={true}
                   allowSingleDateInRange={true}
@@ -277,7 +279,7 @@ function SellerReportPage() {
                     label: 'text-primary text-2xl font-semibold',
                     root: style.rootDatePicker,
                   }}
-                  w={360}
+                  w={333}
                   type="range"
                   placeholder="Pick date range"
                   value={dateValues}

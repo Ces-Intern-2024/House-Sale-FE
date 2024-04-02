@@ -44,6 +44,7 @@ const PieChart = ({ data, title }: PieChartProps) => {
         color: 'black',
         fontSize: '14px',
         textOutline: 'none',
+        fontWeight: 'bold',
       },
     },
     tooltip: {
@@ -58,6 +59,7 @@ const PieChart = ({ data, title }: PieChartProps) => {
         opacity: 1,
       },
     },
+
     legend: {
       enabled: true,
       layout: 'horizontal',
@@ -68,14 +70,7 @@ const PieChart = ({ data, title }: PieChartProps) => {
         fontWeight: 'bold',
         fontSize: '16px',
       },
-      // itemWidth: 120,
     },
-    // accessibility: {
-    //   point: {
-    //     valueSuffix: '%',
-    //     pointFormat: '{point.percentage:.1f}%',
-    //   },
-    // },
 
     plotOptions: {
       series: {
@@ -133,7 +128,7 @@ const PieChart = ({ data, title }: PieChartProps) => {
         animation: true,
         name: 'Percentage',
         colorByPoint: true,
-        data: data,
+        data: data.filter((d: any) => d.y > 0),
       },
     ],
   }
