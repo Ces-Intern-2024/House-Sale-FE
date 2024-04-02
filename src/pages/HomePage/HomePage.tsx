@@ -70,7 +70,6 @@ const HomePage = () => {
             <MultiCarousel properties={wishList} title="YOUR WISHLIST" />
           )}
         </div>
-
         <BannerWelcome />
       </Container>
       <ScrollToTop />

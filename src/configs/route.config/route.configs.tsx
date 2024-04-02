@@ -154,6 +154,14 @@ export const protectedRoutes = [
     authority: [Roles.Admin],
   },
   {
+    key: 'admin-report',
+    path: '/admin-report',
+    component: lazy(
+      () => import('../../pages/AdminReportPage/AdminReportPage'),
+    ),
+    authority: [Roles.Admin],
+  },
+  {
     key: 'admin-maintenance',
     path: '/admin-maintenance',
     component: lazy(
