@@ -9,10 +9,12 @@ import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 interface CreditComponentProps {
   setOpened: (value: boolean) => void
   userProfile?: User
+  conversionRate: string
 }
 export default function CreditComponent({
   setOpened,
   userProfile,
+  conversionRate,
 }: CreditComponentProps) {
   const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
   const [maintenanceMessage, setMaintenanceMessage] = useState('')
@@ -33,35 +35,57 @@ export default function CreditComponent({
 
   return (
     <>
-      <div className={style.creditCurrentHead}>
-        <div className={style.titleText}>Current credit</div>
-        <div className={style.creditCurrentRow}>
-          {userProfile && (
-            <span className={style.creditAmount}>
-              {Number(userProfile.balance)}
+      <div className="flex flex-col">
+        <div className={style.creditCurrentHead}>
+          <div className={style.titleText}>Current credit</div>
+          <div className={style.creditCurrentRow}>
+            {userProfile && (
+              <h1 className={style.creditAmount}>
+                {Number(userProfile.balance)}
+              </h1>
+            )}
+            <span className={style.creditIcon}>
+              <GiCrownCoin />
             </span>
-          )}
+          </div>
+        </div>
+        <span className="text-gray-00 italic">
+          Before buying credit, you need to review current conversion rate
+          below!*
+        </span>
+        <div className={style.creditBtn}>
+          <Button
+            classNames={{ root: style.rootButton }}
+            fullWidth
+            onClick={() => {
+              handleGetMaintenanceMode()
+            }}
+          >
+            Buy Credit
+          </Button>
+        </div>
+
+        <UnderMaintenance
+          setStatus={setIsUnderMaintenance}
+          status={isUnderMaintenance}
+          maintenanceMessage={maintenanceMessage}
+        />
+      </div>
+      <div className={style.conversionRateLine}>
+        <hr></hr>
+        <div className={style.currentConversionRate}>
+          Current Conversion Rate
+        </div>
+        <div className={style.currenConversionRateRow}>
+          <span className={style.currentConversionRate}>1</span>
           <span className={style.creditIcon}>
-            <GiCrownCoin />
+            <GiCrownCoin size={18} />
+          </span>
+          <span className={style.currentConversionRate}>
+            = {Number(conversionRate).toFixed()} $
           </span>
         </div>
       </div>
-      <div className={style.creditBtn}>
-        <Button
-          classNames={{ root: style.rootButton }}
-          fullWidth
-          onClick={() => {
-            handleGetMaintenanceMode()
-          }}
-        >
-          Buy Credit
-        </Button>
-      </div>
-      <UnderMaintenance
-        setStatus={setIsUnderMaintenance}
-        status={isUnderMaintenance}
-        maintenanceMessage={maintenanceMessage}
-      />
     </>
   )
 }

@@ -50,6 +50,10 @@
     @apply ml-1 flex items-center text-orangeBtn;
 }
 
+.creditCurrentHead {
+    @apply flex flex-col;
+}
+
 .creditCurrent {
     @apply w-2/5 rounded-[16px] py-2 px-3 bg-white shadow-xl;
 }
@@ -68,6 +72,14 @@
 
 .creditBtn {
     @apply text-right mt-2 w-full;
+}
+
+.currentConversionRate {
+    @apply text-lg text-gray-400 italic
+}
+
+.currenConversionRateRow {
+    @apply flex items-center gap-3 justify-center;
 }
 
 .rootButton {

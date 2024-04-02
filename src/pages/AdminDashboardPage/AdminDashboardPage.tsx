@@ -7,6 +7,19 @@ import {
   getPropertiesCountedByFeature,
 } from '../../service/AdminService'
 import ProgressCard from '../../components/ProgressCard/ProgressCard'
+import {
+  APIProvider,
+  AdvancedMarker,
+  Map,
+  Pin,
+} from '@vis.gl/react-google-maps'
+import {
+  REACT_APP_GOOGLE_MAP_ID_HOANG,
+  REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG,
+} from '../../constants/google.constant'
+import { TbBuildingWarehouse } from 'react-icons/tb'
+import { Properties } from '@/types'
+import { searchProperty } from '../../service/SearchService'
 
 function AdminDashboardPage() {
   const [propertiesCountedByFeature, setPropertiesCountedByFeature] = useState<
@@ -15,6 +28,18 @@ function AdminDashboardPage() {
   const [propertiesCountedByCategory, setPropertiesCountedByCategory] =
     useState<[]>([])
   const [propertiesCountedByDate, setPropertiesCountedByDate] = useState<[]>([])
+  const [allLocations, setAllLocations] = useState<{ lat: number, lng: number }[]>([]);
+
+  const handleGetAllLocations = async () => {
+    const res = await searchProperty({}, true)
+    const data = res.data
+    const formattedData = data.map((property: Properties) => ({
+      lat: Number(property.location.lat),
+      lng: Number(property.location.lng),
+    }))
+    setAllLocations((_prev) => formattedData)
+  }
+
   const handleGetPropertiesCountedByFeature = async () => {
     const data = await getPropertiesCountedByFeature()
     const formattedData = data.metaData.flatMap((property: any) => [
@@ -55,6 +80,7 @@ function AdminDashboardPage() {
     handleGetPropertiesCountedByFeature()
     handleGetPropertiesCountedByCategory()
     getAmountOfPropertyCreated()
+    handleGetAllLocations()
   }, [])
   return (
     <div>
@@ -81,6 +107,23 @@ function AdminDashboardPage() {
         </div>
       </div>
       <div>
+        <h1>PROPERTY BY LOCATIONS</h1>
+        <APIProvider apiKey={REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG!}>
+          <Map
+            style={{ width: '70%', height: '500px' }}
+            defaultCenter={allLocations[0]}
+            defaultZoom={14}
+            mapId={REACT_APP_GOOGLE_MAP_ID_HOANG!}
+          >
+            {allLocations.map((location: any, index: number) => (
+              <AdvancedMarker key={index} position={location}>
+                <Pin>
+                  <TbBuildingWarehouse color="white" size={18} />
+                </Pin>
+              </AdvancedMarker>
+            ))}
+          </Map>
+        </APIProvider>
       </div>
     </div>
   )
