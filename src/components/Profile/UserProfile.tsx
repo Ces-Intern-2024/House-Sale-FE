@@ -264,7 +264,7 @@ export default function SellerProfile() {
   return (
     <>
       <div className={styles.container}>
-        <div className=" flex flex-row justify-between">
+        <div className=" flex justify-between">
           <h1 className={styles.heading}>My Profile</h1>
           <Button variant="outline" onClick={() => handleGetMaintenanceMode()}>
             Change Password
