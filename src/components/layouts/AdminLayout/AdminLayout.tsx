@@ -51,7 +51,9 @@ export default function AdminLayout() {
     pathname === '/admin-conversion-rate'
       ? { title: 'Conversion Rate', href: '/admin-conversion-rate' }
       : null,
-    pathname === '/report' ? { title: 'Report', href: '/admin-report' } : null,
+    pathname === '/admin-report'
+      ? { title: 'Report', href: '/admin-report' }
+      : null,
     pathname === '/admin-maintenance'
       ? { title: 'Maintenance', href: '/admin-maintenance' }
       : null,
@@ -205,7 +207,7 @@ export default function AdminLayout() {
             </NavLink>
 
             <NavLink
-              to="/report"
+              to="/admin-report"
               className={({ isActive }) =>
                 isActive ? styles.navItemActive : ''
               }
