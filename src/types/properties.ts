@@ -42,6 +42,8 @@ export interface Location {
   provinceCode: string
   street: string
   address: string
+  lat: string
+  lng: string
 }
 
 export interface Image {

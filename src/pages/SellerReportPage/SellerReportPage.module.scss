@@ -43,4 +43,20 @@ div.countedByDate > div > div {
     box-shadow:
     0 4px 8px 0 rgba(0, 0, 0, 0.2),
     0 6px 20px 0 rgba(0, 0, 0, 0.2);
+    &[data-in-range] {
+        background-color: #DCE4F5;
+        color: black;
+    }
+
+    &[data-selected] {
+        background-color: #B9C7E2;
+        color: black;
+    }
+}
+
+.datePicker {
+    position: sticky;
+    top: 100px;
+    z-index: 100;
+    left: 100%;
 }

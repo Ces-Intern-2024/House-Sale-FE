@@ -28,7 +28,6 @@ const GoongMap = ({ location }: Props) => {
         const res = await geocoding(location.concat('100 Cô Giang, Phường Cô Giang, Quận 1, Thành phố Hồ Chí Minh, Việt Nam,100 Cô Giang, Phường Cô Giang, Quận 1, Thành phố Hồ Chí Minh, Việt Nam'))
         setLng((_prev) => res.data.features[0].geometry.coordinates[0])
         setLat((_prev) => res.data.features[0].geometry.coordinates[1])
-
         setViewport((_prv) => ({
           latitude: lat,
           longitude: lng,

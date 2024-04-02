@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import TableProperty from '../../components/TableProperty/TableProperty'
-import CreditComponent from '../../components/Transaction/CreditComponent'
-import TransactionHistory from '../../components/Transaction/TransactionHistory'
 import { Button, Modal, NumberInput } from '@mantine/core'
 import { IconCurrencyDollar } from '@tabler/icons-react'
 import style from '../../components/Transaction/Transaction.module.scss'
@@ -65,20 +63,7 @@ export default function SellerPage() {
 
   return (
     <>
-      <div>
-        <div className="my-7.5 xl:mx-5 lg:mx-5 ">
-          <div className=" grid grid-cols-12 gap-x-3 gap-y-10">
-            <div className="  lg:col-span-5 mobile:col-span-12 bg-white shadow-xl rounded-[16px] pb-4 pt-2 px-5 flex flex-col items-center justify-center">
-              <CreditComponent
-                setOpened={setOpened}
-                userProfile={userProfile}
-              />
-            </div>
-            <div className="  lg:col-span-7 mobile:col-span-12 bg-white shadow-xl rounded-[16px] pb-4 pt-2 px-5">
-              <TransactionHistory shouldUpdate={shouldUpdate} />
-            </div>
-          </div>
-        </div>
+      <div className='pt-2'>
         <TableProperty
           setShouldUpdate={setShouldUpdate}
           shouldUpdate={shouldUpdate}

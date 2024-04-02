@@ -6,9 +6,7 @@ import {
   getPropertiesCountedByCategory,
   getPropertiesCountedByDate,
   getPropertiesCountedByFeature,
-  getTotalAmountDeposited,
   getTotalAmountDepositedByDate,
-  getTotalCreditsUsed,
   getTotalCreditsUsedByDate,
 } from '../../service/SellerService'
 import DoubleLineChart from '../../components/Charts/DoubleLineChart'
@@ -39,8 +37,6 @@ function SellerReportPage() {
     totalAmountDepositedByDateInDollar,
     setTotalAmountDepositedByDateInDollar,
   ] = useState<[]>([])
-  const [_totalCreditsDeposited, setTotalCreditsDeposited] = useState(0)
-  const [_totalCreditsUsed, setTotalCreditsUsed] = useState(0)
   const user = useAppSelector((state) => state.user)
   const [dateValues, setDateValues] = useState<[Date | null, Date | null]>([
     new Date(String(user.createdAt)),
@@ -61,7 +57,6 @@ function SellerReportPage() {
           },
         ])
         .sort((a: any, b: any) => a.inNumber - b.inNumber)
-
       setPropertiesCountedByFeature((_prev) => formattedData)
     } catch (err) {
       console.error(err)
@@ -142,16 +137,6 @@ function SellerReportPage() {
     setTotalCreditsUsedByDate((_prev) => formattedData)
   }
 
-  const handleGetTotalAmountDeposited = async () => {
-    const res = await getTotalAmountDeposited()
-    setTotalCreditsDeposited(res.metaData.totalAmountInCredits)
-  }
-
-  const handleGetTotalCreditsUsed = async () => {
-    const res = await getTotalCreditsUsed()
-    setTotalCreditsUsed(res.metaData)
-  }
-
   useEffect(() => {
     // to make sure we have the date range
     if (dateValues[0] && dateValues[1]) {
@@ -159,8 +144,7 @@ function SellerReportPage() {
       handleGetTotalAmountDepositedByDate()
       handleGetContactsCountedByDate()
       handleGetCreditsUsedByDate()
-      handleGetTotalAmountDeposited()
-      handleGetTotalCreditsUsed()
+
       handleGetPropertiesCountedByCategory()
       handleGetPropertiesCountedByFeature()
     }
@@ -183,30 +167,6 @@ function SellerReportPage() {
         />
 
         <div className="outer flex flex-col mt-7 gap-y-14 px-2 font-archivo">
-          {/* This comment can be used in the future.
-          <div className="flex flex-col gap-y-2">
-            <div className="flex justify-between items-center m-0 gap-x-20">
-              <div className="flex m-0 gap-x-10">
-                <BalanceViewer
-                  balance={totalCreditsDeposited}
-                  sign="+"
-                  background="#66d9e880"
-                  icon={<IconCreditCardRefund size={40} />}
-                  title="Total Credits In"
-                />
-                <BalanceViewer
-                  balance={totalCreditsUsed}
-                  sign="-"
-                  background="rgba(255, 173, 194, 0.38)"
-                  icon={<IconCreditCardPay size={40} />}
-                  title="Total Credits Out"
-                />
-              </div> 
-
-              
-            </div>
-          </div> */}
-
           <div>
             <div className={style.coverPieChart}>
               <div className={style.featureChart}>
@@ -309,7 +269,7 @@ function SellerReportPage() {
                   placeholder="Pick date range"
                   value={dateValues}
                   onChange={setDateValues}
-                />
+                  />
               </div>
             </div>
           </div>

@@ -25,12 +25,12 @@ export default function TransactionHistory({
   const getTransaction = async () => {
     try {
       setVisible(true)
-      const data = await getTransactionHistory(null, null, null, 3)
+      const data = await getTransactionHistory(null, null, null, 4)
       const rentServiceHistory = await getTransactionRentService(
         null,
         null,
         null,
-        3,
+        4,
       )
       const combinedHistory = [...data.data, ...rentServiceHistory.data]
 
@@ -72,7 +72,7 @@ export default function TransactionHistory({
           loaderProps={{ color: 'pink', type: 'bars' }}
           overlayProps={{ radius: 'sm', blur: 0.7 }}
         />
-        <div className=" max-h-[110px] overflow-y-scroll pr-4 flex flex-col gap-y-1">
+        <div className="h-[284px] max-h-[1840px] pr-4 flex flex-col gap-y-3">
           {histories.length > 0 ? (
             histories.map((history, index) => (
               <div key={index} className={style.row}>
