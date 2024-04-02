@@ -26,12 +26,28 @@ function AdminMangeUserPage() {
             )}
             <div>
               <SegmentedControl
+                className="text-primary"
                 value={segment}
                 onChange={setSegment}
                 data={[
                   { label: 'Seller', value: String(Roles.Seller) },
                   { label: 'Customer', value: String(Roles.User) },
                 ]}
+                styles={{
+                  root: {
+                    paddingTop: '5px',
+                    paddingBottom: '5px',
+                  },
+                  label: {
+                    fontWeight: 'bold',
+                    color: '#396652',
+                    fontSize: '18px',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  },
+                }}
               />
             </div>
           </div>

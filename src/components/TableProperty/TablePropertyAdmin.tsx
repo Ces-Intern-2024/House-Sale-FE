@@ -706,62 +706,67 @@ const TablePropertyAdmin = () => {
             </Button>
           </div> */}
           <div className={style.tableContent}>
-            <Table
-              className="relative"
-              bg="white"
-              highlightOnHover
-              withTableBorder
-              verticalSpacing="sm"
-              stickyHeader
-            >
-              <Table.Thead>
-                <Table.Tr className={style.titleTable}>
-                  <Table.Th>
-                    <Checkbox
-                      checked={allSelected}
-                      onChange={() => handleSelectAllSelectedRows()}
-                    />
-                  </Table.Th>
-                  <Table.Th>ID</Table.Th>
-                  <Table.Th classNames={{ th: style.thName }}>
-                    Property Name
-                  </Table.Th>
-                  <Table.Th>Featured</Table.Th>
-                  <Table.Th>Category</Table.Th>
-                  <Table.Th classNames={{ th: style.thPrice }}>
-                    <span>Price</span>
-                    <span
-                      className={style.iconSortTh}
-                      onClick={() => {
-                        setOrderBy('price')
-                        setSortBy(sortBy.includes('asc') ? 'desc' : 'asc')
-                      }}
-                    >
-                      {sortBy ? (
-                        sortBy === 'desc' ? (
-                          <FaLongArrowAltUp />
+            <Table.ScrollContainer minWidth={500}>
+              <Table
+                className="relative"
+                bg="white"
+                highlightOnHover
+                withTableBorder
+                verticalSpacing="sm"
+                stickyHeader
+              >
+                <Table.Thead>
+                  <Table.Tr className={style.titleTable}>
+                    <Table.Th>
+                      <Checkbox
+                        checked={allSelected}
+                        onChange={() => handleSelectAllSelectedRows()}
+                      />
+                    </Table.Th>
+                    <Table.Th>ID</Table.Th>
+                    <Table.Th classNames={{ th: style.thName }}>
+                      Property Name
+                    </Table.Th>
+                    <Table.Th>Featured</Table.Th>
+                    <Table.Th>Category</Table.Th>
+                    <Table.Th classNames={{ th: style.thPrice }}>
+                      <span>Price</span>
+                      <span
+                        className={style.iconSortTh}
+                        onClick={() => {
+                          setOrderBy('price')
+                          setSortBy(sortBy.includes('asc') ? 'desc' : 'asc')
+                        }}
+                      >
+                        {sortBy ? (
+                          sortBy === 'desc' ? (
+                            <FaLongArrowAltUp />
+                          ) : (
+                            <FaLongArrowAltDown />
+                          )
                         ) : (
-                          <FaLongArrowAltDown />
-                        )
-                      ) : (
-                        <PiArrowsDownUp className="cursor-pointer" size={20} />
-                      )}
-                    </span>
-                  </Table.Th>
-                  <Table.Th>Seller</Table.Th>
-                  <Table.Th className="min-w-30">Status</Table.Th>
-                  <Table.Th>Actions</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
+                          <PiArrowsDownUp
+                            className="cursor-pointer"
+                            size={20}
+                          />
+                        )}
+                      </span>
+                    </Table.Th>
+                    <Table.Th>Seller</Table.Th>
+                    <Table.Th className="min-w-30">Status</Table.Th>
+                    <Table.Th>Actions</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
 
-              <LoadingOverlay
-                visible={isLoading}
-                zIndex={10}
-                overlayProps={{ radius: 'sm', blur: 2 }}
-                loaderProps={{ color: 'pink', type: 'bars' }}
-              />
-              <Table.Tbody>{rows}</Table.Tbody>
-            </Table>
+                <LoadingOverlay
+                  visible={isLoading}
+                  zIndex={10}
+                  overlayProps={{ radius: 'sm', blur: 2 }}
+                  loaderProps={{ color: 'pink', type: 'bars' }}
+                />
+                <Table.Tbody>{rows}</Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
           </div>
 
           <div className={style.pagination}>

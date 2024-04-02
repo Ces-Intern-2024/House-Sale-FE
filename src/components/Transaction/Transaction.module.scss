@@ -15,7 +15,7 @@
 }
 
 .titleText {
-    @apply text-30 font-bold text-primary text-center font-archivo;
+    @apply sm:text-30 mobile:text-[24px] font-bold text-primary text-center font-archivo;
 }
 
 .titleIcon {
