@@ -6,20 +6,18 @@ import {
   getPropertiesCountedByCategory,
   getPropertiesCountedByDate,
   getPropertiesCountedByFeature,
-  getTotalAmountDeposited,
   getTotalAmountDepositedByDate,
-  getTotalCreditsUsed,
   getTotalCreditsUsedByDate,
-} from '../../service/SellerService'
+} from '../../service/AdminService'
 import DoubleLineChart from '../../components/Charts/DoubleLineChart'
 import { IconCalendar, IconHistory } from '@tabler/icons-react'
-import { useAppSelector } from '../../redux/hooks'
 import { DatePickerInput } from '@mantine/dates'
 import { primary } from '../../constants/color.constant'
-import style from './SellerReportPage.module.scss'
+import style from './AdminReportPage.module.scss'
 import { formatDateToYYYYMMDD } from '../../utils/commonFunctions'
 import { Box, LoadingOverlay, Tooltip } from '@mantine/core'
-function SellerReportPage() {
+
+const AdminReportPage = () => {
   const [propertiesCountedByFeature, setPropertiesCountedByFeature] = useState<
     []
   >([])
@@ -36,13 +34,11 @@ function SellerReportPage() {
     totalAmountDepositedByDateInDollar,
     setTotalAmountDepositedByDateInDollar,
   ] = useState<[]>([])
-  const [_totalCreditsDeposited, setTotalCreditsDeposited] = useState(0)
-  const [_totalCreditsUsed, setTotalCreditsUsed] = useState(0)
-  const user = useAppSelector((state) => state.user)
   const [dateValues, setDateValues] = useState<[Date | null, Date | null]>([
-    new Date(String(user.createdAt)),
+    new Date('2024-01-15'),
     new Date(),
   ])
+
   const [isLoading, setIsLoading] = useState(false)
 
   const handleGetPropertiesCountedByFeature = async () => {
@@ -139,16 +135,6 @@ function SellerReportPage() {
     setTotalCreditsUsedByDate((_prev) => formattedData)
   }
 
-  const handleGetTotalAmountDeposited = async () => {
-    const res = await getTotalAmountDeposited()
-    setTotalCreditsDeposited(res.metaData.totalAmountInCredits)
-  }
-
-  const handleGetTotalCreditsUsed = async () => {
-    const res = await getTotalCreditsUsed()
-    setTotalCreditsUsed(res.metaData)
-  }
-
   useEffect(() => {
     // to make sure we have the date range
     if (dateValues[0] && dateValues[1]) {
@@ -156,14 +142,12 @@ function SellerReportPage() {
       handleGetTotalAmountDepositedByDate()
       handleGetContactsCountedByDate()
       handleGetCreditsUsedByDate()
-      handleGetTotalAmountDeposited()
-      handleGetTotalCreditsUsed()
       handleGetPropertiesCountedByCategory()
       handleGetPropertiesCountedByFeature()
     }
     // for reset purpose
     if (!dateValues[0] && !dateValues[1]) {
-      setDateValues([new Date(String(user.createdAt)), new Date()])
+      setDateValues([new Date('2024-01-15'), new Date()])
     }
   }, [dateValues[1]])
   return (
@@ -196,7 +180,6 @@ function SellerReportPage() {
               </div>
             </div>
           </div>
-
           <div className="grid grid-cols-10 gap-4 relative">
             <div className="col-span-7">
               <div className="flex flex-col gap-y-2">
@@ -251,7 +234,7 @@ function SellerReportPage() {
             <div className="col-span-3 min-h-[1600px] ">
               <div className="sticky top-[120px]">
                 <DatePickerInput
-                  className="rounded-[14px]"
+                  className="shadow-md"
                   clearable={true}
                   allowSingleDateInRange={true}
                   leftSection={<IconCalendar color={primary} stroke={1.5} />}
@@ -262,10 +245,7 @@ function SellerReportPage() {
                         stroke={1.5}
                         className=" cursor-pointer"
                         onClick={() =>
-                          setDateValues([
-                            new Date(String(user.createdAt)),
-                            new Date(),
-                          ])
+                          setDateValues([new Date('2024-01-15'), new Date()])
                         }
                       />
                     </Tooltip>
@@ -274,8 +254,7 @@ function SellerReportPage() {
                   classNames={{
                     day: style.day,
                     weekday: ' text-gray-600 font-bold',
-                    label: 'text-primary text-2xl font-semibold',
-                    root: style.rootDatePicker,
+                    label: 'text-primary',
                   }}
                   w={360}
                   type="range"
@@ -292,4 +271,4 @@ function SellerReportPage() {
   )
 }
 
-export default SellerReportPage
+export default AdminReportPage

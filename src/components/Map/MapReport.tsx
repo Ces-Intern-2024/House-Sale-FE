@@ -45,7 +45,6 @@ const MapReport = () => {
     },
 
     mapView: {
-      // Make room for the title
       padding: [30, 0, 0, 0],
     },
 
