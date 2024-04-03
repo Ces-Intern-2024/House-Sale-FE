@@ -1,12 +1,12 @@
 .ContactContainer {
-  @apply font-archivo rounded-[20px]
+  @apply font-archivo sticky top-[100px] rounded-[20px]
     lg:w-[360px] lg:px-[40px]
     mobile:px-[40px]
     bg-second;
 }
 
 .ContactContent {
-  @apply py-[24px] flex flex-col items-center border-none;
+  @apply pt-[24px] flex flex-col items-center border-none;
 }
 
 .ContactPriceProperty {

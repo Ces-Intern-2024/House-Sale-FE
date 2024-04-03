@@ -146,9 +146,9 @@ const ContactUs = ({ property }: ContactUsProps) => {
             </div>
             <div className={style.ContactInputRow}>
               <Textarea
-                size="lg"
+                size="xl"
                 autosize
-                minRows={4}
+                minRows={6}
                 maxRows={7}
                 placeholder="Message"
                 {...form.getInputProps('message')}

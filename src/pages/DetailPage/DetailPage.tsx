@@ -87,7 +87,7 @@ export default function DetailPage() {
   return (
     <>
       <div className={style.outer}>
-        <Breadcrumbs my="md" className="overflow-hidden text-ellipsis ">
+        <Breadcrumbs my="md" className="overflow-hidden text-ellipsis">
           {paths}
         </Breadcrumbs>
 
@@ -102,7 +102,6 @@ export default function DetailPage() {
           <div className={style.containerDesc}>
             <DetailsProperty property={property!} />
             <Map location={property?.fullLocationText} />
-            {/* <GoongMap location={property?.fullLocationText}/> */}
           </div>
           <div className={style.containerContact}>
             <ContactUs property={property!} />

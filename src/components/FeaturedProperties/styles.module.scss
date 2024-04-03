@@ -25,8 +25,8 @@
 }
 
 .rootButtonRent {
-  @apply bg-primary text-base text-center mt-5 hover:bg-primary;
+  @apply animate-bounce bg-white  border-primary text-primary text-center mt-5 hover:text-white hover:bg-primary hover:border-primary;
 }
 .rootButtonSale {
-  @apply bg-labelBlue text-base text-center mt-5 hover:bg-labelBlue;
+  @apply animate-bounce bg-white text-labelBlue border-labelBlue text-center mt-5 hover:text-white hover:bg-labelBlue hover:border-labelBlue;
 }

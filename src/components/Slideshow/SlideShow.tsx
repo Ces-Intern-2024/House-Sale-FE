@@ -55,7 +55,7 @@ export default function SlideShow() {
 
         <div className={styles.overlay}>
           <div className={styles.flexBox}>
-            <h1 className={styles.largeText}>Find The Perfect Home</h1>
+            <h1 className={styles.largeText}>Find The Perfect Building</h1>
             <h6 className={styles.smallText}>
               Your Dreams Are In Trusted Hands
             </h6>

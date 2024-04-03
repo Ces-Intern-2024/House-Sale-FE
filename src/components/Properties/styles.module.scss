@@ -74,7 +74,7 @@
 }
 
 .heartIsAdded {
-  @apply text-orangeHeart hover:text-[#AA0000] cursor-pointer px-2   
+  @apply text-orangeHeart z-[5] hover:text-[#AA0000] cursor-pointer px-2   
   hover:ease-in hover:duration-300 bg-transparent hover:bg-transparent;
 }
 
@@ -100,6 +100,6 @@
   @apply flex items-center;
 }
 .propertyStatus {
-  @apply absolute z-[5] text-white bottom-0  font-semibold
-  bg-gray-600 w-auto text-center text-2xl h-9 w-full left-0;
+  @apply absolute flex justify-center items-center z-[5] text-white bottom-0  font-semibold
+  bg-gray-600 w-auto text-center text-sm h-9 w-full left-0;
 }

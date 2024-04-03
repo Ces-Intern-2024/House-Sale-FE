@@ -73,25 +73,6 @@ const Properties = ({ data }: Props) => {
           data.status === AVAILABLE ? 'hidden' : style.propertyDisabled
         }
       ></div>
-      {wishList &&
-        data.status !== AVAILABLE &&
-        wishList.find(
-          (property: PropertiesType) => property.propertyId === data.propertyId,
-        ) && (
-          <Tooltip label="Remove from wishlist">
-            <Button
-              loading={isLoading}
-              className={
-                data.status === AVAILABLE
-                  ? style.heartIsAdded
-                  : style.removeWishlist
-              }
-              onClick={() => handleAddToWishlist(data.propertyId)}
-            >
-              <FaHeart size={26} />
-            </Button>
-          </Tooltip>
-        )}
       <div className={style.propertyContent}>
         <div
           className={`${style.propertyFeatured} ${data.feature.featureId === 1 ? 'bg-labelBlue' : 'bg-emerald-700'}`}
@@ -179,8 +160,7 @@ const Properties = ({ data }: Props) => {
                 <Tooltip label="Remove from wishlist">
                   <Button
                     loading={isLoading}
-                    className={
-                      data.status === AVAILABLE ? style.heartIsAdded : 'hidden'
+                    className={style.heartIsAdded
                     }
                     onClick={() => handleAddToWishlist(data.propertyId)}
                   >
@@ -233,7 +213,6 @@ const Properties = ({ data }: Props) => {
               <img src={bedroom} className="w-5 h-auto mr-2" />
               {data.numberOfBedRoom}
             </span>
-            
           </div>
         </div>
       </div>
