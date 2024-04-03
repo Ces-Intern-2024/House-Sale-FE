@@ -5,6 +5,8 @@ import style from './styles.module.scss'
 import { Button } from '@mantine/core'
 import { FEATURED_FOR_RENT } from '../../constants/category.constant'
 
+const QUANTITY_PROPERTY_TO_SHOW = 8
+
 type Props = {
   title?: string
   properties: Properties[]
@@ -12,17 +14,28 @@ type Props = {
   children?: ReactNode
 }
 const FeaturedProperties = ({ title, properties, children }: Props) => {
-  const quantity = 4
-  const [visibleProperty, setVisibleProperty] = useState<number>(quantity)
+  const [showButton, setShowButton] = useState<boolean>(false)
+  const [visibleProperty, setVisibleProperty] = useState<number>(QUANTITY_PROPERTY_TO_SHOW)
   const [propertiesToShow, setPropertiesToShow] = useState<Properties[]>([])
-
+  
   useEffect(() => {
-    const initList = properties.slice(0, visibleProperty)
-    setPropertiesToShow(initList)
+    if (properties.length > 0) {
+      const initList = properties.slice(0, visibleProperty)
+      setPropertiesToShow(initList)
+      if (properties.length > visibleProperty) {
+        setShowButton(true)
+      }
+    }
   }, [properties, visibleProperty])
 
+  useEffect(() => {
+    if (visibleProperty >= properties.length) {
+      setShowButton(false)
+    }
+  }, [visibleProperty, properties.length])
+
   const handleViewMore = () => {
-    setVisibleProperty((prevCount) => prevCount + quantity)
+    setVisibleProperty((prevCount) => prevCount + QUANTITY_PROPERTY_TO_SHOW)
   }
 
   return (
@@ -41,7 +54,7 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
       {children}
 
       <div className={style.buttonContainer}>
-        {visibleProperty === propertiesToShow.length && (
+        {showButton && (
           <Button
             classNames={{ root: title === FEATURED_FOR_RENT ? style.rootButtonRent : style.rootButtonSale }}
             variant="filled"

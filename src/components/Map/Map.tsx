@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Map.module.scss'
-import { AspectRatio, Box, LoadingOverlay } from '@mantine/core'
+import { Box, LoadingOverlay } from '@mantine/core'
 import {
   APIProvider,
   AdvancedMarker,
@@ -49,6 +49,7 @@ export default function MapComponent({ location }: Props) {
 
   return (
     <div className={styles.mapContainer}>
+      <hr />
       <h1 className={styles.mapFont}>GOOGLE MAP</h1>
       <Box pos="relative">
         <LoadingOverlay
@@ -57,7 +58,6 @@ export default function MapComponent({ location }: Props) {
           overlayProps={{ radius: 'sm', blur: 2 }}
           loaderProps={{ color: 'pink', type: 'bars' }}
         />
-        <AspectRatio ratio={9 / 3}>
           <APIProvider apiKey={REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG!}>
             {isUpdated && (
               <Map
@@ -74,7 +74,6 @@ export default function MapComponent({ location }: Props) {
               </Map>
             )}
           </APIProvider>
-        </AspectRatio>
       </Box>
     </div>
   )

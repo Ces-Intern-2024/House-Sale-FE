@@ -348,13 +348,14 @@ export default function MenuBar({
               )}
             </div>
           )}
-        </div>
-
+        </div>  
+                {Number(user?.roleId) !== Roles.Admin && 
         <div className={styles.postingBtn} onClick={handleNavigateToPublishing}>
-          <span className="text-postingBtn text-[16px] flex flex-col items-center font-extrabold">
+          <span className="text-primary hover:text-white text-[16px] flex flex-col items-center font-extrabold">
             POSTING
           </span>
         </div>
+                }
       </div>
       <UnderMaintenance
         setStatus={setIsUnderMaintenance}

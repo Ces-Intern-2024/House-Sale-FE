@@ -109,5 +109,13 @@
 }
 
 .postingBtn{
-  @apply cursor-pointer h-[50px] sm:w-auto mobile:w-[220px] mobile:justify-center mb-6 mt-2 p-2 lg:m-0 mobile:ml-5 outline outline-2 rounded-2xl outline-[#FFFDD0] hover:bg-[#FFFDD022] flex items-center justify-start
+  @apply animate-bounce cursor-pointer h-[50px] sm:w-auto mobile:w-[220px] mobile:justify-center mb-6 mt-2 p-2 lg:m-0 mobile:ml-5 outline outline-2 rounded-2xl outline-primary flex items-center justify-start bg-white;
+  // animation: moveUpDown 1s linear infinite;
+  &:hover {
+    @apply bg-primary outline-white;
+
+    span {
+      @apply text-white;
+    }
+  }
 }
