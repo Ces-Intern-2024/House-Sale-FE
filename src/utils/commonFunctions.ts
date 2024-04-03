@@ -86,5 +86,40 @@ export function formatRoutePath(routeName:string){
 }
 
 
+export function getAllDatesFromLastAndThisWeek() {
+  const today = new Date();
+    const day = today.getDay(); // 0-6
+
+    const diffMonday = today.getDate() - day - 6; // subtract 6 days to get to the previous Monday
+    const diffSunday = today.getDate() + (7 - day); // add the remaining days to get to this Sunday
+
+    const lastWeekMonday = new Date(today);
+    lastWeekMonday.setDate(diffMonday);
+
+    const thisWeekSunday = new Date(today);
+    thisWeekSunday.setDate(diffSunday);
+
+    return [lastWeekMonday, thisWeekSunday];
+}
+
+export function getLastTwoWeeksIncludingToday() {
+    const result = [];
+    for(let i=0; i<14; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        result.push(d);
+    }
+    return [result[result.length -1], result[0]];
+}
+
+export function getDaysOfWeekWithTodayLast() {
+    const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const today = new Date().getDay();
+    const reorderedDays = daysOfWeek.slice(today + 1).concat(daysOfWeek.slice(0, today + 1));
+    return reorderedDays;
+}
+
+
+
 
 

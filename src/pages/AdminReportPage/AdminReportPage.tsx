@@ -6,6 +6,7 @@ import {
   getPropertiesCountedByCategory,
   getPropertiesCountedByDate,
   getPropertiesCountedByFeature,
+  getTotalAccountsByRole,
   getTotalAmountDepositedByDate,
   getTotalCreditsUsedByDate,
 } from '../../service/AdminService'
@@ -38,6 +39,7 @@ const AdminReportPage = () => {
     new Date('2024-01-15'),
     new Date(),
   ])
+  const [totalAccountsByRole, setTotalAccountsByRole] = useState<[]>([])
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -135,6 +137,20 @@ const AdminReportPage = () => {
     setTotalCreditsUsedByDate((_prev) => formattedData)
   }
 
+  const handleGetTotalAccountsByRole = async () => {
+    const data = await getTotalAccountsByRole()
+    const formattedData = data.metaData
+      .flatMap((account: any) => [
+        {
+          name: account.roleName,
+          y: Number(account.totalAccounts),
+          inNumber: account.totalAccounts,
+        },
+      ])
+      .sort((a: any, b: any) => a.inNumber - b.inNumber)
+    setTotalAccountsByRole((_prev) => formattedData)
+  }
+
   useEffect(() => {
     // to make sure we have the date range
     if (dateValues[0] && dateValues[1]) {
@@ -142,6 +158,7 @@ const AdminReportPage = () => {
       handleGetTotalAmountDepositedByDate()
       handleGetContactsCountedByDate()
       handleGetCreditsUsedByDate()
+      handleGetTotalAccountsByRole()
       handleGetPropertiesCountedByCategory()
       handleGetPropertiesCountedByFeature()
     }
@@ -176,6 +193,16 @@ const AdminReportPage = () => {
                 <PieChart
                   title="Properties By Category"
                   data={propertiesCountedByCategory}
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className={style.coverPieChart}>
+              <div className={style.featureChart}>
+                <PieChart
+                  title="Total Accounts By Role"
+                  data={totalAccountsByRole}
                 />
               </div>
             </div>
