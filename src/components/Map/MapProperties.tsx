@@ -10,21 +10,69 @@ import {
   Pin,
   useMap,
 } from '@vis.gl/react-google-maps'
-import trees from '../../utils/trees'
 import { Marker, MarkerClusterer } from '@googlemaps/markerclusterer'
 import { TbBuildingWarehouse } from 'react-icons/tb'
+import { IMarker, RawMarker } from '../../types/propertyMarkerMap'
+import style from './MapProperties.module.scss'
+import { Properties } from '@/types'
+import { getAllPropertiesService } from '../../service/PropertyService'
+
 const MapProperties = () => {
+  const [propertiesList, setPropertiesList] = useState<Properties[]>([])
+  const [markers, setMarkers] = useState<RawMarker[]>([])
+  const getAllProperties = async () => {
+    const res = await getAllPropertiesService()
+    setPropertiesList(res.data.metaData.data)
+  }
+  useEffect(() => {
+    getAllProperties()
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [propertiesList])
+
+  const fetchData = () => {
+    const tempMarkers: RawMarker[] = propertiesList.map(
+      (property: Properties) => [
+        property.name,
+        Number(property.location.lat),
+        Number(property.location.lng),
+      ],
+    )
+    return setMarkers(tempMarkers)
+  }
+
+  const [formattedMarkers, setFormattedMarkers] = useState<IMarker[]>()
+  const convertData = () => {
+    const formatted = markers.map(([name, lat, lng]) => ({
+      name,
+      lat,
+      lng,
+      key: JSON.stringify({ name, lat, lng }),
+    }))
+    return setFormattedMarkers(formatted)
+  }
+  useEffect(() => {
+    convertData()
+  }, [markers])
+
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
-      <APIProvider apiKey={REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG!}>
-        <Map
-          defaultCenter={{ lat: 43.64, lng: -79.94 }}
-          defaultZoom={10}
-          mapId={REACT_APP_GOOGLE_MAP_ID_HOANG!}
+    <div className={style.container}>
+      <div className={style.googleMaps}>
+        <APIProvider
+          language="en"
+          apiKey={REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG!}
         >
-          <Markers points={trees}></Markers>
-        </Map>
-      </APIProvider>
+          <Map
+            defaultCenter={{ lat: 16.047079, lng: 108.20623 }}
+            defaultZoom={5.8}
+            mapId={REACT_APP_GOOGLE_MAP_ID_HOANG!}
+          >
+            <Markers points={formattedMarkers!}></Markers>
+          </Map>
+        </APIProvider>
+      </div>
     </div>
   )
 }
