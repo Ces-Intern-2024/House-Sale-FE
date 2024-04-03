@@ -14,6 +14,7 @@ import MultiCarousel from '../../components/MultiCarousel/MultiCarousel'
 import style from './HomePage.module.scss'
 import { getAllWishList } from '../../redux/reducers/propertySlice'
 import ScrollToTop from '../../components/ScrollToTop/ScrollToTop'
+import MapProperties from '../../components/Map/MapProperties'
 
 const HomePage = () => {
   const salesList: Properties[] = useAppSelector(
@@ -69,6 +70,16 @@ const HomePage = () => {
           {wishList?.length > 0 && (
             <MultiCarousel properties={wishList} title="YOUR WISHLIST" />
           )}
+        </div>
+
+        <div className="px-30">
+          <div className="text-left text-darkBlue font-archivo text-30 ">
+            View properites on Google Maps
+          </div>
+          <span className=" w-12.5 h-1 bg-[#209c24] block mt-3 mx-0 mb-7.5"></span>
+          <div>
+            <MapProperties />
+          </div>
         </div>
         <BannerWelcome />
       </Container>

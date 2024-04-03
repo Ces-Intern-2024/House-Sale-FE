@@ -33,7 +33,7 @@ export default function AdminLayout() {
   const [isSmallNav, setIsSmallNav] = useState(false)
   const SMALL_SCREEN_WIDTH = 70
   const LARGE_SCREEN_WIDTH = 180
-  const ICON_SIZE = 30
+  const ICON_SIZE = 28
   const APPSHELL_HEIGHT = 80
   const dispatch = useAppDispatch()
   const isSmallScreen = useAppSelector((state) => state.resize.isSmallScreen)

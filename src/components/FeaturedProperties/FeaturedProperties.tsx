@@ -56,7 +56,12 @@ const FeaturedProperties = ({ title, properties, children }: Props) => {
       <div className={style.buttonContainer}>
         {showButton && (
           <Button
-            classNames={{ root: title === FEATURED_FOR_RENT ? style.rootButtonRent : style.rootButtonSale }}
+            classNames={{
+              root:
+                title === FEATURED_FOR_RENT
+                  ? style.rootButtonRent
+                  : style.rootButtonSale,
+            }}
             variant="filled"
             onClick={handleViewMore}
           >

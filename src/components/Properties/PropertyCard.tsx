@@ -111,7 +111,9 @@ const Properties = ({ data }: Props) => {
               </span>
               <Tooltip label={data.location.address}>
                 <span className={style.propertyDetailLocation}>
-                  {data.location.address}
+                  {data.location.address
+                    ? data.location.address
+                    : data.fullLocationText}
                 </span>
               </Tooltip>
             </div>
@@ -160,8 +162,7 @@ const Properties = ({ data }: Props) => {
                 <Tooltip label="Remove from wishlist">
                   <Button
                     loading={isLoading}
-                    className={style.heartIsAdded
-                    }
+                    className={style.heartIsAdded}
                     onClick={() => handleAddToWishlist(data.propertyId)}
                   >
                     <FaHeart size={20} />

@@ -25,7 +25,7 @@
   }
   
   .navText {
-    @apply my-3 w-[100px] text-lg font-bold mobile:visible overflow-ellipsis;
+    @apply my-3 w-25 text-lg font-bold mobile:visible overflow-ellipsis;
   }
   
   .navItemActive {

@@ -23,7 +23,7 @@ export default function BalanceViewer({
     <>
       <div
         style={{ backgroundColor: background }}
-        className={` rounded-[16px] shadow-xl h-full flex items-center justify-center p-3`}
+        className={style.container}
       >
         <div className=" flex flex-col items-between w-full px-5 gap-y-5">
           <div className="flex items-center justify-between gap-x-10  ">

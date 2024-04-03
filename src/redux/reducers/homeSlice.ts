@@ -21,7 +21,7 @@ const initialState: HomeState = {
 export const getAllPropertiesForSale = createAsyncThunk(
   'properties/getAllpropertiesForSale',
   async (_, thunkAPI) => {
-    const res = await axios.get(`/properties?featureId=1&limit=1000000`, {
+    const res = await axios.get(`/properties?featureId=1&limit=1000000000`, {
       signal: thunkAPI.signal,
     })
     const data = res.data.metaData.data as Properties[] // Adjust the type here
@@ -32,7 +32,7 @@ export const getAllPropertiesForSale = createAsyncThunk(
 export const getAllPropertiesForRent = createAsyncThunk(
   'properties/getAllpropertiesForRent',
   async (_, thunkAPI) => {
-    const res = await axios.get(`/properties?featureId=2&limit=1000000`, {
+    const res = await axios.get(`/properties?featureId=2&limit=1000000000`, {
       signal: thunkAPI.signal,
     })
     const data = res.data.metaData.data as Properties[] // Adjust the type here

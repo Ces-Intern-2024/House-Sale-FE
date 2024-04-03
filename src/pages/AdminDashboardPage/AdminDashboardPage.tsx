@@ -30,6 +30,7 @@ const AdminDashboardPage = () => {
   const [totalContacts, setTotalContacts] = useState(0)
   const [totalLastWeekAmount, setTotalLastWeekAmount] = useState<number[]>([])
   const [totalThisWeekAmount, setTotalThisWeekAmount] = useState<number[]>([])
+  
 
   const handleGetPropertiesCountedByFeature = async () => {
     try {
