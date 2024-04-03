@@ -77,7 +77,7 @@ export default function TransactionHistory({
           loaderProps={{ color: 'pink', type: 'bars' }}
           overlayProps={{ radius: 'sm', blur: 0.7 }}
         />
-        <div className=" max-h-[280px] pr-4 flex flex-col gap-y-1">
+        <div className=" max-h-[280px] overflow-y-scroll pr-4 flex flex-col gap-y-1">
           {histories.length > 0 ? (
             histories.map((history, index) => (
               <div key={index} className={style.row}>

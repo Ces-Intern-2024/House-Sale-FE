@@ -1,6 +1,7 @@
 import { GiCrownCoin } from 'react-icons/gi'
 import style from './BalanceViewer.module.scss'
 import React from 'react'
+import { formatMoneyToUSD } from '../../utils/commonFunctions'
 
 interface BalanceViewerProps {
   icon: JSX.Element
@@ -8,6 +9,7 @@ interface BalanceViewerProps {
   balance: number
   title: string
   isCreditBalance?: boolean
+  isMoney?: boolean
 }
 export default function BalanceViewer({
   icon,
@@ -15,17 +17,18 @@ export default function BalanceViewer({
   balance,
   title,
   isCreditBalance,
+  isMoney,
 }: BalanceViewerProps) {
   return (
     <>
       <div
         style={{ backgroundColor: background }}
-        className={` rounded-[16px] shadow-xl flex items-center justify-center p-3`}
+        className={` rounded-[16px] shadow-xl h-full flex items-center justify-center p-3`}
       >
         <div className=" flex flex-col items-between w-full px-5 gap-y-5">
           <div className="flex items-center justify-between gap-x-10  ">
             <div className="text-[24px] flex items-center font-extrabold p-0 m-0 gap-x-3">
-              {balance}
+              {isMoney === true ? formatMoneyToUSD(balance) : balance}
               {isCreditBalance && (
                 <span className={style.creditIcon}>
                   <GiCrownCoin />

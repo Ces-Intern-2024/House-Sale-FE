@@ -15,7 +15,7 @@ import { Marker, MarkerClusterer } from '@googlemaps/markerclusterer'
 import { TbBuildingWarehouse } from 'react-icons/tb'
 const MapProperties = () => {
   return (
-    <div style={{ width: '100%', height: '300px' }}>
+    <div style={{ width: '100%', height: '100vh' }}>
       <APIProvider apiKey={REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG!}>
         <Map
           defaultCenter={{ lat: 43.64, lng: -79.94 }}

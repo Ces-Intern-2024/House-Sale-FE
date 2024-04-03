@@ -5,60 +5,83 @@ import ExportData from 'highcharts/modules/export-data'
 import Accessibility from 'highcharts/modules/accessibility'
 import Exporting from 'highcharts/modules/exporting'
 import './PieChart.css'
+import { getDaysOfWeekWithTodayLast } from '../../utils/commonFunctions'
 
 ExportData(Highcharts)
 Exporting(Highcharts)
 Accessibility(Highcharts)
 
 interface BarChartProps {
-  depositedCredits: number
-  usedCredits: number
-  remainingCredits: number
+  depositedCreditsLastWeek: number[]
+  depositedCreditsThisWeek: number[]
   title?: string
   seriesName?: string
   yAxisLabel?: string
 }
 const BarChart = ({
-  depositedCredits,
-  usedCredits,
-  remainingCredits,
+  depositedCreditsLastWeek,
+  depositedCreditsThisWeek,
   title,
-  //   seriesName,
-  //   yAxisLabel,
 }: BarChartProps) => {
   const options = {
     exporting: {
       enabled: true,
     },
+    credits: {
+      enabled: false,
+    },
 
     chart: {
-      type: 'bar',
+      type: 'column',
+      spacing: [30, 30, 10, 10],
+      height: 350,
     },
+
     title: {
       text: title,
     },
     xAxis: {
-      categories: ['Credits'],
+      crosshair: true,
+      grouping: false,
+      categories: getDaysOfWeekWithTodayLast(),
     },
     yAxis: {
       title: {
-        text: 'Amount',
+        text: '$ - Dollars',
+      },
+    },
+
+    plotOptions: {
+      column: {
+        grouping: true,
+        pointPadding: 0.2,
+        borderWidth: 0,
+        pointWidth: 20,
       },
     },
     series: [
       {
-        name: 'Deposited',
-        data: [depositedCredits],
+        name: 'Last Week',
+        data: depositedCreditsLastWeek,
       },
       {
-        name: 'Used',
-        data: [usedCredits],
-      },
-      {
-        name: 'Remaining',
-        data: [remainingCredits],
+        name: 'This Week',
+        data: depositedCreditsThisWeek,
       },
     ],
+    tooltip: {
+      formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+        return (
+          '<span style="color:' +
+          this.series.color +
+          '">' +
+          this.series.name +
+          '</span>: <b style="color:black">$' +
+          this.y +
+          '</b><br/>'
+        )
+      },
+    },
   }
 
   return (
