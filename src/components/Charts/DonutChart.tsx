@@ -83,7 +83,7 @@ const DonutChart = ({ data, title }: DonutChartProps) => {
         innerSize: '60%',
         dataLabels: {
           format:
-            '<b style="color: orange; fontSize: 16px">{point.name}:</b> <b style="opacity: 0.9; fontSize: 12px">{y}%</b>',
+            '<b style="color: orange; fontSize: 16px">{point.name}:</b> <b style="opacity: 0.9; fontSize: 12px">{point.percentage:.1f}%</b>',
           filter: {
             property: 'y',
             operator: '>',

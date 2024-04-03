@@ -124,6 +124,9 @@ export default function SellerDashboardPage() {
           zIndex={10}
           overlayProps={{ radius: 'lg', blur: 10 }}
           loaderProps={{ color: 'pink', type: 'bars' }}
+          classNames={{
+            loader: 'absolute top-20 ',
+          }}
         />
         <div className="flex flex-col gap-y-2 justify-between m-0">
           <h1 className="text-primary m-0">Overview</h1>

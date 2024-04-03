@@ -108,8 +108,8 @@ export function Login() {
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
       password: (val) =>
-        val.length <= 6
-          ? 'Password should include at least 6 characters'
+        val.length < 8
+          ? 'Password should include at least 8 characters'
           : null,
     },
   })
@@ -147,6 +147,7 @@ export function Login() {
             res.data.metaData.user.isEmailVerified === false
           ) {
             setError('Please verify email before login')
+            return
           } else {
             await dispatch(
               signInSuccess({

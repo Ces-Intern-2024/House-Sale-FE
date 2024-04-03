@@ -72,7 +72,7 @@ export default function MenuBar({
       navigate('/register', { state: { isSeller: true } })
     }
     if (authenticated && Number(roleId) === Roles.Seller) {
-      navigate('/seller')
+      navigate('/seller-property')
     }
 
     if (authenticated && Number(roleId) === Roles.User)

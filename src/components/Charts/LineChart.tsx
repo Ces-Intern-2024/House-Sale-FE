@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
 import ExportData from 'highcharts/modules/export-data'
@@ -50,8 +50,9 @@ const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
           return Highcharts.dateFormat('%b %e', Number(this.value))
         },
       },
-      tickInterval: 24 * 3600 * 1000,
+      tickInterval: data.length > 14 ? 7 * 24 * 3600 * 1000 : 24 * 3600 * 1000,
     },
+
     yAxis: {
       opposite: false,
       title: {
@@ -98,6 +99,10 @@ const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
     },
   }
 
+  useEffect(() => {
+    options.series[0].data = data
+  }, [data])
+
   return (
     <div>
       {data.length > 0 && (
@@ -105,6 +110,7 @@ const LineChart = ({ data, title, seriesName, yAxisLabel }: LineChartProps) => {
           highcharts={Highcharts}
           // constructorType={'stockChart'}
           options={options}
+          updateArgs={[true, true, true]}
         />
       )}
     </div>

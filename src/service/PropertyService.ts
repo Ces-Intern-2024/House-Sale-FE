@@ -7,7 +7,6 @@ import {
 } from '../constants/codeResponse.constant'
 import axios from 'axios'
 
-
 export const addToWishListService = async (property: Properties) => {
   try {
     const res = await axiosInstance.post(
@@ -34,7 +33,7 @@ export const addToWishListService = async (property: Properties) => {
 }
 
 export const getAllWishListService = async () => {
-  try {  
+  try {
     const res = await axiosInstance.get(`/favorites-list`)
     if (res.data) {
       return res.data.metaData.favoritesList
@@ -58,4 +57,9 @@ export async function getPropertyById(propertyId: number) {
 export async function countAvailableProperties() {
   const res = await axios.get('/properties/count-available-property')
   return res.data
+}
+
+export const getAllPropertiesService = async () => {
+  const res = await axios.get(`/properties?limit=1000000000`)
+  return res
 }

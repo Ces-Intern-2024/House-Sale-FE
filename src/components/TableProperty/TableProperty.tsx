@@ -662,7 +662,7 @@ const TableProperty = ({
                   <Switch checked={false} />
                 </Tooltip>
               ) : element.status === 'Available' ? (
-                <Tooltip label="Disable property" refProp="rootRef">
+                <Tooltip label="Change to unavailable status" refProp="rootRef">
                   <Switch
                     checked={element.status === 'Available' ? true : false}
                     onChange={(event) =>
@@ -671,7 +671,7 @@ const TableProperty = ({
                   />
                 </Tooltip>
               ) : (
-                <Tooltip label="Enable property" refProp="rootRef">
+                <Tooltip label="Change to available status" refProp="rootRef">
                   <Switch
                     checked={element.status === 'Available' ? true : false}
                     onChange={(event) =>
