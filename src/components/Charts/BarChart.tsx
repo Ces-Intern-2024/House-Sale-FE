@@ -33,7 +33,6 @@ const BarChart = ({
 
     chart: {
       type: 'column',
-      spacing: [30, 30, 10, 10],
       height: 350,
     },
 
@@ -85,9 +84,14 @@ const BarChart = ({
   }
 
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    <>
+      {depositedCreditsLastWeek.length > 0 &&
+        depositedCreditsThisWeek.length > 0 && (
+          <div>
+            <HighchartsReact highcharts={Highcharts} options={options} />
+          </div>
+        )}
+    </>
   )
 }
 

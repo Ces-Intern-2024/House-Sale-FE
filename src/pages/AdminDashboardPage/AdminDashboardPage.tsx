@@ -113,6 +113,9 @@ const AdminDashboardPage = () => {
           zIndex={10}
           overlayProps={{ radius: 'lg', blur: 5 }}
           loaderProps={{ color: 'pink', type: 'bars' }}
+          classNames={{
+            loader: 'absolute top-20 ',
+          }}
         />
         <div>
           <h2 className="text-primary mt-0 mb-1">OVERVIEW</h2>

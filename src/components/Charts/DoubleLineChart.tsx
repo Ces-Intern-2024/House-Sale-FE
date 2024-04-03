@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
 import ExportData from 'highcharts/modules/export-data'
@@ -37,7 +37,6 @@ const DoubleLineChart = ({ data1, data2, title }: DoubleLineChartProps) => {
     },
 
     xAxis: {
-      type: 'datetime',
       labels: {
         formatter: function (
           this: Highcharts.AxisLabelsFormatterContextObject,
@@ -45,7 +44,7 @@ const DoubleLineChart = ({ data1, data2, title }: DoubleLineChartProps) => {
           return Highcharts.dateFormat('%b %e', Number(this.value))
         },
       },
-      tickInterval: 24 * 3600 * 1000,
+      tickInterval: data1.length > 14 ? 7 * 24 * 3600 * 1000 : 24 * 3600 * 1000,
       opposite: false,
     },
     yAxis: {
@@ -100,6 +99,11 @@ const DoubleLineChart = ({ data1, data2, title }: DoubleLineChartProps) => {
     },
   }
 
+  useEffect(() => {
+    options.series[0].data = data1
+    options.series[1].data = data2
+  }, [data1, data2])
+
   return (
     <div>
       {data1.length > 0 && data2.length > 0 && (
@@ -107,6 +111,7 @@ const DoubleLineChart = ({ data1, data2, title }: DoubleLineChartProps) => {
           highcharts={Highcharts}
           // constructorType={'stockChart'}
           options={options}
+          updateArgs={[true, true, true]}
         />
       )}
     </div>

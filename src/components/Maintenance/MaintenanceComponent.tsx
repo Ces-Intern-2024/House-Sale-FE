@@ -22,7 +22,12 @@ export default function MaintenanceComponent() {
     try {
       const res = await getMaintenanceMode()
       setChecked((_prev) => res.metaData.isMaintenance)
-      setMessage((_prev) => res.metaData.description)
+      if (res.metaData.isMaintenance === true) {
+        setMessage((_prev) => res.metaData.description)
+      } else {
+        // if it's not under maintenance, then set this default message
+        setMessage((_prev) => 'This website is under maintenance mode.')
+      }
     } catch (error) {
       console.error(error)
     }
@@ -44,7 +49,7 @@ export default function MaintenanceComponent() {
 
   const handleToggle = () => {
     Swal.fire({
-      icon: 'question',
+      icon: 'warning',
       title: 'Maintenance Mode Confirmation',
       text: `Are you sure you want to turn ${checked ? 'OFF' : 'ON'} maintenance mode?`,
       showCancelButton: true,
@@ -54,7 +59,10 @@ export default function MaintenanceComponent() {
       if (result.isConfirmed) {
         setVisible((_prev) => true)
         try {
-          await handleUpdateMaintenanceMode(!checked, message)
+          await handleUpdateMaintenanceMode(
+            !checked,
+            message ? message : 'This website is under maintenance mode.',
+          )
           setChecked((prev) => !prev)
           Swal.fire({
             icon: 'success',
@@ -145,7 +153,7 @@ export default function MaintenanceComponent() {
               className="mb-5 text-primary"
               size="md"
               label="Enter Message For Maintenance Pop-Up"
-              defaultValue={message}
+              value={message}
               autosize
               minRows={5}
               maxRows={7}
