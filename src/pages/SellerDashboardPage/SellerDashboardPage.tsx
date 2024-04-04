@@ -170,7 +170,7 @@ export default function SellerDashboardPage() {
         </div>
 
         <div className="mt-[30px] flex flex-col gap-y-2">
-          <h1 className="text-primary m-0">Balance & Notifications</h1>
+          <h1 className="text-primary m-0">Balance - Notifications</h1>
           <div>
             <div className=" grid grid-cols-12 gap-x-3 gap-y-10">
               <div className="  lg:col-span-5 mobile:col-span-12 bg-white shadow-xl rounded-[16px] pb-4 pt-2 px-5 flex flex-col items-center justify-between">

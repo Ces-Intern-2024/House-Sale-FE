@@ -53,7 +53,7 @@ export default function TransactionHistory({
           <span className="md:text-[30px] mobile:text-[24px] font-bold text-primary text-center font-archivo">
             Notifications
           </span>
-          <b className="text-primary sm:text-[16px] mobile:text-[11px] italic ">{`(Last 7 Days)`}</b>
+          <b className="text-primary sm:text-[16px] mobile:text-[11px] italic ">{`(Latest)`}</b>
           <span className={style.titleIcon}>
             <IoIosNotifications />
           </span>

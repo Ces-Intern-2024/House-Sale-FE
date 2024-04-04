@@ -15,8 +15,7 @@ const Footer = () => {
           <div className={style.footerCoverLogo}>
             <Image src={logo} className={style.footerImage} />
             <p className={style.footerSlogan}>
-              Our portfolio includes exquisite properties nestled in prime
-              locations renowned for their desirability.
+              Our portfolio includes exquisite properties nestled in prime locations renowned for their desirability.
             </p>
           </div>
         </div>
@@ -24,22 +23,22 @@ const Footer = () => {
           <div className={style.footerTitleCol}>About us</div>
           <ul className={style.footerContentCol}>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLink} href="/home">
                 Homepage
               </a>
             </li>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLinkDisabled} href="/">
                 Introduce
               </a>
             </li>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLinkDisabled} href="/" >
                 Real Estate
               </a>
             </li>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLink} href="/feedback">
                 Contact us
               </a>
             </li>
@@ -49,22 +48,22 @@ const Footer = () => {
           <div className={style.footerTitleCol}>Support</div>
           <ul className={style.footerContentCol}>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLinkDisabled} href="/">
                 FAQs
               </a>
             </li>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLinkDisabled} href="/">
                 Policy
               </a>
             </li>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLinkDisabled} href="/">
                 Benefits
               </a>
             </li>
             <li>
-              <a className={style.footerLink} href="/">
+              <a className={style.footerLinkDisabled} href="/">
                 Site map
               </a>
             </li>

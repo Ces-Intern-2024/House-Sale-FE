@@ -114,6 +114,7 @@ const AdminDashboardPage = () => {
           loaderProps={{ color: 'pink', type: 'bars' }}
         />
         <div>
+          <h2 className="text-primary mt-0 mb-1">OVERVIEW</h2>
           <div className="grid grid-cols-12 gap-4">
             <div className="col-span-12 lg:col-span-6 flex flex-col gap-y-5">
               <div className="grid grid-cols-2 gap-x-4 items-center sm:gap-y-12 mobile:gap-y-5">
@@ -167,6 +168,7 @@ const AdminDashboardPage = () => {
             </div>
 
             <div className="col-span-12 mt-7">
+              <h2 className="text-primary mt-0 mb-1">PROPERTY DISTRIBUTION</h2>
               <MapProperties />
             </div>
           </div>
