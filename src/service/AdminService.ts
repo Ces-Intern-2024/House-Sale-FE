@@ -226,6 +226,11 @@ export async function getTotalAccountsByRole(){
   return res.data
 }
 
+export async function countPropertiesByFeatureCategory(){
+  const res = await axiosInstance.get("/admin/report/count-properties-by-feature-category")
+  return res.data
+}
+
 export const AdminDepositForUser = async (
   userId: number,
   amountInDollars: number,

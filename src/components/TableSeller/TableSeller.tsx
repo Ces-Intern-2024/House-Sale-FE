@@ -321,15 +321,6 @@ function TableSeller() {
           </Table.Td>
 
           <Table.Td onClick={() => openModalUser(user)}>{user.email}</Table.Td>
-          {user.phone ? (
-            <Table.Td>{user.phone}</Table.Td>
-          ) : (
-            <Table.Td>
-              <span className="text-base text-[#7B54F4] bg-[#F1EDFE] px-2 rounded-[6px] py-1">
-                Not registered
-              </span>
-            </Table.Td>
-          )}
           {user.roleId === Roles.Seller ? (
             <Table.Td>{Number(user.balance)}</Table.Td>
           ) : (
@@ -527,8 +518,7 @@ function TableSeller() {
                   <Table.Th>ID</Table.Th>
                   <Table.Th>Avatar</Table.Th>
                   <Table.Th>Email</Table.Th>
-                  <Table.Th>Phone</Table.Th>
-                  <Table.Th>Balance</Table.Th>
+                  <Table.Th>Credits</Table.Th>
                   {/* This comment can be used in future. 
                     <Table.Th>Role</Table.Th> */}
                   <Table.Th>Created On</Table.Th>

@@ -54,3 +54,8 @@ export async function getPropertyById(propertyId: number) {
   const res = await axios.get(`/properties/${propertyId}`)
   return res.data.metaData
 }
+
+export async function countAvailableProperties() {
+  const res = await axios.get('/properties/count-available-property')
+  return res.data
+}

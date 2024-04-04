@@ -1,11 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './MenuBar.module.scss'
 import { Accordion, Menu } from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react'
 import { NavigationTree } from '../../types/navigation'
 import { NavLink, useSearchParams } from 'react-router-dom'
-import { useAppSelector } from '../../redux/hooks'
-import { Category } from '../../types'
+import { countAvailableProperties } from '../../service/PropertyService'
 
 interface CollapseMenuItemProps {
   nav: NavigationTree
@@ -20,14 +19,22 @@ export default function CollapseMenuItem({
 }: CollapseMenuItemProps) {
   const OPEN_DELAY = 50
   const CLOSE_DELAY = 50
-  const categories: Category[] = useAppSelector(
-    (state) => state.category.categoriesList,
-  )
   const [searchParams] = useSearchParams()
+  const [listOfCategoriesBasedOnFeature, setListOfCategoriesBasedOnFeature] =
+    useState<any[]>([])
+
+  const handleGetCountAvailableProperties = async () => {
+    const res = await countAvailableProperties()
+    setListOfCategoriesBasedOnFeature((_prev) => res.metaData)
+  }
+
+  useEffect(() => {
+    handleGetCountAvailableProperties()
+  }, [])
 
   return (
     <>
-      {isOfDrawers ? (
+      {isOfDrawers && listOfCategoriesBasedOnFeature ? (
         <Accordion
           variant="unstyled"
           className="w-full ml-2"
@@ -53,22 +60,26 @@ export default function CollapseMenuItem({
             </Accordion.Control>
             <Accordion.Panel className=" px-2 mt-2 bg-[#2c513f] rounded-lg shadow-xl">
               <div className=" flex flex-col justify-center">
-                {categories.map((category) => (
-                  <NavLink
-                    className=" h-[35px]  px-5 rounded-md hover:bg-[#518B76] flex items-center"
-                    key={category.categoryId}
-                    to={`/search?featureId=${nav.key}&categoryId=${category.categoryId.toString()}`}
-                  >
-                    <span
-                      className="font-semibold text-white"
-                      onClick={() => {
-                        closeDrawer
-                      }}
-                    >
-                      {category.name}
-                    </span>
-                  </NavLink>
-                ))}
+                {listOfCategoriesBasedOnFeature.length > 0 &&
+                  listOfCategoriesBasedOnFeature
+                    .filter((el: any) => String(el.featureId) === nav.key)[0]
+                    .categories.filter((el: any) => el.count > 0)
+                    .map((category: any) => (
+                      <NavLink
+                        className=" h-[35px]  px-5 rounded-md hover:bg-[#518B76] flex items-center"
+                        key={category.categoryId}
+                        to={`/search?featureId=${nav.key}&categoryId=${category.categoryId.toString()}`}
+                      >
+                        <span
+                          className="font-semibold text-white"
+                          onClick={() => {
+                            closeDrawer
+                          }}
+                        >
+                          {category.name}
+                        </span>
+                      </NavLink>
+                    ))}
               </div>
             </Accordion.Panel>
           </Accordion.Item>
@@ -107,21 +118,25 @@ export default function CollapseMenuItem({
             </NavLink>
           </Menu.Target>
           <Menu.Dropdown>
-            {categories.map((category) => (
-              <NavLink
-                key={category.categoryId}
-                to={`/search?featureId=${nav.key}&categoryId=${category.categoryId.toString()}`}
-              >
-                <Menu.Item
-                  className={styles.dropdown}
-                  onClick={() => {
-                    closeDrawer
-                  }}
-                >
-                  {category.name}
-                </Menu.Item>
-              </NavLink>
-            ))}
+            {listOfCategoriesBasedOnFeature.length > 0 &&
+              listOfCategoriesBasedOnFeature
+                .filter((el: any) => String(el.featureId) === nav.key)[0]
+                .categories.filter((el: any) => el.count > 0)
+                .map((category: any) => (
+                  <NavLink
+                    key={category.categoryId}
+                    to={`/search?featureId=${nav.key}&categoryId=${category.categoryId.toString()}`}
+                  >
+                    <Menu.Item
+                      className={styles.dropdown}
+                      onClick={() => {
+                        closeDrawer
+                      }}
+                    >
+                      {category.name}
+                    </Menu.Item>
+                  </NavLink>
+                ))}
           </Menu.Dropdown>
         </Menu>
       )}

@@ -2,6 +2,7 @@ import PieChart from '../../components/Charts/PieChart'
 import LineChart from '../../components/Charts/LineChart'
 import React, { useEffect, useState } from 'react'
 import {
+  countPropertiesByFeatureCategory,
   getContactsCountedByDate,
   getPropertiesCountedByCategory,
   getPropertiesCountedByDate,
@@ -17,6 +18,7 @@ import { primary } from '../../constants/color.constant'
 import style from './AdminReportPage.module.scss'
 import { formatDateToYYYYMMDD } from '../../utils/commonFunctions'
 import { Box, LoadingOverlay, Tooltip } from '@mantine/core'
+import DonutChart from '../../components/Charts/DonutChart'
 
 const AdminReportPage = () => {
   const [propertiesCountedByFeature, setPropertiesCountedByFeature] = useState<
@@ -40,6 +42,7 @@ const AdminReportPage = () => {
     new Date(),
   ])
   const [totalAccountsByRole, setTotalAccountsByRole] = useState<[]>([])
+  const [donutChartData, setDonutChartData] = useState<any[]>([])
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -151,6 +154,36 @@ const AdminReportPage = () => {
     setTotalAccountsByRole((_prev) => formattedData)
   }
 
+  const handleCountPropertiesByFeatureCategory = async () => {
+    const data = await countPropertiesByFeatureCategory()
+    const formattedDataForFeature: any[] = []
+    const formattedDataForCategory: any[] = []
+    data.metaData.map((el: any, index: number) => {
+      formattedDataForFeature.push({
+        name: el.name,
+        y: Number(el.totalCount),
+        inNumber: el.totalCount,
+        color: index === 0 ? '#00AFA6' : '#845EC2',
+      })
+      const tempCategoryArr: any[] = []
+
+      el.categories.map((category: any) => {
+        tempCategoryArr.push({
+          name: category.name,
+          y: Number(category.count),
+          inNumber: category.count,
+          color: index === 0 ? '#60BEB9' : '#B39CD0',
+        })
+      })
+      formattedDataForCategory.push(...tempCategoryArr)
+    })
+
+    setDonutChartData((_prev) => [
+      formattedDataForFeature,
+      formattedDataForCategory,
+    ])
+  }
+
   useEffect(() => {
     // to make sure we have the date range
     if (dateValues[0] && dateValues[1]) {
@@ -159,6 +192,7 @@ const AdminReportPage = () => {
       handleGetContactsCountedByDate()
       handleGetCreditsUsedByDate()
       handleGetTotalAccountsByRole()
+      handleCountPropertiesByFeatureCategory()
       handleGetPropertiesCountedByCategory()
       handleGetPropertiesCountedByFeature()
     }
@@ -204,6 +238,12 @@ const AdminReportPage = () => {
                 <PieChart
                   title="Total Accounts By Role"
                   data={totalAccountsByRole}
+                />
+              </div>
+              <div className={style.categoryChart}>
+                <DonutChart
+                  title="Properties By Feature And Category"
+                  data={donutChartData}
                 />
               </div>
             </div>

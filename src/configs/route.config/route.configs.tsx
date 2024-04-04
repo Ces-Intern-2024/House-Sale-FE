@@ -1,32 +1,5 @@
 import { lazy } from 'react'
 import { Roles } from '../../types/role'
-import { formatRoutePath } from '../../utils/commonFunctions'
-
-const categoryNames = [
-  'apartment',
-  'hotel',
-  'house',
-  'serviced-apartment',
-  'villa',
-]
-
-export const forRentCategoryRoutes: any[] = []
-export const forSaleCategoryRoutes: any[] = []
-
-categoryNames.forEach((category, index: any) => {
-  forRentCategoryRoutes.push({
-    key: `/for-rent/${category}/${index}`,
-    path: `/for-rent/${formatRoutePath(category)}`,
-    component: lazy(() => import('../../pages/SearchPage/SearchPage')),
-    authority: [],
-  })
-  forSaleCategoryRoutes.push({
-    key: `/for-sale/${category}/${index}`,
-    path: `/for-sale/${formatRoutePath(category)}`,
-    component: lazy(() => import('../../pages/SearchPage/SearchPage')),
-    authority: [],
-  })
-})
 
 export const publicRoutes = [
   {
@@ -71,8 +44,6 @@ export const publicRoutes = [
     component: lazy(() => import('../../pages/AboutUsPage/AboutUsPage')),
     authority: [],
   },
-  ...forRentCategoryRoutes,
-  ...forSaleCategoryRoutes,
 ]
 
 export const protectedRoutes = [
