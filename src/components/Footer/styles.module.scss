@@ -33,9 +33,13 @@
   @apply list-none mobile:text-center;
 }
 
-.footerLink {
+.footerLink, .footerLinkDisabled {
   @apply flex leading-[24px] items-center lg:justify-start no-underline text-blur
   hover:text-white mobile:justify-center;
+}
+
+.footerLinkDisabled {
+  pointer-events: none;
 }
 
 .iconLink {

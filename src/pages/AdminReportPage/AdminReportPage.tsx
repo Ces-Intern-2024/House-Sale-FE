@@ -182,7 +182,8 @@ const AdminReportPage = () => {
 
         <div className="outer flex flex-col mt-7 gap-y-14 px-2 font-archivo">
           <div>
-            <div className={style.coverPieChart}>
+            <h2 className="text-primary mt-0 mb-1">OVERVIEW</h2>
+            <div className={style.coverPieChart}> 
               <div className={style.featureChart}>
                 <PieChart
                   title="Properties By Feature"
@@ -207,14 +208,14 @@ const AdminReportPage = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-10 gap-4 relative">
-            <div className="col-span-7">
+          <div className="grid grid-cols-12 gap-4 relative">
+            <div className="col-span-9">
               <div className="flex flex-col gap-y-2">
-                <h2 className="text-primary m-0 ">Property Created By Date</h2>
+                <h2 className="text-primary m-0 ">Total Property Created By Date</h2>
                 <div className={style.countedByDate}>
                   <LineChart
                     data={propertiesCountedByDate}
-                    title="Properties Created By Date"
+                    title="Total Properties Created By Date"
                     seriesName="Number of Properties Created"
                     yAxisLabel="Properties"
                   />
@@ -222,12 +223,12 @@ const AdminReportPage = () => {
               </div>
 
               <div className="flex flex-col gap-y-2 mt-6">
-                <h2 className="text-primary m-0 ">Contacts Received By Date</h2>
+                <h2 className="text-primary m-0 ">Distribution Of Contacts Sent To Sellers By Date</h2>
                 <div className={style.countedByDate}>
                   <LineChart
                     data={contactsCountedByDate}
-                    title="Contacts Received By Date"
-                    seriesName="Number of Contacts Received"
+                    title="Distribution Of Contacts Sent To Sellers By Date"
+                    seriesName="Number of Contacts Sent"
                     yAxisLabel="Contacts"
                   />
                 </div>
@@ -235,11 +236,11 @@ const AdminReportPage = () => {
 
               <div className="flex flex-col gap-y-2 mt-6">
                 <h2 className="text-primary m-0">
-                  Total Amount Deposited By Date
+                Total Dollars and Credits All Seller Deposited By Date
                 </h2>
                 <div className={style.countedByDate}>
                   <DoubleLineChart
-                    title="Total Amount Deposited By Date In Credit and Dollar"
+                    title="Total Dollars and Credits All Seller Deposited By Date"
                     data1={totalAmountDepositedByDateInCredit}
                     data2={totalAmountDepositedByDateInDollar}
                   />
@@ -247,18 +248,18 @@ const AdminReportPage = () => {
               </div>
 
               <div className="flex flex-col gap-y-2 mt-6">
-                <h2 className="text-primary m-0 ">Credits Used By Date</h2>
+                <h2 className="text-primary m-0 ">Overall Seller Credits Utilized By Date</h2>
                 <div className={style.countedByDate}>
                   <LineChart
                     data={totalCreditsUsedByDate}
-                    title="Credits Used By Date"
+                    title="Overall Seller Credits Utilized By Date"
                     seriesName="Number of Credits Used"
                     yAxisLabel="Credits"
                   />
                 </div>
               </div>
             </div>
-            <div className="col-span-3 min-h-[1600px] ">
+            <div className="col-span-3 min-h-[1600px] justify-self-end">
               <div className="sticky top-[120px]">
                 <DatePickerInput
                   className="shadow-md"
