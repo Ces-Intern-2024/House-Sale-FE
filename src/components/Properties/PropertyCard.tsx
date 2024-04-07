@@ -113,7 +113,7 @@ const Properties = ({ data }: Props) => {
                 <span className={style.propertyDetailLocation}>
                   {data.location.address
                     ? data.location.address
-                    : data.fullLocationText}
+                    : data.location.street}
                 </span>
               </Tooltip>
             </div>

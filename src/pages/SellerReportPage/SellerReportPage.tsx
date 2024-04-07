@@ -181,7 +181,7 @@ function SellerReportPage() {
 
         <div className="outer flex flex-col mt-7 gap-y-14 px-2 font-archivo">
           <div>
-          <h2 className="text-primary m-0 mb-2">Property Overview</h2>
+            <h2 className="text-primary m-0 mb-2">Property Overview</h2>
             <div className={style.coverPieChart}>
               <div className={style.featureChart}>
                 <PieChart
@@ -199,57 +199,7 @@ function SellerReportPage() {
           </div>
 
           <div className="grid grid-cols-12 gap-4 relative">
-            <div className="col-span-9">
-              <div className="flex flex-col gap-y-2">
-                <h2 className="text-primary m-0 mb-2">Total Property Created By Date</h2>
-                <div className={style.countedByDate}>
-                  <LineChart
-                    data={propertiesCountedByDate}
-                    title="Total Properties Created By Date"
-                    seriesName="Number of Properties Created"
-                    yAxisLabel="Properties"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-y-2 mt-6">
-                <h2 className="text-primary m-0 ">Total Number Of Contacts Received By Date</h2>
-                <div className={style.countedByDate}>
-                  <LineChart
-                    data={contactsCountedByDate}
-                    title="Total Number Of Contacts Received By Date"
-                    seriesName="Number of Contacts Received"
-                    yAxisLabel="Contacts"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-y-2 mt-6">
-                <h2 className="text-primary m-0">
-                Total Dollars and Credits Deposited By Date
-                </h2>
-                <div className={style.countedByDate}>
-                  <DoubleLineChart
-                    title="Total Dollars and Credits Deposited By Date"
-                    data1={totalAmountDepositedByDateInCredit}
-                    data2={totalAmountDepositedByDateInDollar}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-y-2 mt-6">
-                <h2 className="text-primary m-0 ">Total Credits Used By Date</h2>
-                <div className={style.countedByDate}>
-                  <LineChart
-                    data={totalCreditsUsedByDate}
-                    title="Total Credits Used By Date"
-                    seriesName="Number of Credits Used"
-                    yAxisLabel="Credits"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="col-span-3 min-h-[1600px] justify-self-end">
+            <div className="col-span-12 min-h-[1600px] justify-self-end absolute right-0 z-[5]">
               <div className="sticky top-[120px] ">
                 <DatePickerInput
                   maxDate={new Date()}
@@ -286,6 +236,62 @@ function SellerReportPage() {
                   value={dateValues}
                   onChange={setDateValues}
                 />
+              </div>
+            </div>
+            <div className="col-span-12">
+              <div className="flex flex-col gap-y-2">
+                <h2 className="text-primary m-0 mb-2">
+                  Total Property Created By Date
+                </h2>
+                <div className={style.countedByDate}>
+                  <LineChart
+                    data={propertiesCountedByDate}
+                    title="Total Properties Created By Date"
+                    seriesName="Number of Properties Created"
+                    yAxisLabel="Properties"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-y-2 mt-6">
+                <h2 className="text-primary m-0 ">
+                  Total Number Of Contacts Received By Date
+                </h2>
+                <div className={style.countedByDate}>
+                  <LineChart
+                    data={contactsCountedByDate}
+                    title="Total Number Of Contacts Received By Date"
+                    seriesName="Number of Contacts Received"
+                    yAxisLabel="Contacts"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-y-2 mt-6">
+                <h2 className="text-primary m-0">
+                  Total Dollars and Credits Deposited By Date
+                </h2>
+                <div className={style.countedByDate}>
+                  <DoubleLineChart
+                    title="Total Dollars and Credits Deposited By Date"
+                    data1={totalAmountDepositedByDateInCredit}
+                    data2={totalAmountDepositedByDateInDollar}
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-y-2 mt-6">
+                <h2 className="text-primary m-0 ">
+                  Total Credits Used By Date
+                </h2>
+                <div className={style.countedByDate}>
+                  <LineChart
+                    data={totalCreditsUsedByDate}
+                    title="Total Credits Used By Date"
+                    seriesName="Number of Credits Used"
+                    yAxisLabel="Credits"
+                  />
+                </div>
               </div>
             </div>
           </div>

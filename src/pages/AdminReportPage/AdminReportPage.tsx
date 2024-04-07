@@ -249,7 +249,42 @@ const AdminReportPage = () => {
             </div>
           </div>
           <div className="grid grid-cols-12 gap-4 relative">
-            <div className="col-span-9">
+            <div className="col-span-12 min-h-[1600px] absolute z-[5] right-0">
+              <div className="sticky top-[120px] ">
+                <DatePickerInput
+                  maxDate={new Date()}
+                  minDate={new Date('2024-01-15')}
+                  className="shadow-md"
+                  clearable={true}
+                  allowSingleDateInRange={true}
+                  leftSection={<IconCalendar color={primary} stroke={1.5} />}
+                  rightSection={
+                    <Tooltip label="Reset" className="bg-gray-800">
+                      <IconHistory
+                        color={primary}
+                        stroke={1.5}
+                        className=" cursor-pointer"
+                        onClick={() =>
+                          setDateValues([new Date('2024-01-15'), new Date()])
+                        }
+                      />
+                    </Tooltip>
+                  }
+                  size="md"
+                  classNames={{
+                    day: style.day,
+                    weekday: ' text-gray-600 font-bold',
+                    label: 'text-primary',
+                  }}
+                  w={360}
+                  type="range"
+                  placeholder="Pick date range"
+                  value={dateValues}
+                  onChange={setDateValues}
+                />
+              </div>
+            </div>
+            <div className="col-span-12">
               <div className="flex flex-col gap-y-2">
                 <h2 className="text-primary m-0 ">
                   Total Property Created By Date
@@ -303,41 +338,6 @@ const AdminReportPage = () => {
                     yAxisLabel="Credits"
                   />
                 </div>
-              </div>
-            </div>
-            <div className="col-span-3 min-h-[1600px] justify-self-end">
-              <div className="sticky top-[120px]">
-                <DatePickerInput
-                  maxDate={new Date()}
-                  minDate={new Date('2024-01-15')}
-                  className="shadow-md"
-                  clearable={true}
-                  allowSingleDateInRange={true}
-                  leftSection={<IconCalendar color={primary} stroke={1.5} />}
-                  rightSection={
-                    <Tooltip label="Reset" className="bg-gray-800">
-                      <IconHistory
-                        color={primary}
-                        stroke={1.5}
-                        className=" cursor-pointer"
-                        onClick={() =>
-                          setDateValues([new Date('2024-01-15'), new Date()])
-                        }
-                      />
-                    </Tooltip>
-                  }
-                  size="md"
-                  classNames={{
-                    day: style.day,
-                    weekday: ' text-gray-600 font-bold',
-                    label: 'text-primary',
-                  }}
-                  w={360}
-                  type="range"
-                  placeholder="Pick date range"
-                  value={dateValues}
-                  onChange={setDateValues}
-                />
               </div>
             </div>
           </div>
