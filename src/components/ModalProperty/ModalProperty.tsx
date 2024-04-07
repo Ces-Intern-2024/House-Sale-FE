@@ -164,7 +164,7 @@ const ModalProperty = ({
       districtCode: yup.string().required('District Code is required'),
       wardCode: yup.string().required('Ward Code is required'),
       street: yup.string().required('Street is required'),
-      address: yup.string().nullable(),
+      address: yup.string().required('Address is required'),
       price: yup.number().positive().required('Price is required'),
       landArea: yup.string().nullable(),
       areaOfUse: yup.string().nullable(),
@@ -334,6 +334,8 @@ const ModalProperty = ({
           text: error.response.data.error.message,
           icon: 'error',
         })
+      } finally {
+        setLoading(false)
       }
     }
   }
@@ -577,6 +579,7 @@ const ModalProperty = ({
             {...form.getInputProps('address')}
             className={style.colModal}
             label="Address"
+            required
             placeholder="Enter address"
             readOnly={property === null ? false : true}
             classNames={{

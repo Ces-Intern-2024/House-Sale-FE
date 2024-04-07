@@ -32,8 +32,8 @@ import { useDisclosure } from '@mantine/hooks'
 import ModalManageUser from '../ModalManageUser/ModalManageUser'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
-import ModalAdminDeposits from '../ModalAdminDeposits/ModalAdminDeposits'
 import { useNavigate } from 'react-router-dom'
+import ModalAdminDepositsMain from '../ModalAdminDeposits/ModalAdminDeposits1'
 
 function TableSeller() {
   const [email, setEmail] = useState('')
@@ -576,7 +576,7 @@ function TableSeller() {
           body: style.bodyDeposit,
         }}
       >
-        <ModalAdminDeposits
+        <ModalAdminDepositsMain
           user={userSelected!}
           setIsUpdated={setIsUpdated}
           isUpdated={isUpdated}
