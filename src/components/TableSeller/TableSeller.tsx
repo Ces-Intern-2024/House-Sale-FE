@@ -33,7 +33,7 @@ import ModalManageUser from '../ModalManageUser/ModalManageUser'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
-import ModalAdminDepositsMain from '../ModalAdminDeposits/ModalAdminDeposits1'
+import ModalAdminDepositsMain from '../ModalAdminDeposits/ModalAdminDepositsMain'
 
 function TableSeller() {
   const [email, setEmail] = useState('')
