@@ -49,6 +49,7 @@ import { PiArrowsDownUp } from 'react-icons/pi'
 import Swal from 'sweetalert2'
 import { cancelBtn, confirmBtn } from '../../constants/color.constant'
 import { EDIT_PROP, VIEW_PROP } from '../../constants/actions.constant'
+import { getMaxPrice } from '../../service/SearchService'
 
 const TablePropertyAdmin = () => {
   const [opened, { open, close }] = useDisclosure(false)
@@ -93,12 +94,9 @@ const TablePropertyAdmin = () => {
   }, [keyword, categoryId, featureId, sortBy, priceRange, provinceCode])
 
   const handleGetMaxPrice = async () => {
-    const res = await getPropertiesForAdminService({
-      orderBy: 'price',
-      sortBy: 'desc',
-    })
-    setMaxPrice(Number(res.data.metaData.data[0].price))
-    setPriceRange([0, Number(res.data.metaData.data[0].price)])
+    const res = await getMaxPrice()
+    setMaxPrice(res.metaData)
+    setPriceRange([0, res.metaData])
   }
   useEffect(() => {
     handleGetMaxPrice()
