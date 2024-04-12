@@ -1,5 +1,5 @@
 .container {
-  @apply bg-white py-4  min-h-125 my-7.5 rounded-2xl mx-[16px] px-10 font-archivo;
+  @apply bg-white py-4 min-h-125 my-7.5 rounded-2xl md:mx-[16px] mobile:mx-[12px] px-10 font-archivo;
 }
 
 .outer {
@@ -37,7 +37,7 @@
 }
 
 .btn {
-  @apply mt-6 bg-orangeBtn hover:bg-darkBlue w-1/2;
+  @apply mt-6 bg-orangeBtn hover:bg-darkBlue sm:w-1/2 mobile:w-2/3;
 }
 
 .uploadBtn {
@@ -45,7 +45,7 @@
 }
 
 .disableBtn {
-  @apply mt-6 bg-orangeBtn text-white w-1/2 opacity-70;
+  @apply mt-6 bg-orangeBtn text-white sm:w-1/2 mobile:w-2/3 opacity-70;
 }
 
 .personalInfoOuter {

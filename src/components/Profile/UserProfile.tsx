@@ -64,7 +64,7 @@ export default function SellerProfile() {
   const [addressEditing, setAddressEditing] = useState(false)
   const [locationEditing, setLocationEditing] = useState(false)
 
-  const [_opened, { close }] = useDisclosure(false)
+  const [opened, { open, close }] = useDisclosure(false)
 
   const [userInfo, setUserInfo] = useState<User>()
 
@@ -135,6 +135,8 @@ export default function SellerProfile() {
       const res = await getMaintenanceModeForSeller()
       setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
       setMaintenanceMessage(res.metaData.description)
+      console.log(res.metaData.isMaintenance)
+
       return res.metaData.isMaintenance
     } catch (error) {
       console.error(error)
@@ -264,9 +266,16 @@ export default function SellerProfile() {
   return (
     <>
       <div className={styles.container}>
-        <div className=" flex justify-between items-center">
+        <div className=" flex justify-between gap-x-1 items-center w-full">
           <h1 className={styles.heading}>My Profile</h1>
-          <Button variant="outline" onClick={() => handleGetMaintenanceMode()}>
+          <Button
+            className=" mobile:text-[12px] sm:text-[16px]"
+            variant="outline"
+            onClick={async () => {
+              const status = await handleGetMaintenanceMode()
+              if (status === false) open()
+            }}
+          >
             Change Password
           </Button>
         </div>
@@ -509,7 +518,7 @@ export default function SellerProfile() {
           </div>
         </div>
 
-        <ChangePassword isOpened={isUnderMaintenance} onClose={close} />
+        <ChangePassword isOpened={opened} onClose={close} />
         <UnderMaintenance
           setStatus={setIsUnderMaintenance}
           status={isUnderMaintenance}

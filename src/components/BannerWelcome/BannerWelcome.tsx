@@ -7,9 +7,11 @@ const BannerWelcome = () => {
     <div className={style.bannerWelcomeContainer}>
       <div className={style.bannerWelcomeContent}>
         <div className={style.bannerWelcomeText}>
-          <h4 className={style.bannerTitle}>Your Satisfaction</h4>
-          <h2 className={style.bannerSubTitle}>LUXURY</h2>
-          <h1 className={style.bannerTitle}>House</h1>
+          <div className="flex flex-col md:gap-y-10 mobile:gap-y-5 my-0">
+            <h4 className={style.bannerTitle}>Your Satisfaction</h4>
+            <h2 className={style.bannerSubTitle}>Is Our Priority</h2>
+          </div>
+
           <p className={style.bannerDescription}>
             Determined to uphold the highest standards, our seasoned team of
             experts stands prepared to deliver individualized support and expert
