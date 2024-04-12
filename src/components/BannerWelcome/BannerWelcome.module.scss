@@ -11,10 +11,11 @@
 }
 
 .bannerWelcomeText {
-  @apply z-[1]  text-center flex-col justify-evenly items-center   
+  @apply z-[1]  text-center flex-col justify-center items-center md:gap-y-10 mobile:gap-y-5
   xl:flex xl:max-h-[500px] xl:max-w-[40%] xl:min-h-[500px] xl:min-w-[50%] 
   lg:flex lg:max-h-[500px] lg:max-w-[40%] lg:min-h-[500px] lg:min-w-[50%]
-  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%] mobile:gap-y-[0px]  relative;
+  mobile:flex mobile:max-h-[700px] mobile:max-w-[100%]  
+  relative;
 }
 
 .bannerWelcomeImage {
@@ -31,17 +32,17 @@
 
 .bannerTitle {
   @apply tracking-tight mt-0 mb-0 text-[7xl]  lg:text-[64px] font-archivo font-[400] lg:leading-[64px] 
-  mobile:text-[40px] mobile:leading-[50px] font-semibold leading-tight text-pretty;
+  mobile:text-[40px] mobile:leading-[50px] font-semibold text-pretty leading-[1.1] m-0;
 }
 
 .bannerSubTitle {
   @apply font-[100] lg:text-[64px] font-[Inter_Sans] text-primary  font-[500]
-  mobile:text-[32px] mobile:leading-[0px]  
+  mobile:text-[32px] mobile:leading-[0px] m-0 p-0
   italic;
 }
 
 .bannerDescription {
   @apply max-w-[420px] text-[18px] 
   mobile:max-w-[300px]
-  font-semibold;
+  font-semibold text-pretty;
 }

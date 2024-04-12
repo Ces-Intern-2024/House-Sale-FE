@@ -26,6 +26,7 @@ export default function ChangePassword({
   const [visible, { toggle }] = useDisclosure(false)
   const [visibleCurrentPw, handlers] = useDisclosure(false)
   const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const passwordSchema = yup.object().shape({
     currentPassword: yup
@@ -73,6 +74,7 @@ export default function ChangePassword({
     passwordForm.clearErrors()
     const { currentPassword, newPassword } = values
     try {
+      setIsLoading(true)
       await changePassword({ currentPassword, newPassword })
       onClose()
       passwordForm.reset()
@@ -87,6 +89,8 @@ export default function ChangePassword({
       passwordForm.setErrors({
         currentPassword: error.response.data.error.message,
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -154,7 +158,12 @@ export default function ChangePassword({
             />
             <div>
               <div className=" flex justify-center">
-                <Button size="md" type="submit" className={styles.btn}>
+                <Button
+                  size="md"
+                  type="submit"
+                  className={styles.btn}
+                  loading={isLoading}
+                >
                   Confirm
                 </Button>
               </div>
