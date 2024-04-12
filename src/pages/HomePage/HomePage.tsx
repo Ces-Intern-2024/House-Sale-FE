@@ -72,9 +72,9 @@ const HomePage = () => {
           )}
         </div>
 
-        <div className="px-30">
-          <div className="text-left text-darkBlue font-archivo text-30 ">
-            View properites on Google Maps
+        <div className="lg:px-30 mobile:px-5">
+          <div className="text-left text-darkBlue font-archivo text-30 font-semibold">
+            Property Distribution
           </div>
           <span className=" w-12.5 h-1 bg-[#209c24] block mt-3 mx-0 mb-7.5"></span>
           <div>

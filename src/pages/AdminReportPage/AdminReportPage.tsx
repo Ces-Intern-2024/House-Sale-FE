@@ -250,7 +250,7 @@ const AdminReportPage = () => {
           </div>
           <div className="grid grid-cols-12 gap-4 relative">
             <div className="col-span-12 min-h-[1600px] absolute z-[5] right-0">
-              <div className="sticky top-[120px] ">
+              <div className="sticky top-[80px] ">
                 <DatePickerInput
                   maxDate={new Date()}
                   minDate={new Date('2024-01-15')}
