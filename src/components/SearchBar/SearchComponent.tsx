@@ -38,6 +38,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useDisclosure } from '@mantine/hooks'
 import { Properties } from '../../types/properties'
 import { setIsSmallScreen } from '../../redux/reducers/resizeSlice'
+import { formatMoneyToUSD } from '../../utils/commonFunctions'
 
 export default function SearchComponent() {
   const [flag, setFlag] = useState(false) // to make sure initial call of setRangeValue not recall api
@@ -565,6 +566,7 @@ export default function SearchComponent() {
           defaultValue={priceRange}
           onChangeEnd={setPriceRange}
           labelAlwaysOn
+          label={(value) => `${formatMoneyToUSD(Math.round(value))}`}
         />
       </div>
     </>
