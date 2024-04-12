@@ -624,6 +624,7 @@ const TablePropertyAdmin = () => {
                       defaultValue={priceRange}
                       onChangeEnd={setPriceRange}
                       labelAlwaysOn
+                      label={(value) => `${formatMoneyToUSD(value)}`}
                     />
                   </div>
                   <Button

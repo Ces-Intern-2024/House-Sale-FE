@@ -85,10 +85,11 @@ export default function Register() {
     password: yup
       .string()
       .matches(
-        /^(?=.*\d)[a-zA-Z\d]{8,}$/,
+        /^(?=.*[0-9])(?!=.*[a-z])(?!=.*[A-Z])(?!=.*[@\W])(?!.* @).{8,16}$/,
         'Password must contain at least 1 number and 1 character',
       )
-      .min(8)
+      .min(8, 'Password must be at least 8 characters long')
+      .max(16, 'Password must be at most 16 characters long')
       .required(),
     confirmPassword: yup
       .string()

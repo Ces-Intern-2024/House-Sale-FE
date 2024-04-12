@@ -94,6 +94,8 @@ const DoubleLineChart = ({ data1, data2, title }: DoubleLineChartProps) => {
     tooltip: {
       shared: true,
       crosshairs: true,
+      headerFormat:
+        '<span style="font-size: 10px">{point.key:%A, %e %b %Y}</span><br/>',
       pointFormat:
         '<span style="color:{series.color}">{series.name}</span>: <b style="color:black">{point.y}</b><br/>',
     },
