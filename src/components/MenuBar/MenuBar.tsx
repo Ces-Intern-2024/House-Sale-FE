@@ -60,7 +60,12 @@ export default function MenuBar({
     }
   }
 
-  const handleNavigateToPublishing = () => {
+  const handleNavigateToPublishing = async () => {
+    const status = await handleGetMaintenanceMode()
+    if (status === true) {
+      setIsUnderMaintenance((_prev) => true)
+      return
+    }
     if (!authenticated) {
       Swal.fire({
         title: 'Please register first',

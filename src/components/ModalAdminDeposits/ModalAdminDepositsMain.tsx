@@ -85,7 +85,7 @@ const ModalAdminDepositsMain = ({
             className=" mr-3"
           ></GiCrownCoin>
           <span className="mr-3">=</span>
-          {Number(conversionRate).toFixed()} dollars
+          {Number(conversionRate)} dollars
         </span>
       </h1>
 
@@ -116,7 +116,7 @@ const ModalAdminDepositsMain = ({
       ></NumberInput>
       <div>
         <Button
-            loading={isLoading}
+          loading={isLoading}
           disabled={shouldShowCheckoutForm ? true : false}
           className={`${shouldShowCheckoutForm ? 'bg-orangeBtn text-white opacity-70' : 'bg-orangeBtn hover:bg-darkBlue'} `}
           fullWidth

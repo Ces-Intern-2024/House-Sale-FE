@@ -99,6 +99,8 @@ export default function UpgradeSeller({
     form.clearErrors()
     setLoading(true)
     const res = await upgradeToSeller(values)
+    console.log(res)
+
     handleLogout(res.message)
     setLoading(false)
   }
@@ -141,9 +143,15 @@ export default function UpgradeSeller({
           )}
         >
           <Stack className=" px-2">
-            <h4 className=" my-0 text-primary">
-              Please fill in your information to upgrade to seller!
-            </h4>
+            <div>
+              <h4 className=" m-0 text-primary italic">
+                Only sellers can use the listing function.
+              </h4>
+              <h4 className=" m-0 text-primary">
+                Please fill in your information to upgrade to seller if you are
+                interested.
+              </h4>
+            </div>
             <>
               <TextInput
                 size="md"
