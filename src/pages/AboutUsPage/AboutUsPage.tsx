@@ -49,7 +49,7 @@ function AboutUsPage() {
         <div className="flex md:flex-row mobile:flex-col bg-blur mobile:min-h-[330px] items-center rounded-[16px] p-3 gap-x-2">
           <div className="w-full sm:w-1/2 flex flex-col items-center">
             <h1 className="font-semibold font-alice text-lg sm:text-3xl m-0">
-              MISSIONs
+              MISSIONS
             </h1>
             <p className="text-sm sm:text-base font-alice">
               Our mission at MODERN HOUSE is to simplify the process of buying,

@@ -213,7 +213,7 @@ export default function SellerDashboardPage() {
                   className=" mr-3"
                 ></GiCrownCoin>
                 <span className="mr-3">=</span>
-                {Number(conversionRate).toFixed()} dollars
+                {Number(conversionRate)} dollars
               </span>
             </h1>
 
