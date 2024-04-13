@@ -82,7 +82,7 @@ export default function CreditComponent({
             <GiCrownCoin size={18} />
           </span>
           <span className={style.currentConversionRate}>
-            = {Number(conversionRate).toFixed()} dollars
+            = {Number(conversionRate)} dollars
           </span>
         </div>
       </div>
