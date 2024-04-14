@@ -99,8 +99,6 @@ export default function UpgradeSeller({
     form.clearErrors()
     setLoading(true)
     const res = await upgradeToSeller(values)
-    console.log(res)
-
     handleLogout(res.message)
     setLoading(false)
   }

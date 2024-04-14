@@ -135,8 +135,6 @@ export default function SellerProfile() {
       const res = await getMaintenanceModeForSeller()
       setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
       setMaintenanceMessage(res.metaData.description)
-      console.log(res.metaData.isMaintenance)
-
       return res.metaData.isMaintenance
     } catch (error) {
       console.error(error)

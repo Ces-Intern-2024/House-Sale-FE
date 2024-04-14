@@ -1,5 +1,5 @@
 .drawers {
-  @apply w-[80%] lg:hidden xs:block block bg-drawerBackground;
+  @apply xl:hidden mobile:block  bg-drawerBackground;
 }
 
 .iconAlign {
@@ -7,13 +7,13 @@
 }
 
 .toggleBtn {
-  @apply lg:hidden xs:block block bg-primary hover:bg-primary;
+  @apply xl:hidden mobile:block  bg-primary hover:bg-primary;
 }
 
 .drawersContent {
-  @apply bg-drawerBackground px-5  h-[100px] flex items-center justify-start;
+  @apply bg-drawerBackground px-5  flex justify-start;
 }
 
 .logo {
-  @apply w-1/2 cursor-pointer;
+  @apply w-2/3 cursor-pointer;
 }

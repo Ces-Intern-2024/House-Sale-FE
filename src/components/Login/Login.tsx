@@ -127,13 +127,16 @@ export function Login() {
       const roleId: Roles = res.data.metaData.user.roleId
       if (
         res.data.metaData.user.isEmailVerified === false &&
-        roleId !== Roles.User
+        Number(roleId) !== Roles.User
       ) {
         setError((_prev) => 'Please verify email before login')
         return
       }
       if (res.data.metaData.user.isActive === false) {
-        setError((_prev) => 'Please activate your account before login')
+        setError(
+          (_prev) =>
+            'Your account has been deactivated. We apologize for any inconvenience.',
+        )
         return
       }
       // if not meet any of these 2 conditions above then user can login
@@ -154,60 +157,6 @@ export function Login() {
       setIsLoading(false)
     }
   }
-
-  // Jellyfish's code :)
-  //  const handleLogin = async (value: Props) => {
-  //    setError('')
-  //    try {
-  //      setIsLoading(true)
-  //      const res = await axios.post(
-  //        LOGIN_URL,
-  //        { email: value.email, password: value.password },
-  //        {
-  //          headers: { 'Content-Type': 'application/json' },
-  //          withCredentials: true,
-  //        },
-  //      )
-  //      const roleId: Roles = res.data.metaData.user.roleId
-  //      const rolePath = rolePaths[roleId]
-  //      if (res.data.metaData.user.isActive) {
-  //        await dispatch(setUser(res.data.metaData.user))
-  //        if (rolePath) {
-  //          if (
-  //            roleId === Roles.Seller &&
-  //            res.data.metaData.user.isEmailVerified === true
-  //          ) {
-  //            await dispatch(
-  //              signInSuccess({
-  //                signedIn: true,
-  //                tokens: { ...res.data.metaData.tokens },
-  //              }),
-  //            )
-  //            navigate(rolePath)
-  //          } else if (
-  //            roleId === Roles.Seller &&
-  //            res.data.metaData.user.isEmailVerified === false
-  //          ) {
-  //            setError('Please verify email before login')
-  //            return
-  //          } else {
-  //            await dispatch(
-  //              signInSuccess({
-  //                signedIn: true,
-  //                tokens: { ...res.data.metaData.tokens },
-  //              }),
-  //            )
-  //            navigate(rolePath)
-  //          }
-  //        }
-  //      }
-  //      setIsLoading(false)
-  //    } catch (error: any) {
-  //      setError(error.response.data.error.message)
-  //    } finally {
-  //      setIsLoading(false)
-  //    }
-  //  }
 
   return (
     <>
