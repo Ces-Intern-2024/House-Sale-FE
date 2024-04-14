@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Menu, Avatar, Accordion, ScrollArea } from '@mantine/core'
+import { Menu, Avatar, Accordion } from '@mantine/core'
 import styles from './MenuBar.module.scss'
 import { useNavigate, NavLink, useLocation } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -153,106 +153,107 @@ export default function MenuBar({
             }
           })}
           {isOfDrawers ? (
-            <ScrollArea.Autosize mah="100%" maw="100%" type="never">
-              <div className="flex items-center cursor-pointer">
-                {user.userId ? (
-                  <>
-                    <Accordion
-                      variant="unstyled"
-                      className="w-full ml-2"
-                      classNames={{
-                        content: 'px-0',
-                        chevron: 'text-white',
-                        label: 'p-0',
-                        panel: 'text-black',
-                      }}
+            <div className="flex items-center cursor-pointer w-full">
+              {user.userId ? (
+                <>
+                  <Accordion
+                    variant="unstyled"
+                    className="w-full mb-5"
+                    classNames={{
+                      chevron:
+                        'text-white w-[50px] h-[50px] flex justify-center items-center',
+                      label: 'p-0',
+                      panel: 'text-black',
+                      control: 'p-0',
+                      content: 'p-0',
+                    }}
+                    w="100%"
+                  >
+                    <Accordion.Item
+                      value="photos"
+                      className="hover:bg-transparent"
                     >
-                      <Accordion.Item
-                        value="photos"
-                        className="hover:bg-transparent"
-                      >
-                        <Accordion.Control className="w-[220px] px-5 ">
-                          <NavLink to="#">
-                            <div className=" flex flex-col justify-center gap-y-1 flex-wrap">
-                              <div className="flex items-center">
-                                <Avatar size={28} color="white" />
-                                <div className={styles.nameTag}>
-                                  {user.fullName
-                                    ? user.fullName.toUpperCase()
-                                    : 'USER'}
-                                </div>
+                      <Accordion.Control>
+                        <NavLink to="#" className="p-0 m-0">
+                          <div className={styles.nameTagContainer}>
+                            <div className="flex items-center ">
+                              <Avatar size={28} color="white" />
+                              <div className={styles.nameTag}>
+                                {user.fullName
+                                  ? user.fullName.toUpperCase()
+                                  : 'USER'}
                               </div>
-                              <span
-                                className={`h-[3px] bg-[#ffa500] ${activeLink === '#' ? 'opacity-100' : 'opacity-0'}`}
-                              ></span>
                             </div>
-                          </NavLink>
-                        </Accordion.Control>
-                        <Accordion.Panel className=" px-2 mt-2 bg-[#2c513f] rounded-lg shadow-xl">
-                          <div className=" flex flex-col justify-center">
-                            {Number(user.roleId) === Roles.Seller && (
-                              <>
-                                <NavLink
-                                  to="/seller"
-                                  className={styles.commonNav}
-                                >
-                                  Dashboard
-                                </NavLink>
-
-                                <NavLink
-                                  to="/seller-profile"
-                                  className={styles.commonNav}
-                                >
-                                  Profile
-                                </NavLink>
-                              </>
-                            )}
-                            {Number(user.roleId) === Roles.Admin && (
-                              <NavLink to="/admin" className={styles.commonNav}>
+                            <span
+                              className={`h-[3px] bg-[#ffa500] ${activeLink === '#' ? 'opacity-100' : 'opacity-0'}`}
+                            ></span>
+                          </div>
+                        </NavLink>
+                      </Accordion.Control>
+                      <Accordion.Panel className="mx-[-42px] mt-2 bg-[#2c513f] rounded-lg shadow-xl">
+                        <div className="flex flex-col w-full justify-center">
+                          {Number(user.roleId) === Roles.Seller && (
+                            <>
+                              <NavLink
+                                to="/seller"
+                                className={styles.commonNav}
+                              >
                                 Dashboard
                               </NavLink>
-                            )}
 
-                            <span
-                              onClick={async () => {
-                                const status = await handleGetMaintenanceMode()
-                                if (status === false) open()
-                              }}
-                              className={styles.commonNav}
-                            >
-                              Change Password
-                            </span>
+                              <NavLink
+                                to="/seller-profile"
+                                className={styles.commonNav}
+                              >
+                                Profile
+                              </NavLink>
+                            </>
+                          )}
+                          {Number(user.roleId) === Roles.Admin && (
+                            <NavLink to="/admin" className={styles.commonNav}>
+                              Dashboard
+                            </NavLink>
+                          )}
 
-                            <span
-                              onClick={() => {
-                                closeDrawer
-                                handleLogout()
-                              }}
-                              className={styles.commonNav}
-                            >
-                              Log Out
-                            </span>
-                          </div>
-                        </Accordion.Panel>
-                      </Accordion.Item>
-                    </Accordion>
-                  </>
-                ) : (
-                  <NavLink
-                    to="/login"
-                    onClick={closeDrawer}
-                    className={styles.navLink}
-                  >
-                    <div className=" flex flex-col items-start justify-center">
-                      <span className={styles.navText}>LOG IN</span>
-                      <span
-                        className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/login' ? 'opacity-100' : 'opacity-0'}`}
-                      ></span>
-                    </div>
-                  </NavLink>
-                )}
-              </div>
-            </ScrollArea.Autosize>
+                          <span
+                            onClick={async () => {
+                              const status = await handleGetMaintenanceMode()
+                              if (status === false) open()
+                            }}
+                            className={styles.commonNav}
+                          >
+                            Change Password
+                          </span>
+
+                          <span
+                            onClick={() => {
+                              closeDrawer
+                              handleLogout()
+                            }}
+                            className={styles.commonNav}
+                          >
+                            Log Out
+                          </span>
+                        </div>
+                      </Accordion.Panel>
+                    </Accordion.Item>
+                  </Accordion>
+                </>
+              ) : (
+                <NavLink
+                  to="/login"
+                  onClick={closeDrawer}
+                  className={styles.navLink}
+                >
+                  <div className=" flex flex-col items-start justify-center">
+                    <span className={styles.navText}>LOG IN</span>
+                    <span
+                      className={`h-[3px] mt-2 bg-[#ffa500] ${activeLink === '/login' ? 'opacity-100' : 'opacity-0'}`}
+                    ></span>
+                  </div>
+                </NavLink>
+              )}
+            </div>
           ) : (
             <div className="flex items-center cursor-pointer">
               {user.userId ? (
@@ -274,9 +275,17 @@ export default function MenuBar({
                     <Menu.Target>
                       <NavLink to="#" className={styles.navLink}>
                         <div className=" flex flex-col justify-center gap-y-1 flex-wrap">
-                          <div className="flex items-center">
-                            <Avatar size={28} color="white" />
-                            <span className="text-base text-white font-bold ml-1 hover:text-orange-100">
+                          <div className="flex justify-center">
+                            <Avatar
+                              variant="transparent"
+                              classNames={{
+                                placeholder:
+                                  ' flex items-center justify-center relative top-[2px] left-[6px]',
+                              }}
+                              size={28}
+                              color="white"
+                            />
+                            <span className=" text-white font-bold ml-1 hover:text-orange-100">
                               {user.fullName
                                 ? user.fullName.toUpperCase()
                                 : 'USER'}

@@ -130,7 +130,7 @@ export default function Feedback() {
 
   return (
     <>
-      <div className=" w-full   mt-15  xl:px-45 xs:px-20 mobile:px-10 py-25">
+      <div className=" w-full   mt-15  xl:px-45 xs:px-20 mobile:px-5 py-25">
         <div className=" outline rounded-md outline-gray-300 xl:px-30 md:px-20 mobile:px-10 pb-10">
           <div className=" flex items-center justify-center md:gap-x-10 mobile-gap-x-5">
             <img

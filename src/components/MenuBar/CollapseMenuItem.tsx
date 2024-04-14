@@ -37,17 +37,19 @@ export default function CollapseMenuItem({
       {isOfDrawers && listOfCategoriesBasedOnFeature ? (
         <Accordion
           variant="unstyled"
-          className="w-full ml-2"
+          className="w-full"
           classNames={{
-            content: 'px-0',
-            chevron: 'text-white',
+            content: 'px-0 py-0',
+            chevron:
+              'text-white w-[50px] h-[50px] flex justify-center items-center',
             label: 'p-0',
             panel: 'text-black',
           }}
+          w="100%"
         >
           <Accordion.Item value="photos" className="hover:bg-transparent">
-            <Accordion.Control className="w-[220px] px-5 ">
-              <NavLink
+            <Accordion.Control className="w-full p-0 m-0">
+              {/* <NavLink
                 to={`/search?featureId=${nav.key}`}
                 key={nav.key}
                 onClick={closeDrawer}
@@ -56,17 +58,22 @@ export default function CollapseMenuItem({
                 <div className=" flex flex-col justify-center">
                   <h1 className={styles.navText}>{nav.title}</h1>
                 </div>
-              </NavLink>
+              </NavLink> */}
+              <div key={nav.key}>
+                <div className=" flex flex-col justify-center">
+                  <h1 className={styles.navText}>{nav.title}</h1>
+                </div>
+              </div>
             </Accordion.Control>
-            <Accordion.Panel className=" px-2 mt-2 bg-[#2c513f] rounded-lg shadow-xl">
-              <div className=" flex flex-col justify-center">
+            <Accordion.Panel className="mx-[-42px] mt-2 bg-[#2c513f] rounded-lg shadow-xl">
+              <div className=" flex flex-col px-[9px] justify-center ">
                 {listOfCategoriesBasedOnFeature.length > 0 &&
                   listOfCategoriesBasedOnFeature
                     .filter((el: any) => String(el.featureId) === nav.key)[0]
                     .categories.filter((el: any) => el.count > 0)
                     .map((category: any) => (
                       <NavLink
-                        className=" h-[35px]  px-5 rounded-md hover:bg-[#518B76] flex items-center"
+                        className=" py-4 px-8 rounded-md hover:bg-[#518B76] flex items-center"
                         key={category.categoryId}
                         to={`/search?featureId=${nav.key}&categoryId=${category.categoryId.toString()}`}
                       >

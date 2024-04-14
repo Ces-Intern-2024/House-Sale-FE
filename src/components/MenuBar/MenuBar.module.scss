@@ -1,10 +1,10 @@
 .navLink {
-  @apply text-white font-bold;
+  @apply text-white font-bold  mobile:mx-0;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
-  margin-left: 28px;
+  // margin-left: 28px;
   height: 50px;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .navText {
-  @apply text-base py-0 my-0 font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
+  @apply text-base py-0 my-0 px-0 font-bold text-white hover:text-orange-100 active:text-orange-100 flex items-center;
 }
 
 .icon {
@@ -42,20 +42,34 @@
 }
 
 .outer {
-  @apply bg-[#396652] items-center justify-center py-2 lg:flex xs:hidden hidden mt-3;
+  @apply bg-[#396652] items-center justify-center gap-x-5 py-2 xl:flex mobile:hidden mt-3;
 }
 
 .outerOfListing{
-@apply bg-[#396652] items-center justify-center gap-x-9 py-2 lg:flex xs:hidden hidden;
+@apply bg-[#396652] items-center justify-center gap-x-9 py-2 xl:flex mobile:hidden  ;
 } 
 
 .outerOfDrawers {
   @apply bg-[#396652] 
-  justify-start items-start py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-1;
+  justify-start items-start px-0 py-2 xl:hidden xs:flex mobile:flex flex-col gap-y-5 w-full;
+}
+
+.nameTagContainer {
+  @apply flex flex-col justify-center flex-wrap;
+
+}
+
+.navLink span {
+    -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      max-width: 100px;
 }
 
 .outerOfDrawersListing {
-  @apply bg-[#396652] h-[70vh] overflow-y-scroll px-7 justify-start items-center py-2 lg:hidden xs:flex mobile:flex flex-col gap-y-1;
+  @apply  justify-start items-start py-2 xl:hidden mobile:flex flex-col gap-y-1 px-5;
 }
 
 .dropdown {
@@ -67,7 +81,7 @@
 }
 
 .navLinkCollapse {
-  @apply text-white font-bold;
+  @apply text-white font-bold m-0 p-0;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -101,15 +115,37 @@
 }
 
 .commonNav{
-  @apply h-[35px] hover:bg-[#518B76] flex items-center px-5 text-white font-semibold rounded-md 
+  @apply  hover:bg-[#518B76] flex items-center py-4 px-11 text-white font-semibold rounded-md 
 }
 
 .nameTag{
-  @apply text-base max-w-[100px] line-clamp-1 overflow-ellipsis text-white font-bold ml-1 hover:text-orange-100
-}
+  @apply  max-w-[100px] text-pretty line-clamp-1 overflow-hidden text-ellipsis text-white font-bold ml-1 hover:text-orange-100;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+ }
+ .nameTag, .nameTag span {
+   max-width: 150px;
+   white-space: pre;
+   
+   -webkit-line-clamp: 1;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   color: #ffffff;
+   font-weight: bold;
+   margin-left: 0.25rem;
+ }
+
+ .nameTag:hover {
+   color: var(text-orange-100);
+ }
 
 .postingBtn{
-  @apply animate-bounce cursor-pointer h-[50px] sm:w-auto mobile:w-[220px] mobile:justify-center mb-6 mt-2 p-2 lg:m-0 mobile:ml-5 outline outline-2 rounded-2xl outline-primary flex items-center justify-start bg-white;
+  @apply animate-bounce cursor-pointer h-[50px] xl:w-auto mobile:w-full justify-center outline outline-2 rounded-2xl outline-primary flex items-center bg-white px-2;
   // animation: moveUpDown 1s linear infinite;
   &:hover {
     @apply bg-primary outline-white;
