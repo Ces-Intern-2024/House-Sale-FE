@@ -25,6 +25,7 @@ import {
 import Swal from 'sweetalert2'
 import { ConversionRate } from '../../types/conversionRate'
 import { confirmBtn, cancelBtn } from '../../constants/color.constant'
+import { getMaintenanceModeForSeller } from '../../service/MaintenanceService'
 
 // some comments in this component is kept for future use
 export default function ConversionRateComponent() {
@@ -41,6 +42,7 @@ export default function ConversionRateComponent() {
   const [selectedConversionRate, setSelectedConversionRate] =
     useState<ConversionRate>()
   const [shouldUpdate, setShouldUpdate] = useState(false)
+  const [isUnderMaintenance, setIsUnderMaintenance] = useState(false)
 
   // const handleKeyDown = (event: any) => {
   //   setSearchConversionRate(event.currentTarget.value)
@@ -50,7 +52,6 @@ export default function ConversionRateComponent() {
     try {
       setIsLoading(true)
       const res = await getAllConversionRates()
-
       setConversionRates(res)
     } catch (error) {
       console.error(error)
@@ -134,8 +135,19 @@ export default function ConversionRateComponent() {
     })
   }
 
+  const handleGetMaintenanceMode = async () => {
+    try {
+      const res = await getMaintenanceModeForSeller()
+      setIsUnderMaintenance((_prev) => res.metaData.isMaintenance)
+      console.log(res)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
     handleGetAllConversionRates()
+    handleGetMaintenanceMode()
   }, [shouldUpdate])
 
   const rows =
@@ -278,10 +290,11 @@ export default function ConversionRateComponent() {
           />
           <small className=" font-bold text-primary">
             {selectedConversionRate
-              ? 'Note: You can only change the exchange rate'
+              ? 'Note: You can only change the exchange rate when the system is under maintenance.'
               : ''}
           </small>
           <Button
+            disabled={isUnderMaintenance ? true : false}
             className=" bg-primary"
             size="md"
             onClick={() => {
