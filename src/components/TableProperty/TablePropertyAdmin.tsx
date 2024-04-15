@@ -609,21 +609,24 @@ const TablePropertyAdmin = () => {
                 <div className={style.priceRangeContainer}>
                   <div className={style.priceRangeChild}>
                     <Text className={style.labelPriceRange}>Price range:</Text>
-                    <RangeSlider
-                      classNames={{
-                        root: style.rootRangeSlider,
-                        label: style.lableRangeSlider,
-                      }}
-                      color="#396651"
-                      minRange={100}
-                      min={0}
-                      max={maxPrice}
-                      step={500}
-                      defaultValue={priceRange}
-                      onChangeEnd={setPriceRange}
-                      labelAlwaysOn
-                      label={(value) => `${formatMoneyToUSD(value)}`}
-                    />
+
+                    {maxPrice !== 0 && (
+                      <RangeSlider
+                        classNames={{
+                          root: style.rootRangeSlider,
+                          label: style.lableRangeSlider,
+                        }}
+                        color="#396651"
+                        minRange={100}
+                        min={0}
+                        max={maxPrice}
+                        step={500}
+                        defaultValue={priceRange}
+                        onChangeEnd={setPriceRange}
+                        labelAlwaysOn
+                        label={(value) => `${formatMoneyToUSD(value)}`}
+                      />
+                    )}
                   </div>
                   <Button
                     className={style.iconSearchAdmin}
