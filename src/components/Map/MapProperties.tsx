@@ -6,6 +6,7 @@ import {
 import {
   APIProvider,
   AdvancedMarker,
+  InfoWindow,
   Map,
   Pin,
   useMap,
@@ -16,6 +17,7 @@ import { IMarker, RawMarker } from '../../types/propertyMarkerMap'
 import style from './MapProperties.module.scss'
 import { Properties } from '@/types'
 import { getAllPropertiesService } from '../../service/PropertyService'
+import { Link } from 'react-router-dom'
 
 const MapProperties = () => {
   const [propertiesList, setPropertiesList] = useState<Properties[]>([])
@@ -38,6 +40,7 @@ const MapProperties = () => {
         property.name,
         Number(property.location.lat),
         Number(property.location.lng),
+        property.propertyId,
       ],
     )
     return setMarkers(tempMarkers)
@@ -45,10 +48,11 @@ const MapProperties = () => {
 
   const [formattedMarkers, setFormattedMarkers] = useState<IMarker[]>()
   const convertData = () => {
-    const formatted = markers.map(([name, lat, lng]) => ({
+    const formatted = markers.map(([name, lat, lng, propertyId]) => ({
       name,
       lat,
       lng,
+      propertyId,
       key: JSON.stringify({ name, lat, lng }),
     }))
     return setFormattedMarkers(formatted)
@@ -79,13 +83,15 @@ const MapProperties = () => {
 
 export default MapProperties
 
-type Point = google.maps.LatLngLiteral & { key: string }
-type Props = { points: Point[] }
-const Markers = ({ points }: Props) => {
+type Point = google.maps.LatLngLiteral & { key: string, propertyId: number , name: string}
+type Props = { 
+  points: Point[],
+}
+const Markers = ({ points}: Props) => {
   const map = useMap()
   const [markers, setMarkers] = useState<{ [key: string]: Marker }>({})
   const clusterer = useRef<MarkerClusterer | null>(null)
-
+  const [open, setOpen] = useState<string | null>(null)
   useEffect(() => {
     if (!map) return
     if (!clusterer.current) {
@@ -118,15 +124,24 @@ const Markers = ({ points }: Props) => {
   return (
     <>
       {points.map((point, index) => (
-        <AdvancedMarker
-          key={index}
-          position={point}
-          ref={(marker) => setMarkerRef(marker, point.key)}
-        >
-          <Pin>
-            <TbBuildingWarehouse color="white" size={12} />
-          </Pin>
-        </AdvancedMarker>
+        <>
+          <AdvancedMarker
+            key={index}
+            position={point}
+            ref={(marker) => setMarkerRef(marker, point.key)}
+            onClick={() => setOpen(point.key)}
+          >
+            <Pin>
+              <TbBuildingWarehouse color="white" size={12} />
+            </Pin>
+          </AdvancedMarker>
+
+          {open === point.key && (
+            <InfoWindow position={point} onCloseClick={() => setOpen(null)}>
+              <p className='p-0 m-0'><Link to={`/details/${point.propertyId}`}>{point.name}</Link></p>
+            </InfoWindow>
+          )}
+        </>
       ))}
     </>
   )
