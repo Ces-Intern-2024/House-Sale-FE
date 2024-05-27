@@ -26,7 +26,7 @@ export default function MapComponent({ location }: Props) {
   const [isUpdated, setIsUpdated] = useState(false)
 
   const getLatLng = async () => {
-    if (location) {      
+    if (location) {
       try {
         setIsLoading(true)
         setIsUpdated(false)
@@ -35,7 +35,7 @@ export default function MapComponent({ location }: Props) {
           lat: res.data.results[0].geometry.location.lat,
           lng: res.data.results[0].geometry.location.lng,
         })
-        setIsUpdated((prev) => !prev)        
+        setIsUpdated((prev) => !prev)
       } catch (error) {
         console.error(error)
       } finally {
@@ -58,22 +58,22 @@ export default function MapComponent({ location }: Props) {
           overlayProps={{ radius: 'sm', blur: 2 }}
           loaderProps={{ color: 'pink', type: 'bars' }}
         />
-          <APIProvider apiKey={REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG!}>
-            {isUpdated && (
-              <Map
-                style={{ width: '100%', height: '300px' }}
-                defaultCenter={position}
-                defaultZoom={14}
-                mapId={REACT_APP_GOOGLE_MAP_ID_HOANG!}
-              >
-                <AdvancedMarker position={position}>
-                  <Pin>
-                    <TbBuildingWarehouse color="white" size={18} />
-                  </Pin>
-                </AdvancedMarker>
-              </Map>
-            )}
-          </APIProvider>
+        <APIProvider apiKey={REACT_APP_PUBLIC_GOOGLE_MAPS_API_KEY_HOANG!}>
+          {isUpdated && (
+            <Map
+              style={{ width: '100%', height: '250px' }}
+              defaultCenter={position}
+              defaultZoom={14}
+              mapId={REACT_APP_GOOGLE_MAP_ID_HOANG!}
+            >
+              <AdvancedMarker position={position}>
+                <Pin>
+                  <TbBuildingWarehouse color="white" size={18} />
+                </Pin>
+              </AdvancedMarker>
+            </Map>
+          )}
+        </APIProvider>
       </Box>
     </div>
   )
