@@ -3,6 +3,7 @@ import chaticon from '../../assets/images/chaticon.png'
 import { Image, Input } from '@mantine/core'
 import { IoMdSend } from 'react-icons/io'
 
+const chatbotURL = process.env.REACT_APP_CHATBOT_URL
 const ChatbotConversation = () => {
   const [value, setValue] = useState('')
   const [messages, setMessages] = useState<
@@ -26,7 +27,12 @@ const ChatbotConversation = () => {
       setValue('')
 
       try {
-        const response = await fetch('http://23.102.238.210:8000/chatbot', {
+        if (!chatbotURL) {
+          throw new Error(
+            'REACT_APP_CHATBOT_URL is not defined in your environment variables',
+          )
+        }
+        const response = await fetch(chatbotURL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
