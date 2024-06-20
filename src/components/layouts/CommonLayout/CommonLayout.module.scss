@@ -5,3 +5,11 @@
 .inner {
   @apply fixed z-10 top-0 bg-white left-0 right-0;
 }
+
+.chatbotIcon{
+  @apply w-[60px] h-[60px] bg-transparent
+}
+
+.chatbot{
+  @apply mr-[-12px] h-[60px] bg-transparent hover:bg-transparent rounded-[100px] fixed bottom-5 right-7 z-50 border-none outline-none cursor-pointer mb-20
+}
